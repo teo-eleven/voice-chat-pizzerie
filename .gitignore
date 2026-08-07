@@ -1,0 +1,29 @@
+# secrete — niciodată în repo
+.env
+.env.local
+*.key
+
+# baze de date locale
+*.db
+*.db-journal
+*.sqlite3
+
+# audio de test (poate conține voci reale)
+data/recordings/
+
+# rapoarte generate
+evals/reports/*.md
+!evals/reports/.gitkeep
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# unelte
+.idea/
+.vscode/

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pizzeria Punto — Livrare</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-title">Pizzeria Punto — test</span>
+  <a href="/index.html">Comandă</a>
+  <a href="/kitchen.html" target="_blank" rel="noopener">Bucătărie</a>
+  <a href="/driver.html" class="active">Livrare</a>
+  <span class="conn-status" id="conn-status"><span class="conn-dot"></span><span id="conn-status-text">Conectare...</span></span>
+</nav>
+
+<main class="page">
+  <h1>Ecran livrator</h1>
+  <p class="subtitle">Starea se reconstruiește din baza de date la încărcare, apoi se actualizează live prin WebSocket.</p>
+
+  <div id="error-log"></div>
+
+  <div id="orders-container" class="grid" style="margin-top:16px"></div>
+</main>
+
+<script src="/api.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const esc = PizzaApi.escapeHtml;
+  const errorLog = PizzaApi.createErrorLog(document.getElementById("error-log"));
+
+  const STATUS_LABELS = {
+    new: "Nouă",
+    in_kitchen: "În bucătărie",
+    ready: "Gata",
+    assigned: "Alocată livratorului",
+    out: "Pe drum",
+    delivered: "Livrată",
+    picked_up: "Ridicată",
+    cancelled: "Anulată",
+  };
+  const PAYMENT_LABELS = { cash: "Numerar", card_on_delivery: "Card la livrare" };
+
+  const EMPTY_STATE_HTML = `
+    <div class="empty-state">
+      Nicio livrare de preluat momentan.<br />
+      Comenzile apar aici <strong>doar</strong> din momentul în care bucătăria le marchează „Gata” —
+      și <strong>ridicările nu apar niciodată</strong> pe acest ecran.
+    </div>
+  `;
+
+  let orders = [];
+
+  async function guarded(promiseFactory) {
+    try {
+      return await promiseFactory();
+    } catch (err) {
+      if (err instanceof PizzaApi.ApiError) {
+        errorLog.report(err);
+      } else {
+        errorLog.report({ code: null, message: `Eroare neașteptată: ${err.message}`, field: null, status: 0 });
+      }
+      return null;
+    }
+  }
+
+  async function loadOrders() {
+    const result = await guarded(() => PizzaApi.apiGet("/api/orders?view=driver"));
+    if (!result) return;
+    orders = result;
+    renderOrders();
+  }
+
+  function renderOrders() {
+    const container = document.getElementById("orders-container");
+    if (orders.length === 0) {
+      container.innerHTML = EMPTY_STATE_HTML;
+      return;
+    }
+    container.innerHTML = orders.map(buildOrderCard).join("");
+    container.querySelectorAll(".btn-transition").forEach((button) => {
+      button.addEventListener("click", () => transitionOrder(button.dataset.orderId, button.dataset.status));
+    });
+  }
+
+  function buildAddressDetailsHtml(address) {
+    if (!address) {
+      return '<div class="muted">Fără adresă înregistrată (neobișnuit pentru o livrare).</div>';
+    }
+    const subFields = [
+      ["block", "Bloc"],
+      ["staircase", "Scară"],
+      ["floor", "Etaj"],
+      ["apartment", "Apartament"],
+      ["intercom", "Interfon"],
+      ["notes", "Detalii"],
+    ];
+    const details = subFields
+      .filter(([key]) => address[key])
+      .map(([key, label]) => `<li>${label}: ${esc(address[key])}</li>`)
+      .join("");
+    const headline = address.formatted || `${address.street} ${address.number}`;
+    return `
+      <div><strong>${esc(headline)}</strong></div>
+      ${details ? `<ul>${details}</ul>` : ""}
+    `;
+  }
+
+  function buildOrderCard(order) {
+    const lines = order.cart.lines
+      .map(
+        (line) => `
+      <li>${line.qty} × ${esc(line.product_name)}${line.size_label ? " (" + esc(line.size_label) + ")" : ""}
+        ${line.removed_ingredients.length ? " — fără " + esc(line.removed_ingredients.join(", ")) : ""}</li>`
+      )
+      .join("");
+
+    let actionsHtml = "";
+    if (order.status === "ready") {
+      actionsHtml = `<button type="button" class="btn btn--primary btn-transition" data-order-id="${esc(order.id)}" data-status="assigned">Preiau</button>`;
+    } else if (order.status === "assigned") {
+      actionsHtml = `<button type="button" class="btn btn--primary btn-transition" data-order-id="${esc(order.id)}" data-status="out">Am plecat</button>`;
+    } else if (order.status === "out") {
+      actionsHtml = `<button type="button" class="btn btn--primary btn-transition" data-order-id="${esc(order.id)}" data-status="delivered">Livrat</button>`;
+    }
+
+    return `
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <strong>${esc(order.id)}</strong>
+          <span class="badge badge--status-${esc(order.status)}">${STATUS_LABELS[order.status] || order.status}</span>
+        </div>
+        ${buildAddressDetailsHtml(order.address)}
+        <div>Telefon: ${esc(order.contact.phone)}${order.contact.name ? " — " + esc(order.contact.name) : ""}</div>
+        <ul>${lines || "<li>Fără produse</li>"}</ul>
+        <div class="row" style="justify-content:space-between">
+          <span>Total: ${PizzaApi.formatBani(order.cart.total_bani)}</span>
+          <span>Plată: ${PAYMENT_LABELS[order.payment] || order.payment}</span>
+        </div>
+        <div class="muted">ETA: ${PizzaApi.formatEtaWindow(order.eta)}</div>
+        <div class="row">${actionsHtml}</div>
+      </div>
+    `;
+  }
+
+  async function transitionOrder(orderId, status) {
+    const result = await guarded(() => PizzaApi.apiPost(`/api/orders/${orderId}/status`, { status }));
+    if (!result) return;
+    await loadOrders();
+  }
+
+  const connStatusEl = document.getElementById("conn-status");
+  const connStatusTextEl = document.getElementById("conn-status-text");
+  const CONN_LABELS = { connected: "Conectat", connecting: "Conectare…", disconnected: "Deconectat — se reconectează…" };
+
+  function updateConnStatus(status) {
+    connStatusEl.classList.remove("connected", "connecting", "disconnected");
+    connStatusEl.classList.add(status);
+    connStatusTextEl.textContent = CONN_LABELS[status] || status;
+  }
+
+  loadOrders();
+  PizzaApi.connectOrdersSocket({
+    onEvent: () => loadOrders(),
+    onStatus: updateConnStatus,
+  });
+})();
+</script>
+</body>
+</html>

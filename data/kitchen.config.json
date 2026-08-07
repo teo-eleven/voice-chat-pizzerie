@@ -1,0 +1,9 @@
+{
+  "oven_slots": 9,
+  "order_overhead_minutes": 3,
+  "safety_buffer_minutes": 5,
+  "quote_rounding_minutes": 5,
+  "quote_window_minutes": 10,
+  "max_promisable_minutes": 75,
+  "delivery_drive_minutes": 12
+}

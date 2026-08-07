@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Pizzeria Punto — Bucătărie</title>
+<link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<nav class="nav">
+  <span class="nav-title">Pizzeria Punto — test</span>
+  <a href="/index.html">Comandă</a>
+  <a href="/kitchen.html" class="active">Bucătărie</a>
+  <a href="/driver.html" target="_blank" rel="noopener">Livrare</a>
+  <span class="conn-status" id="conn-status"><span class="conn-dot"></span><span id="conn-status-text">Conectare...</span></span>
+</nav>
+
+<main class="page">
+  <h1>Ecran bucătărie</h1>
+  <p class="subtitle">Starea se reconstruiește din baza de date la încărcare, apoi se actualizează live prin WebSocket.</p>
+
+  <div id="error-log"></div>
+
+  <div class="alert alert--info">
+    Notă: acest ecran nu primește și nu afișează telefonul sau adresa clientului — răspunsul serverului pentru
+    <code>view=kitchen</code> le omite intenționat (minimizare de date). Acele detalii sunt disponibile doar pe ecranul de livrare.
+  </div>
+
+  <div id="orders-container" class="grid" style="margin-top:16px"></div>
+</main>
+
+<script src="/api.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const esc = PizzaApi.escapeHtml;
+  const errorLog = PizzaApi.createErrorLog(document.getElementById("error-log"));
+
+  const FULFILLMENT_LABELS = { delivery: "Livrare", pickup: "Ridicare" };
+  const STATUS_LABELS = {
+    new: "Nouă",
+    in_kitchen: "În bucătărie",
+    ready: "Gata",
+    assigned: "Alocată livratorului",
+    out: "Pe drum",
+    delivered: "Livrată",
+    picked_up: "Ridicată",
+    cancelled: "Anulată",
+  };
+
+  let orders = [];
+
+  async function guarded(promiseFactory) {
+    try {
+      return await promiseFactory();
+    } catch (err) {
+      if (err instanceof PizzaApi.ApiError) {
+        errorLog.report(err);
+      } else {
+        errorLog.report({ code: null, message: `Eroare neașteptată: ${err.message}`, field: null, status: 0 });
+      }
+      return null;
+    }
+  }
+
+  async function loadOrders() {
+    const result = await guarded(() => PizzaApi.apiGet("/api/orders?view=kitchen"));
+    if (!result) return;
+    orders = result;
+    renderOrders();
+  }
+
+  function renderOrders() {
+    const container = document.getElementById("orders-container");
+    if (orders.length === 0) {
+      container.innerHTML = '<div class="empty-state">Nicio comandă activă în bucătărie momentan.</div>';
+      return;
+    }
+    container.innerHTML = orders.map(buildOrderCard).join("");
+    container.querySelectorAll(".btn-transition").forEach((button) => {
+      button.addEventListener("click", () => transitionOrder(button.dataset.orderId, button.dataset.status));
+    });
+    updateTimers();
+  }
+
+  function buildOrderCard(order) {
+    const lines = order.cart.lines
+      .map(
+        (line) => `
+      <li>${line.qty} × ${esc(line.product_name)}${line.size_label ? " (" + esc(line.size_label) + ")" : ""}
+        ${line.removed_ingredients.length ? " — fără " + esc(line.removed_ingredients.join(", ")) : ""}</li>`
+      )
+      .join("");
+
+    const allergyHtml = order.allergy_note
+      ? `<div class="allergy-alert">Atenție — alergie declarată: ${esc(order.allergy_note)}</div>`
+      : "";
+
+    const timerHtml = order.created_at
+      ? `<div class="timer" data-created-at="${esc(order.created_at)}">Timp scurs: calculare…</div>`
+      : "";
+
+    let actionsHtml = "";
+    if (order.status === "new") {
+      actionsHtml = `<button type="button" class="btn btn--primary btn-transition" data-order-id="${esc(order.id)}" data-status="in_kitchen">Preia</button>`;
+    } else if (order.status === "in_kitchen") {
+      actionsHtml = `<button type="button" class="btn btn--primary btn-transition" data-order-id="${esc(order.id)}" data-status="ready">Gata</button>`;
+    }
+
+    return `
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <strong>${esc(order.id)}</strong>
+          <span class="badge badge--${esc(order.fulfillment)}">${FULFILLMENT_LABELS[order.fulfillment] || order.fulfillment}</span>
+        </div>
+        <div class="row">
+          <span class="badge badge--status-${esc(order.status)}">${STATUS_LABELS[order.status] || order.status}</span>
+          <span class="muted">ETA: ${PizzaApi.formatEtaWindow(order.eta)}</span>
+        </div>
+        ${allergyHtml}
+        <ul>${lines || "<li>Fără produse</li>"}</ul>
+        ${timerHtml}
+        <div class="row">${actionsHtml}</div>
+      </div>
+    `;
+  }
+
+  async function transitionOrder(orderId, status) {
+    const result = await guarded(() => PizzaApi.apiPost(`/api/orders/${orderId}/status`, { status }));
+    if (!result) return;
+    await loadOrders();
+  }
+
+  function updateTimers() {
+    document.querySelectorAll(".timer[data-created-at]").forEach((el) => {
+      const created = new Date(el.getAttribute("data-created-at")).getTime();
+      if (Number.isNaN(created)) {
+        el.textContent = "Timp scurs: necunoscut";
+        return;
+      }
+      const elapsedSeconds = Math.max(0, Math.floor((Date.now() - created) / 1000));
+      const minutes = Math.floor(elapsedSeconds / 60);
+      const seconds = elapsedSeconds % 60;
+      el.textContent = `Timp scurs: ${minutes}m ${String(seconds).padStart(2, "0")}s`;
+    });
+  }
+  setInterval(updateTimers, 1000);
+
+  const connStatusEl = document.getElementById("conn-status");
+  const connStatusTextEl = document.getElementById("conn-status-text");
+  const CONN_LABELS = { connected: "Conectat", connecting: "Conectare…", disconnected: "Deconectat — se reconectează…" };
+
+  function updateConnStatus(status) {
+    connStatusEl.classList.remove("connected", "connecting", "disconnected");
+    connStatusEl.classList.add(status);
+    connStatusTextEl.textContent = CONN_LABELS[status] || status;
+  }
+
+  loadOrders();
+  PizzaApi.connectOrdersSocket({
+    onEvent: () => loadOrders(),
+    onStatus: updateConnStatus,
+  });
+})();
+</script>
+</body>
+</html>

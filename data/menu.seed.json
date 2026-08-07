@@ -1,0 +1,237 @@
+{
+  "restaurant": "Pizzeria Punto",
+  "currency": "RON",
+  "size_template": [
+    { "code": "small",  "label": "mică",  "diameter_cm": 25, "oven_slots": 1, "bake_minutes": 7 },
+    { "code": "medium", "label": "medie", "diameter_cm": 32, "oven_slots": 2, "bake_minutes": 8 },
+    { "code": "large",  "label": "mare",  "diameter_cm": 40, "oven_slots": 3, "bake_minutes": 10 }
+  ],
+  "products": [
+    {
+      "id": "PZ-001",
+      "name": "Margherita",
+      "category": "pizza",
+      "description": "Sos de roșii, mozzarella, busuioc",
+      "ingredients": ["sos de roșii", "mozzarella", "busuioc"],
+      "allergens": ["gluten", "lactoza"],
+      "prices": { "small": "28.00", "medium": "38.00", "large": "48.00" },
+      "aliases": ["margarita", "margherita simpla"]
+    },
+    {
+      "id": "PZ-002",
+      "name": "Capricciosa",
+      "category": "pizza",
+      "description": "Sos de roșii, mozzarella, șuncă, ciuperci, măsline, ardei",
+      "ingredients": ["sos de roșii", "mozzarella", "șuncă", "ciuperci", "măsline", "ardei"],
+      "allergens": ["gluten", "lactoza"],
+      "prices": { "small": "34.00", "medium": "45.00", "large": "56.00" },
+      "aliases": ["capriciosa", "capricioza", "capricciosa"]
+    },
+    {
+      "id": "PZ-003",
+      "name": "Quattro Stagioni",
+      "category": "pizza",
+      "description": "Sos de roșii, mozzarella, șuncă, ciuperci, anghinare, măsline",
+      "ingredients": ["sos de roșii", "mozzarella", "șuncă", "ciuperci", "anghinare", "măsline"],
+      "allergens": ["gluten", "lactoza"],
+      "prices": { "small": "36.00", "medium": "47.00", "large": "58.00" },
+      "aliases": ["quattro stagioni", "patru anotimpuri", "catro stagioni"]
+    },
+    {
+      "id": "PZ-004",
+      "name": "Diavola",
+      "category": "pizza",
+      "description": "Sos de roșii, mozzarella, salam picant, ardei iute",
+      "ingredients": ["sos de roșii", "mozzarella", "salam picant", "ardei iute"],
+      "allergens": ["gluten", "lactoza"],
+      "prices": { "small": "35.00", "medium": "46.00", "large": "57.00" },
+      "aliases": ["diavola", "diabola", "picanta"]
+    },
+    {
+      "id": "PZ-005",
+      "name": "Prosciutto e Funghi",
+      "category": "pizza",
+      "description": "Sos de roșii, mozzarella, șuncă, ciuperci",
+      "ingredients": ["sos de roșii", "mozzarella", "șuncă", "ciuperci"],
+      "allergens": ["gluten", "lactoza"],
+      "prices": { "small": "33.00", "medium": "44.00", "large": "55.00" },
+      "aliases": ["prosciutto funghi", "suncă și ciuperci", "prosciuto"]
+    },
+    {
+      "id": "PZ-006",
+      "name": "Quattro Formaggi",
+      "category": "pizza",
+      "description": "Mozzarella, gorgonzola, parmezan, cașcaval afumat",
+      "ingredients": ["mozzarella", "gorgonzola", "parmezan", "cașcaval afumat"],
+      "allergens": ["gluten", "lactoza"],
+      "prices": { "small": "37.00", "medium": "49.00", "large": "61.00" },
+      "aliases": ["quattro formaggi", "patru brânzeturi", "catro formaji"]
+    },
+    {
+      "id": "PZ-007",
+      "name": "Vegetariana",
+      "category": "pizza",
+      "description": "Sos de roșii, mozzarella, ciuperci, ardei, porumb, măsline, roșii",
+      "ingredients": ["sos de roșii", "mozzarella", "ciuperci", "ardei", "porumb", "măsline", "roșii"],
+      "allergens": ["gluten", "lactoza"],
+      "prices": { "small": "32.00", "medium": "43.00", "large": "54.00" },
+      "aliases": ["vegetariana", "de post cu cascaval", "veggie"]
+    },
+    {
+      "id": "PZ-008",
+      "name": "Punto Speciale",
+      "category": "pizza",
+      "description": "Sos de roșii, mozzarella, prosciutto crudo, rucola, parmezan",
+      "ingredients": ["sos de roșii", "mozzarella", "prosciutto crudo", "rucola", "parmezan"],
+      "allergens": ["gluten", "lactoza"],
+      "prices": { "small": "42.00", "medium": "54.00", "large": "66.00" },
+      "aliases": ["punto speciale", "speciala casei", "speciala"]
+    },
+
+    {
+      "id": "SO-001",
+      "name": "Sos picant",
+      "category": "sauce",
+      "ingredients": ["ardei iute", "roșii", "oțet"],
+      "allergens": [],
+      "price": "4.00",
+      "prep_minutes": 0,
+      "aliases": ["picant", "iute", "hot"]
+    },
+    {
+      "id": "SO-002",
+      "name": "Sos dulce",
+      "category": "sauce",
+      "ingredients": ["roșii", "zahăr", "condimente"],
+      "allergens": [],
+      "price": "4.00",
+      "prep_minutes": 0,
+      "aliases": ["dulce", "ketchup"]
+    },
+    {
+      "id": "SO-003",
+      "name": "Sos de usturoi",
+      "category": "sauce",
+      "ingredients": ["usturoi", "smântână", "ou"],
+      "allergens": ["lactoza", "ou"],
+      "price": "4.50",
+      "prep_minutes": 0,
+      "aliases": ["usturoi", "de usturoi", "aioli"]
+    },
+    {
+      "id": "SO-004",
+      "name": "Sos barbecue",
+      "category": "sauce",
+      "ingredients": ["roșii", "melasă", "muștar", "condimente"],
+      "allergens": ["mustar"],
+      "price": "4.50",
+      "prep_minutes": 0,
+      "aliases": ["barbecue", "bbq", "barbeque"]
+    },
+
+    {
+      "id": "BT-001",
+      "name": "Coca-Cola 0,5 l",
+      "category": "drink",
+      "allergens": [],
+      "price": "8.00",
+      "prep_minutes": 0,
+      "aliases": ["cola", "coca cola", "coca mica", "cola mica"]
+    },
+    {
+      "id": "BT-002",
+      "name": "Coca-Cola 2 l",
+      "category": "drink",
+      "allergens": [],
+      "price": "14.00",
+      "prep_minutes": 0,
+      "aliases": ["cola mare", "coca doi litri", "cola de doi litri"]
+    },
+    {
+      "id": "BT-003",
+      "name": "Fanta 0,5 l",
+      "category": "drink",
+      "allergens": [],
+      "price": "8.00",
+      "prep_minutes": 0,
+      "aliases": ["fanta", "fanta mica", "portocale"]
+    },
+    {
+      "id": "BT-004",
+      "name": "Fanta 2 l",
+      "category": "drink",
+      "allergens": [],
+      "price": "14.00",
+      "prep_minutes": 0,
+      "aliases": ["fanta mare", "fanta doi litri"]
+    },
+    {
+      "id": "BT-005",
+      "name": "Sprite 0,5 l",
+      "category": "drink",
+      "allergens": [],
+      "price": "8.00",
+      "prep_minutes": 0,
+      "aliases": ["sprite", "sprait"]
+    },
+    {
+      "id": "BT-006",
+      "name": "Apă plată 0,5 l",
+      "category": "drink",
+      "allergens": [],
+      "price": "5.00",
+      "prep_minutes": 0,
+      "aliases": ["apa plata", "apa", "plata"]
+    },
+    {
+      "id": "BT-007",
+      "name": "Apă minerală 0,5 l",
+      "category": "drink",
+      "allergens": [],
+      "price": "5.00",
+      "prep_minutes": 0,
+      "aliases": ["apa minerala", "minerala", "apa carbogazoasa"]
+    },
+
+    {
+      "id": "DS-001",
+      "name": "Tiramisu",
+      "category": "dessert",
+      "ingredients": ["mascarpone", "pișcoturi", "cafea", "ou", "cacao"],
+      "allergens": ["gluten", "lactoza", "ou"],
+      "price": "18.00",
+      "prep_minutes": 2,
+      "aliases": ["tiramisu", "tiramisú", "tirami su"]
+    },
+    {
+      "id": "DS-002",
+      "name": "Papanași",
+      "category": "dessert",
+      "ingredients": ["brânză dulce", "făină", "smântână", "dulceață", "ou"],
+      "allergens": ["gluten", "lactoza", "ou"],
+      "price": "22.00",
+      "prep_minutes": 8,
+      "aliases": ["papanasi", "papanași cu smantana"]
+    },
+    {
+      "id": "DS-003",
+      "name": "Lava Cake",
+      "category": "dessert",
+      "ingredients": ["ciocolată", "unt", "ou", "făină"],
+      "allergens": ["gluten", "lactoza", "ou"],
+      "price": "20.00",
+      "prep_minutes": 6,
+      "aliases": ["lava cake", "ciocolata calda", "lavacake"]
+    },
+    {
+      "id": "DS-004",
+      "name": "Cheesecake cu fructe de pădure",
+      "category": "dessert",
+      "ingredients": ["cremă de brânză", "biscuiți", "fructe de pădure", "ou"],
+      "allergens": ["gluten", "lactoza", "ou"],
+      "price": "19.00",
+      "prep_minutes": 2,
+      "aliases": ["cheesecake", "ciseceic", "prajitura cu brnza"]
+    }
+  ]
+}

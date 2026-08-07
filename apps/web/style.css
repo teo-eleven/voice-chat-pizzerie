@@ -1,0 +1,688 @@
+/* style.css — temă întunecată, comună celor trei ecrane de test.
+   Fără build step, fără resurse externe: doar fonturi de sistem. */
+
+:root {
+  color-scheme: dark;
+
+  --bg: #14161a;
+  --bg-elevated: #1c1f26;
+  --bg-elevated-2: #242832;
+  --border: #333844;
+  --text: #e8e9ec;
+  --text-dim: #a2a7b3;
+  --text-faint: #6b7280;
+
+  --accent: #4f8cff;
+  --accent-hover: #6ea0ff;
+  --accent-text: #0b1220;
+
+  --danger: #ff6b6b;
+  --danger-bg: #3a1414;
+  --danger-border: #6b2222;
+
+  --success: #4ade80;
+  --success-bg: #10281a;
+  --success-border: #1f5c39;
+
+  --warning: #facc15;
+  --warning-bg: #332a0c;
+  --warning-border: #6b5411;
+
+  --info: #38bdf8;
+  --info-bg: #0e2a38;
+  --info-border: #1f5c78;
+
+  --radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.page {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 16px 20px 64px;
+}
+
+/* --------------------------------------------------------------------- nav */
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.nav-title {
+  font-weight: 700;
+  font-size: 17px;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.nav a {
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: var(--radius);
+  font-size: 14px;
+}
+
+.nav a:hover {
+  color: var(--text);
+  background: var(--bg-elevated-2);
+}
+
+.nav a.active {
+  color: var(--accent-text);
+  background: var(--accent);
+  font-weight: 600;
+}
+
+.nav .conn-status {
+  margin-left: auto;
+}
+
+.nav-note {
+  width: 100%;
+  color: var(--text-faint);
+  font-size: 12.5px;
+}
+
+/* ------------------------------------------------------------------ layout */
+
+h1 {
+  font-size: 22px;
+  margin: 18px 0 4px;
+}
+
+h2 {
+  font-size: 16px;
+  margin: 0 0 12px;
+  color: var(--text);
+}
+
+.subtitle {
+  color: var(--text-dim);
+  margin: 0 0 20px;
+  font-size: 14px;
+}
+
+.section {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-bottom: 18px;
+}
+
+.section-flat {
+  border: none;
+  background: transparent;
+  padding: 0;
+}
+
+fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+fieldset[disabled] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+#session-notice {
+  display: none;
+  color: var(--warning);
+  background: var(--warning-bg);
+  border: 1px solid var(--warning-border);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-weight: 600;
+}
+
+#session-notice.visible {
+  display: block;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.row > * {
+  min-width: 0;
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 160px;
+}
+
+.field label {
+  font-size: 12.5px;
+  color: var(--text-dim);
+}
+
+/* ---------------------------------------------------------------- controls */
+
+input,
+select,
+textarea {
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+input[type="number"] {
+  width: 90px;
+}
+
+label {
+  font-size: 14px;
+}
+
+.btn {
+  background: var(--bg-elevated-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  border-color: var(--accent);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn--danger {
+  background: transparent;
+  color: var(--danger);
+  border-color: var(--danger-border);
+}
+
+.btn--danger:hover {
+  background: var(--danger-bg);
+}
+
+.btn--small {
+  padding: 4px 10px;
+  font-size: 12.5px;
+}
+
+/* ------------------------------------------------------------------- cards */
+
+.card {
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-title {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.card-desc {
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.card-meta {
+  color: var(--text-faint);
+  font-size: 12px;
+}
+
+.ingredient-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 2px 0;
+}
+
+.ingredient-chip {
+  font-size: 12px;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 8px;
+}
+
+.ingredient-chip input {
+  margin-right: 5px;
+  accent-color: var(--accent);
+}
+
+/* ------------------------------------------------------------------ badges */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text-dim);
+}
+
+.badge--delivery {
+  color: var(--info);
+  border-color: var(--info-border);
+  background: var(--info-bg);
+}
+
+.badge--pickup {
+  color: var(--success);
+  border-color: var(--success-border);
+  background: var(--success-bg);
+}
+
+.badge--status-new {
+  color: var(--warning);
+  border-color: var(--warning-border);
+  background: var(--warning-bg);
+}
+
+.badge--status-in_kitchen {
+  color: var(--info);
+  border-color: var(--info-border);
+  background: var(--info-bg);
+}
+
+.badge--status-ready,
+.badge--status-assigned {
+  color: var(--success);
+  border-color: var(--success-border);
+  background: var(--success-bg);
+}
+
+.badge--status-out {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: rgba(79, 140, 255, 0.12);
+}
+
+.badge--status-delivered,
+.badge--status-picked_up {
+  color: var(--text-dim);
+}
+
+.badge--status-cancelled {
+  color: var(--danger);
+  border-color: var(--danger-border);
+  background: var(--danger-bg);
+}
+
+/* ------------------------------------------------------------------ alerts */
+
+.alert {
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  padding: 12px 14px;
+  font-size: 14px;
+}
+
+.alert--ok {
+  color: var(--success);
+  background: var(--success-bg);
+  border-color: var(--success-border);
+}
+
+.alert--ambiguous {
+  color: var(--warning);
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+}
+
+.alert--out_of_zone,
+.alert--not_found {
+  color: var(--danger);
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+}
+
+.alert--info {
+  color: var(--info);
+  background: var(--info-bg);
+  border-color: var(--info-border);
+}
+
+.alert--neutral {
+  color: var(--text-dim);
+  background: var(--bg-elevated-2);
+}
+
+/* --------------------------------------------------------------- allergies */
+
+.allergy-alert {
+  border: 2px solid var(--danger);
+  background: var(--danger-bg);
+  color: var(--danger);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  font-weight: 800;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* -------------------------------------------------------------- error log */
+
+#error-log {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.error-entry {
+  border: 1px solid var(--danger-border);
+  background: var(--danger-bg);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+}
+
+.error-entry-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.error-code {
+  font-weight: 700;
+  color: var(--danger);
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 13px;
+}
+
+.error-field {
+  color: var(--text-dim);
+  font-size: 12px;
+}
+
+.error-dismiss {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.error-message {
+  margin-top: 4px;
+  color: var(--text);
+}
+
+/* ---------------------------------------------------------------- cart ---*/
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px 6px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+th {
+  color: var(--text-dim);
+  font-weight: 600;
+  font-size: 12.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.totals {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.totals .total-line {
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+  width: 260px;
+}
+
+.totals .grand-total {
+  font-size: 17px;
+  font-weight: 800;
+  border-top: 1px solid var(--border);
+  padding-top: 6px;
+}
+
+/* -------------------------------------------------------------- spoken box */
+
+.spoken-box {
+  border: 2px solid var(--accent);
+  background: rgba(79, 140, 255, 0.08);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.spoken-box-label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+/* -------------------------------------------------------------- checklist */
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.checklist-item:last-child {
+  border-bottom: none;
+}
+
+.checklist-name {
+  min-width: 110px;
+  font-weight: 600;
+}
+
+.flag {
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  border: 1px solid var(--border);
+}
+
+.flag--yes {
+  color: var(--success);
+  background: var(--success-bg);
+  border-color: var(--success-border);
+}
+
+.flag--no {
+  color: var(--text-faint);
+}
+
+/* ------------------------------------------------------------ conn status */
+
+.conn-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+
+.conn-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--text-faint);
+  display: inline-block;
+}
+
+.conn-status.connected .conn-dot {
+  background: var(--success);
+}
+
+.conn-status.connecting .conn-dot {
+  background: var(--warning);
+}
+
+.conn-status.disconnected .conn-dot {
+  background: var(--danger);
+}
+
+/* -------------------------------------------------------------------- misc */
+
+.timer {
+  font-family: "Consolas", "Courier New", monospace;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+.empty-state {
+  color: var(--text-dim);
+  padding: 24px 12px;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+}
+
+.muted {
+  color: var(--text-faint);
+}
+
+.session-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.session-id {
+  font-family: "Consolas", "Courier New", monospace;
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.key-display {
+  font-family: "Consolas", "Courier New", monospace;
+  font-size: 13px;
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  word-break: break-all;
+}
+
+hr.sep {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 14px 0;
+}
+
+@media (max-width: 560px) {
+  .totals .total-line {
+    width: 100%;
+  }
+}

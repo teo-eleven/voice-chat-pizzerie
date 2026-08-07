@@ -1,0 +1,42 @@
+[
+  {
+    "street": "Aleea Nucșoara",
+    "number": "4",
+    "lat": 44.4300,
+    "lon": 26.1000,
+    "confidence": 0.98,
+    "sector": "2"
+  },
+  {
+    "street": "Strada Trandafirilor",
+    "number": "5",
+    "lat": 44.4200,
+    "lon": 26.1100,
+    "confidence": 0.9,
+    "sector": "2"
+  },
+  {
+    "street": "Strada Trandafirilor",
+    "number": "5",
+    "lat": 44.4350,
+    "lon": 26.1200,
+    "confidence": 0.85,
+    "sector": "3"
+  },
+  {
+    "street": "Strada Progresului",
+    "number": "22",
+    "lat": 44.4400,
+    "lon": 26.1300,
+    "confidence": 0.95,
+    "sector": "4"
+  },
+  {
+    "street": "Strada Aviatorilor",
+    "number": "10",
+    "lat": 44.4900,
+    "lon": 26.1000,
+    "confidence": 0.95,
+    "sector": "1"
+  }
+]
