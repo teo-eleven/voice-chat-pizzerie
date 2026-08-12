@@ -27,7 +27,7 @@ pythonpath = ["."]
 asyncio_mode = "auto"
 
 [tool.coverage.run]
-source = ["packages/domain", "apps/api"]
+source = ["packages/domain", "apps/api", "apps/agent"]
 
 [tool.ruff]
 line-length = 100
