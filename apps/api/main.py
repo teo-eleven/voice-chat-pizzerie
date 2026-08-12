@@ -20,6 +20,7 @@ from fastapi.staticfiles import StaticFiles
 from packages.domain.catalog import load_catalog
 from packages.domain.config import load_kitchen_config, load_zone_config
 from packages.domain.errors import DomainError
+from packages.env import load_env
 
 from . import db, events, geocoding
 from .routes_menu import router as menu_router
@@ -28,6 +29,10 @@ from .routes_session import router as session_router
 from .sessions import SessionStore
 
 _WEB_DIR = Path(__file__).resolve().parents[2] / "apps" / "web"
+
+# Inainte de orice `os.environ.get` de mai jos: `DATABASE_URL`, `ENABLE_DOCS` si
+# cheile de provider stau in `.env`, iar mediul real are prioritate peste el.
+load_env()
 
 
 def _init_state(app: FastAPI) -> None:

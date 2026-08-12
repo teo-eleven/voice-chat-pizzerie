@@ -16,6 +16,8 @@ import sys
 import anthropic
 import httpx
 
+from packages.env import load_env
+
 from .agent import OrderAgent
 from .api_client import PizzaApiClient
 from .config import AgentConfig
@@ -29,6 +31,7 @@ Scrie ca si cum ai vorbi la telefon. /tools · /stare · /iesire
 
 
 def main() -> int:
+    load_env()
     config = AgentConfig.from_env()
 
     if (problem := _preflight(config)) is not None:
