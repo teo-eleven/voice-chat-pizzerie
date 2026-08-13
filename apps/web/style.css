@@ -134,11 +134,6 @@ h2 {
   margin-bottom: 18px;
 }
 
-.section-flat {
-  border: none;
-  background: transparent;
-  padding: 0;
-}
 
 fieldset {
   border: none;
@@ -562,22 +557,8 @@ th {
 
 /* -------------------------------------------------------------- checklist */
 
-.checklist-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border);
-}
 
-.checklist-item:last-child {
-  border-bottom: none;
-}
 
-.checklist-name {
-  min-width: 110px;
-  font-weight: 600;
-}
 
 .flag {
   border-radius: 999px;
@@ -587,15 +568,7 @@ th {
   border: 1px solid var(--border);
 }
 
-.flag--yes {
-  color: var(--success);
-  background: var(--success-bg);
-  border-color: var(--success-border);
-}
 
-.flag--no {
-  color: var(--text-faint);
-}
 
 /* ------------------------------------------------------------ conn status */
 
@@ -684,5 +657,466 @@ hr.sep {
 @media (max-width: 560px) {
   .totals .total-line {
     width: 100%;
+  }
+}
+
+/* ---------------------------------------------------------------- wizard */
+
+/* Antetul de progres al asistentului pas-cu-pas: eticheta "Pasul X din N" +
+   un rând de puncte, câte unul pentru fiecare pas activ în acel moment
+   (pasul de adresă dispare din numărătoare la ridicare). */
+.wizard-progress {
+  margin-bottom: 18px;
+}
+
+.wizard-progress-label {
+  font-weight: 700;
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.wizard-progress-dots {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.wizard-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--border);
+  display: inline-block;
+}
+
+.wizard-dot--done {
+  background: var(--success);
+  border-color: var(--success-border);
+}
+
+.wizard-dot--current {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 140, 255, 0.25);
+}
+
+.wizard-dot--upcoming {
+  background: var(--bg-elevated-2);
+}
+
+/* Subsecțiuni în interiorul unui pas (căutare, coș) — doar o linie de separare vizuală. */
+.step-subsection {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.upsell-status {
+  margin: 4px 0 0;
+}
+
+.wizard-nav {
+  position: sticky;
+  bottom: 0;
+  background: var(--bg);
+  padding: 14px 0 4px;
+  margin-top: 4px;
+}
+
+.wizard-nav-buttons {
+  justify-content: space-between;
+}
+
+.wizard-validation-msg {
+  display: none;
+  color: var(--danger);
+  background: var(--danger-bg);
+  border: 1px solid var(--danger-border);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.wizard-validation-msg.visible {
+  display: block;
+}
+
+/* ------------------------------------------------------------ comandă demo */
+
+/* Lista de pași a butonului „Rulează comanda demo”. Fiecare pas își arată starea
+   prin marcaj și opacitate, ca să se vadă unde s-a oprit dacă unul eșuează. */
+.demo-steps {
+  list-style: none;
+  margin: 14px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.demo-step {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 14px;
+  transition: opacity 0.15s ease;
+}
+
+.demo-step-mark {
+  flex: 0 0 1.3em;
+  text-align: center;
+  font-weight: 600;
+}
+
+.demo-step-detail {
+  color: var(--text-faint);
+  margin-left: auto;
+  padding-left: 14px;
+  text-align: right;
+}
+
+.demo-step--pending {
+  opacity: 0.4;
+}
+
+.demo-step--running .demo-step-mark {
+  color: var(--accent);
+}
+
+.demo-step--done .demo-step-mark {
+  color: var(--success);
+}
+
+.demo-step--failed {
+  color: var(--danger);
+}
+
+.demo-step--failed .demo-step-mark {
+  color: var(--danger);
+}
+
+/* ====================================================================== */
+/* index.html — aplicația reală de comandat, folosită de client            */
+/* ====================================================================== */
+
+/* ------------------------------------------------------------ ecran start */
+
+.start-hero {
+  max-width: 560px;
+  margin: 48px auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.start-hero h1 {
+  font-size: 30px;
+  margin: 0;
+}
+
+.btn--large {
+  padding: 16px 34px;
+  font-size: 17px;
+  border-radius: 999px;
+}
+
+/* --------------------------------------------------------- butoane segmentate */
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.segmented-btn {
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-elevated-2);
+  color: var(--text-dim);
+  padding: 8px 16px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.segmented-btn:hover:not(.is-active):not(:disabled) {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.segmented-btn.is-active {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+
+.segmented-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.segmented--large .segmented-btn {
+  padding: 14px 26px;
+  font-size: 15px;
+}
+
+/* ------------------------------------------------------------------ stepper */
+
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 8px;
+}
+
+.stepper-btn {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.stepper-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.stepper-qty {
+  min-width: 18px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.card-cta {
+  margin-top: 4px;
+}
+
+/* -------------------------------------------------------------- carduri produs */
+
+.card--unavailable {
+  opacity: 0.5;
+}
+
+.card-unavailable-note {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.card-price {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.customize-panel {
+  margin-top: 2px;
+}
+
+.customize-panel summary {
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 700;
+  list-style: none;
+}
+
+.customize-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.customize-panel summary::before {
+  content: "▸ ";
+}
+
+.customize-panel[open] summary::before {
+  content: "▾ ";
+}
+
+.customize-panel .ingredient-list {
+  margin-top: 8px;
+}
+
+/* -------------------------------------------------------- adresă: candidați */
+
+.address-candidates {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.address-candidate {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  cursor: pointer;
+  color: var(--text);
+  font: inherit;
+  width: 100%;
+}
+
+.address-candidate:hover {
+  border-color: var(--accent);
+}
+
+.address-candidate-text {
+  font-weight: 700;
+}
+
+.address-candidate-meta {
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.field-error {
+  color: var(--danger);
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+/* --------------------------------------------------------------- coș sticky */
+
+.cart-summary-toggle {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 6px 0;
+  font-family: inherit;
+}
+
+.cart-summary-caret {
+  color: var(--text-dim);
+  transition: transform 0.15s ease;
+  flex: 0 0 auto;
+}
+
+.cart-summary-toggle.is-open .cart-summary-caret {
+  transform: rotate(180deg);
+}
+
+.cart-lines-panel {
+  border-top: 1px solid var(--border);
+  margin-top: 6px;
+  padding-top: 10px;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.cart-lines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cart-line-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.cart-line-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.cart-line-name {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.cart-line-meta {
+  color: var(--text-faint);
+  font-size: 12px;
+}
+
+.cart-line-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cart-line-total {
+  font-weight: 800;
+  min-width: 70px;
+  text-align: right;
+}
+
+/* ---------------------------------------------------------------- confirmare */
+
+.confirmation-box {
+  max-width: 520px;
+  margin: 40px auto;
+  text-align: center;
+}
+
+@media (max-width: 480px) {
+  .cart-line-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* --------------------------------------------------- cerere de comandă în zbor */
+
+/* Cât timp o mutație a comenzii e în zbor, controalele nu mai primesc click-uri.
+   Fără asta, un dublu-click pe „Adaugă” crea două linii identice în coș (backend-ul
+   nu contopește liniile), iar pe stepper se pierdea o unitate: ambele click-uri
+   citeau aceeași cantitate randată și trimiteau aceeași valoare nouă. */
+body.is-busy {
+  cursor: progress;
+}
+
+body.is-busy .btn,
+body.is-busy .stepper-btn,
+body.is-busy .segmented-btn,
+body.is-busy .address-candidate {
+  pointer-events: none;
+  opacity: 0.65;
+}
+
+/* Pe ecran scund (telefon în landscape), panoul de coș desfășurat plus mesajul de
+   validare plus rândul de butoane depășesc înălțimea vizibilă, iar antetul barei se
+   taie peste marginea de sus. Plafonul devine relativ la fereastră, nu fix. */
+@media (max-height: 640px) {
+  .cart-lines-panel {
+    max-height: min(320px, 40vh);
   }
 }

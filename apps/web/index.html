@@ -3,145 +3,143 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pizzeria Punto — Ecran de comandă (test)</title>
+<title>Pizzeria Punto — Comandă</title>
 <link rel="stylesheet" href="/style.css" />
 </head>
 <body>
 
 <nav class="nav">
-  <span class="nav-title">Pizzeria Punto — test</span>
+  <span class="nav-title">Pizzeria Punto</span>
   <a href="/index.html" class="active">Comandă</a>
-  <a href="/kitchen.html" target="_blank" rel="noopener">Bucătărie</a>
-  <a href="/driver.html" target="_blank" rel="noopener">Livrare</a>
-  <span class="nav-note">Deschideți „Bucătărie” și „Livrare” în file separate, ca să vedeți actualizările live cât plasați comenzi de aici.</span>
+  <a href="/kitchen.html">Bucătărie</a>
+  <a href="/driver.html">Livrare</a>
 </nav>
 
 <main class="page">
-  <h1>Ecran de comandă</h1>
-  <p class="subtitle">
-    Fiecare buton de aici cheamă exact ruta pe care ar chema-o agentul vocal (Faza 2).
-    Toate sumele afișate — subtotal, taxă de livrare, total — vin exclusiv din răspunsul serverului;
-    nimic nu se calculează în această pagină.
-  </p>
 
   <div id="error-log"></div>
 
-  <section class="section" id="section-session">
-    <h2>1. Sesiune</h2>
-    <div class="session-box">
-      <button type="button" class="btn btn--primary" id="btn-start-call">Sună la Pizzeria Punto</button>
-      <span id="session-status" class="muted">Niciun apel activ.</span>
+  <!-- ------------------------------------------------------------ ecran start -->
+  <section id="screen-start">
+    <div class="start-hero">
+      <h1>Pizzeria Punto</h1>
+      <p class="subtitle">
+        Comandați pizza favorită în câțiva pași simpli: alegeți produsele, spuneți-ne
+        unde livrăm sau dacă ridicați personal, și cum plătiți — restul îl facem noi.
+      </p>
+      <button type="button" class="btn btn--primary btn--large" id="btn-start-order">Începe comanda</button>
+      <div id="start-error" class="alert alert--out_of_zone" style="display:none"></div>
     </div>
   </section>
 
-  <div id="session-notice" class="visible">
-    Porniți un apel („Sună la Pizzeria Punto”) ca să activați restul ecranului.
-  </div>
+  <!-- ----------------------------------------------------------- asistentul (wizard) -->
+  <div id="screen-wizard" style="display:none">
 
-  <fieldset id="app-fieldset" disabled>
+    <div id="wizard-progress" class="wizard-progress" aria-live="polite"></div>
 
-    <section class="section" id="section-menu">
-      <h2>2. Meniu</h2>
-      <div id="menu-container" class="stack"></div>
+    <section class="section step" id="step-pizza">
+      <h2>Pizza</h2>
+      <div id="menu-pizza-container" class="stack"></div>
     </section>
 
-    <section class="section" id="section-search">
-      <h2>3. Căutare în meniu</h2>
+    <section class="section step" id="step-fulfillment">
+      <h2>Livrare sau ridicare</h2>
+      <p class="muted" style="margin-top:0">Alegeți cum ajunge comanda la dumneavoastră.</p>
+      <div class="segmented segmented--large" role="group" aria-label="Tip preluare" id="fulfillment-controls">
+        <button type="button" class="segmented-btn" id="btn-fulfillment-delivery" data-fulfillment="delivery">Livrare</button>
+        <button type="button" class="segmented-btn" id="btn-fulfillment-pickup" data-fulfillment="pickup">Ridicare din restaurant</button>
+      </div>
+    </section>
+
+    <section class="section step" id="step-address">
+      <h2>Adresă de livrare</h2>
       <div class="row">
-        <input type="text" id="search-input" placeholder="ex: capriciosa" />
-        <button type="button" class="btn" id="btn-search">Caută</button>
-        <button type="button" class="btn btn--small" data-demo-query="capriciosa">capriciosa</button>
-        <button type="button" class="btn btn--small" data-demo-query="CAPRICIOZA">CAPRICIOZA</button>
-        <button type="button" class="btn btn--small" data-demo-query="cola">cola</button>
-        <button type="button" class="btn btn--small" data-demo-query="quattro">quattro</button>
-      </div>
-      <p class="muted" style="margin:8px 0 0">
-        „cola” și „CAPRICIOZA” arată potrivirea insensibilă la majuscule/diacritice; „cola” nu trebuie să întoarcă „Lava Cake”.
-      </p>
-      <div id="search-results" class="stack" style="margin-top:10px"></div>
-    </section>
-
-    <section class="section" id="section-cart">
-      <h2>4. Coș</h2>
-      <div id="cart-container"></div>
-    </section>
-
-    <section class="section" id="section-fulfillment">
-      <h2>5. Tip preluare</h2>
-      <div class="row" id="fulfillment-controls">
-        <label><input type="radio" name="fulfillment" value="delivery" /> Livrare</label>
-        <label><input type="radio" name="fulfillment" value="pickup" /> Ridicare</label>
-      </div>
-    </section>
-
-    <section class="section" id="section-address">
-      <h2>6. Adresă de livrare</h2>
-      <div class="row">
-        <input type="text" id="address-input" style="min-width:340px" placeholder="ex: Aleea Nucsoara 4, bloc 12, scara B, apartament 47" />
-        <button type="button" class="btn" id="btn-check-address">Verifică adresa</button>
-      </div>
-      <div class="row" style="margin-top:8px">
-        <button type="button" class="btn btn--small" data-demo-address="Aleea Nucsoara 4, bloc 12, scara B, apartament 47">Nucsoara 4 (ok)</button>
-        <button type="button" class="btn btn--small" data-demo-address="Strada Trandafirilor 5">Trandafirilor 5 (ambiguu)</button>
-        <button type="button" class="btn btn--small" data-demo-address="Strada Aviatorilor 10">Aviatorilor 10 (în afara zonei)</button>
+        <input type="text" id="address-input" aria-label="Adresă de livrare" style="min-width:280px;flex:1" placeholder="ex: Strada Stefan cel Mare 24, bloc 12, scara B, apartament 47" />
+        <button type="button" class="btn btn--primary" id="btn-check-address">Verifică adresa</button>
       </div>
       <div id="address-result" style="margin-top:12px"></div>
       <div id="address-current" class="muted" style="margin-top:8px"></div>
     </section>
 
-    <section class="section" id="section-contact">
-      <h2>7. Contact</h2>
+    <section class="section step" id="step-sauce">
+      <h2>Sosuri</h2>
+      <p class="muted" style="margin-top:0">Doriți un sos alături de pizza?</p>
+      <div id="menu-sauce-container" class="stack"></div>
+    </section>
+
+    <section class="section step" id="step-drink">
+      <h2>Băuturi</h2>
+      <p class="muted" style="margin-top:0">O băutură rece alături de comandă?</p>
+      <div id="menu-drink-container" class="stack"></div>
+    </section>
+
+    <section class="section step" id="step-dessert">
+      <h2>Desert</h2>
+      <p class="muted" style="margin-top:0">Ceva dulce la final?</p>
+      <div id="menu-dessert-container" class="stack"></div>
+    </section>
+
+    <section class="section step" id="step-contact">
+      <h2>Date de contact</h2>
       <div class="row">
         <div class="field">
           <label for="contact-phone">Telefon</label>
-          <input type="text" id="contact-phone" placeholder="07xxxxxxxx" />
+          <input type="tel" id="contact-phone" placeholder="07xxxxxxxx" />
         </div>
         <div class="field">
-          <label for="contact-name">Nume</label>
-          <input type="text" id="contact-name" placeholder="Prenume (opțional)" />
+          <label for="contact-name">Prenume</label>
+          <input type="text" id="contact-name" placeholder="Prenume" />
         </div>
-        <button type="button" class="btn" id="btn-save-contact" style="align-self:flex-end">Salvează contactul</button>
       </div>
+      <div class="row" style="margin-top:10px">
+        <button type="button" class="btn btn--primary" id="btn-save-contact">Salvează contactul</button>
+      </div>
+      <div id="contact-error" class="field-error" style="display:none"></div>
       <div id="contact-current" class="muted" style="margin-top:8px"></div>
     </section>
 
-    <section class="section" id="section-payment">
-      <h2>8. Plată</h2>
-      <div class="row" id="payment-controls">
-        <label><input type="radio" name="payment" value="cash" /> Numerar</label>
-        <label><input type="radio" name="payment" value="card_on_delivery" /> Card la livrare</label>
+    <section class="section step" id="step-payment">
+      <h2>Plată</h2>
+      <p class="muted" style="margin-top:0">Plata se face la livrare sau la ridicare — niciodată card dictat telefonic.</p>
+      <div class="segmented segmented--large" role="group" aria-label="Metodă de plată" id="payment-controls">
+        <button type="button" class="segmented-btn" id="btn-payment-cash" data-payment="cash">Numerar</button>
+        <button type="button" class="segmented-btn" id="btn-payment-card" data-payment="card_on_delivery">Card la livrare</button>
       </div>
       <div id="payment-current" class="muted" style="margin-top:8px"></div>
     </section>
 
-    <section class="section" id="section-checklist">
-      <h2>9. Checklist upsell</h2>
-      <p class="muted" style="margin-top:0">
-        Stare folosită de agentul vocal (Faza 2) ca să nu întrebe de două ori și să nu propună ce e deja în coș.
-      </p>
-      <div id="checklist-container"></div>
+    <section class="section step" id="step-summary">
+      <h2>Sumar comandă</h2>
+      <div id="summary-container"></div>
     </section>
 
-    <section class="section" id="section-summary">
-      <h2>10. Sumar</h2>
-      <button type="button" class="btn btn--primary" id="btn-summary">Vezi sumarul</button>
-      <div id="summary-container" style="margin-top:14px"></div>
-    </section>
-
-    <section class="section" id="section-place">
-      <h2>11. Plasare comandă</h2>
-      <div class="field">
-        <label>Cheie de idempotență (generată automat la începutul apelului)</label>
-        <div class="key-display" id="idempotency-key-display"></div>
+    <div class="wizard-nav" id="wizard-footer">
+      <button type="button" class="cart-summary-toggle" id="cart-summary-toggle" aria-expanded="false" aria-controls="cart-lines-panel">
+        <span id="cart-summary-text">Coșul este gol</span>
+        <span class="cart-summary-caret" aria-hidden="true">▾</span>
+      </button>
+      <div class="cart-lines-panel" id="cart-lines-panel" hidden></div>
+      <div id="wizard-validation-msg" class="wizard-validation-msg" role="alert"></div>
+      <div class="row wizard-nav-buttons">
+        <button type="button" class="btn" id="btn-wizard-back">← Înapoi</button>
+        <div class="row" style="margin-left:auto">
+          <button type="button" class="btn" id="btn-wizard-skip" style="display:none">Nu, mulțumesc</button>
+          <button type="button" class="btn btn--primary" id="btn-wizard-next">Continuă →</button>
+        </div>
       </div>
-      <div class="row" style="margin-top:10px">
-        <button type="button" class="btn btn--primary" id="btn-place-order">Plasează comanda</button>
-        <button type="button" class="btn" id="btn-resend-order">Retrimite aceeași cheie</button>
-      </div>
-      <div id="place-result" style="margin-top:14px"></div>
-    </section>
+    </div>
 
-  </fieldset>
+  </div>
+
+  <!-- --------------------------------------------------------------- confirmare -->
+  <section id="screen-confirmation" style="display:none">
+    <div class="section confirmation-box">
+      <h1>Comandă plasată</h1>
+      <div id="confirmation-result"></div>
+      <button type="button" class="btn btn--primary btn--large" id="btn-new-order" style="margin-top:20px">Comandă nouă</button>
+    </div>
+  </section>
+
 </main>
 
 <script src="/api.js"></script>
@@ -152,17 +150,10 @@
   const esc = PizzaApi.escapeHtml;
   const errorLog = PizzaApi.createErrorLog(document.getElementById("error-log"));
 
-  const CATEGORY_ORDER = [
-    ["pizza", "Pizza"],
-    ["sauce", "Sosuri"],
-    ["drink", "Băuturi"],
-    ["dessert", "Deserturi"],
-  ];
-  const UPSELL_CATEGORIES = [
-    ["sauce", "Sosuri"],
-    ["drink", "Băuturi"],
-    ["dessert", "Deserturi"],
-  ];
+  const PRODUCT_CATEGORIES = ["pizza", "sauce", "drink", "dessert"];
+  //: Oglindeste `MAX_QTY_PER_LINE` din `packages/domain/limits.py`. Backend-ul ramane
+  //: sursa de adevar; valoarea de aici doar dezactiveaza „+" inainte de refuz.
+  const MAX_QTY_PER_LINE = 50;
   const PAYMENT_LABELS = { cash: "Numerar", card_on_delivery: "Card la livrare" };
   const ADDRESS_RESOLUTION_LABELS = {
     ok: "Adresă confirmată",
@@ -171,11 +162,93 @@
     not_found: "Adresă negăsită",
   };
 
+  /**
+   * Pașii asistentului, în ordinea din docs/PLAN.md („Starea agentului"): produsul
+   * principal, apoi tipul de preluare și adresa (înainte de upsell, ca să nu construim
+   * o comandă lungă la o adresă unde nu livrăm), apoi upsell (sosuri → băuturi →
+   * desert), contact, plată, sumar. Plasarea comenzii se întâmplă la apăsarea
+   * „Continuă” din pasul „summary” — ecranul de confirmare e separat de listă.
+   *
+   * `showIf` lipsă = pasul e mereu activ. Pasul "address" e activ doar la livrare —
+   * `activeSteps()`/`clampStepIndex()` recalculează dinamic care pași contează, ca
+   * numerotarea afișată ("Pasul X din N") să rămână corectă când fulfillment se schimbă.
+   */
+  const STEPS = [
+    { key: "pizza", title: "Pizza", elId: "step-pizza" },
+    { key: "fulfillment", title: "Livrare sau ridicare", elId: "step-fulfillment" },
+    {
+      key: "address",
+      title: "Adresă de livrare",
+      elId: "step-address",
+      showIf: () => Boolean(session && session.fulfillment === "delivery"),
+    },
+    { key: "sauce", title: "Sosuri", elId: "step-sauce", upsellCategory: "sauce" },
+    { key: "drink", title: "Băuturi", elId: "step-drink", upsellCategory: "drink" },
+    { key: "dessert", title: "Desert", elId: "step-dessert", upsellCategory: "dessert" },
+    { key: "contact", title: "Date de contact", elId: "step-contact" },
+    { key: "payment", title: "Plată", elId: "step-payment" },
+    { key: "summary", title: "Sumar", elId: "step-summary" },
+  ];
+
+  /**
+   * Validări per pas, mereu pe baza ultimului răspuns real al serverului (`session`),
+   * niciodată pe o copie locală calculată. Pașii fără validator sunt mereu valizi.
+   */
+  const STEP_VALIDATORS = {
+    pizza: () =>
+      session && session.cart && session.cart.lines.length > 0
+        ? { ok: true }
+        : { ok: false, message: "Adăugați cel puțin un produs în coș înainte de a continua." },
+    address: () =>
+      session && session.address
+        ? { ok: true }
+        : { ok: false, message: "Verificați și confirmați adresa de livrare înainte de a continua." },
+    contact: () =>
+      session && session.contact
+        ? { ok: true }
+        : { ok: false, message: "Salvați telefonul și prenumele înainte de a continua." },
+    payment: () =>
+      session && session.payment
+        ? { ok: true }
+        : { ok: false, message: "Alegeți o metodă de plată înainte de a continua." },
+  };
+
   /** Stare locală — mereu o copie a ultimului răspuns real al serverului, niciodată calculată. */
   let sessionId = null;
   let session = null;
   let idempotencyKey = null;
-  let firstPlacedOrderId = null;
+  let currentStepIndex = 0;
+  let lastAddressText = "";
+  /** Carduri de produs randate curent, ca să le putem reface butonul/stepper-ul după orice schimbare de coș. */
+  let registeredProductCards = [];
+
+  /**
+   * `true` cât timp o cerere care schimbă comanda e în zbor. Click-urile care sosesc
+   * între timp se ignoră.
+   *
+   * Fără asta, două click-uri rapide produc două rezultate greșite, ambele tăcute:
+   * pe „Adaugă", backend-ul creează întotdeauna o linie nouă (`cart_ops.add_line` nu
+   * contopește), deci aceeași pizza apare de două ori pe rânduri diferite; pe stepper,
+   * cantitatea nouă se calculează din valoarea randată, deci ambele click-uri citesc
+   * `qty=1` și trimit amândouă `qty=2`, iar o unitate se pierde.
+   */
+  let mutationInFlight = false;
+
+  /**
+   * Serializează o mutație a comenzii. Cererea a doua nu se pune la coadă, ci se
+   * abandonează: la un dublu-click accidental, intenția reală e una singură.
+   */
+  async function serialized(action) {
+    if (mutationInFlight) return;
+    mutationInFlight = true;
+    document.body.classList.add("is-busy");
+    try {
+      await action();
+    } finally {
+      mutationInFlight = false;
+      document.body.classList.remove("is-busy");
+    }
+  }
 
   /** Rulează un apel API, raportează eroarea în jurnalul vizibil și întoarce `null` la eșec. */
   async function guarded(promiseFactory) {
@@ -191,40 +264,67 @@
     }
   }
 
+  /**
+   * Marcheaza optiunea aleasa dintr-un grup de butoane segmentate.
+   *
+   * `is-active` e doar aspect; `aria-pressed` e informatia pe care o citeste un cititor
+   * de ecran. Fara ea, cineva care navigheaza auditiv nu poate afla ce e selectat.
+   */
+  function setSegmentedActive(button, isActive) {
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  }
+
+  function showScreen(name) {
+    document.getElementById("screen-start").style.display = name === "start" ? "" : "none";
+    document.getElementById("screen-wizard").style.display = name === "wizard" ? "" : "none";
+    document.getElementById("screen-confirmation").style.display = name === "confirmation" ? "" : "none";
+  }
+
   // ----------------------------------------------------------------- sesiune
 
+  /** „Începe comanda” / „Comandă nouă”: sesiune curată pe server, coș gol, asistent la pasul 1. */
   async function startCall() {
     const result = await guarded(() => PizzaApi.apiPost("/api/sessions"));
-    if (!result) return;
+    if (!result) {
+      const el = document.getElementById("start-error");
+      el.textContent = "Nu am putut deschide o comandă nouă. Verificați conexiunea și încercați din nou.";
+      el.style.display = "";
+      showScreen("start");
+      return;
+    }
     sessionId = result.session_id;
-
-    document.getElementById("session-status").innerHTML =
-      `Apel activ — <span class="session-id">${esc(sessionId)}</span>`;
-    document.getElementById("session-notice").classList.remove("visible");
-    document.getElementById("app-fieldset").disabled = false;
-    document.getElementById("btn-start-call").disabled = true;
-
     idempotencyKey = PizzaApi.genIdempotencyKey();
-    document.getElementById("idempotency-key-display").textContent = idempotencyKey;
+    document.getElementById("start-error").style.display = "none";
+    document.getElementById("address-input").value = "";
+    document.getElementById("address-result").innerHTML = "";
+    document.getElementById("contact-phone").value = "";
+    document.getElementById("contact-name").value = "";
+    lastAddressText = "";
 
     await refreshSession();
     await loadMenu();
+    currentStepIndex = 0;
+    showScreen("wizard");
+    renderWizard();
   }
 
+  /** Reincarca sesiunea de pe server. Intoarce `true` la reusita, ca apelantul sa poata reincerca. */
   async function refreshSession() {
     const result = await guarded(() => PizzaApi.apiGet(`/api/sessions/${sessionId}`));
-    if (!result) return;
+    if (!result) return false;
     session = result;
     renderAll();
   }
 
   function renderAll() {
-    renderCart();
+    renderFooterCart();
     renderFulfillment();
     renderAddressCurrent();
     renderContactCurrent();
     renderPaymentCurrent();
-    renderChecklist();
+    refreshAllCardCtas();
+    renderWizard();
   }
 
   // ------------------------------------------------------------------- meniu
@@ -236,54 +336,68 @@
   }
 
   function renderMenu(items) {
-    const container = document.getElementById("menu-container");
-    container.innerHTML = "";
-    for (const [categoryKey, categoryLabel] of CATEGORY_ORDER) {
+    registeredProductCards = [];
+    for (const categoryKey of PRODUCT_CATEGORIES) {
+      const container = document.getElementById(`menu-${categoryKey}-container`);
+      if (!container) continue;
       const categoryItems = items.filter((product) => product.category === categoryKey);
-      if (categoryItems.length === 0) continue;
-      const block = document.createElement("div");
-      const heading = document.createElement("h3");
-      heading.style.margin = "14px 0 8px";
-      heading.style.color = "var(--text-dim)";
-      heading.style.fontSize = "14px";
-      heading.textContent = categoryLabel;
-      block.appendChild(heading);
+      if (categoryItems.length === 0) {
+        container.innerHTML = '<div class="empty-state">Niciun produs disponibil în această categorie momentan.</div>';
+        continue;
+      }
       const grid = document.createElement("div");
       grid.className = "grid";
       for (const product of categoryItems) {
-        grid.appendChild(buildProductCard(product));
+        const card = buildProductCard(product);
+        grid.appendChild(card);
+        registeredProductCards.push({ card, product });
       }
-      block.appendChild(grid);
-      container.appendChild(block);
+      container.innerHTML = "";
+      container.appendChild(grid);
     }
   }
 
+  function pickDefaultSizeCode(sizes) {
+    const medium = sizes.find((size) => size.code === "medium");
+    return medium ? medium.code : sizes[0].code;
+  }
+
+  /**
+   * Un card de produs: mărime prin butoane segmentate (medie preselectată), ingrediente
+   * scoase într-un panou „Personalizează” închis implicit, și în locul unui câmp de
+   * cantitate — un singur buton „Adaugă”, înlocuit de un stepper `− qty +` odată ce
+   * produsul (cu exact această mărime și aceste ingrediente scoase) e deja în coș.
+   */
   function buildProductCard(product) {
     const card = document.createElement("div");
     card.className = "card";
+    if (!product.available) card.classList.add("card--unavailable");
+
+    const hasSizes = Boolean(product.sizes && product.sizes.length > 0);
+    const defaultSizeCode = hasSizes ? pickDefaultSizeCode(product.sizes) : null;
+    card.dataset.selectedSize = defaultSizeCode || "";
 
     let sizeHtml = "";
-    if (product.sizes && product.sizes.length > 0) {
-      const options = product.sizes
-        .map((size) => `<option value="${esc(size.code)}">${esc(size.label)} — ${esc(size.price_formatted)}</option>`)
+    if (hasSizes) {
+      const buttons = product.sizes
+        .map(
+          (size) => `
+        <button type="button" class="segmented-btn${size.code === defaultSizeCode ? " is-active" : ""}"
+          aria-pressed="${size.code === defaultSizeCode ? "true" : "false"}"
+          data-size-code="${esc(size.code)}"${product.available ? "" : " disabled"}>
+          ${esc(size.label)} · ${esc(size.price_formatted)}
+        </button>`
+        )
         .join("");
-      sizeHtml = `
-        <div class="field">
-          <label>Mărime</label>
-          <select class="input-size">
-            <option value="">— alege mărimea (necompletat = testează eroare) —</option>
-            ${options}
-          </select>
-        </div>`;
+      sizeHtml = `<div class="segmented" role="group" aria-label="Mărime">${buttons}</div>`;
     }
 
-    const priceHtml = product.price_formatted
-      ? `<div class="card-meta">${esc(product.price_formatted)}</div>`
+    const priceHtml = !hasSizes && product.price_formatted
+      ? `<div class="card-meta card-price">${esc(product.price_formatted)}</div>`
       : "";
 
-    let ingredientsHtml = "";
-    let invalidIngredientHtml = "";
-    if (product.category === "pizza" && product.ingredients.length > 0) {
+    let customizeHtml = "";
+    if (product.available && product.category === "pizza" && product.ingredients.length > 0) {
       const chips = product.ingredients
         .map(
           (ingredient) => `
@@ -292,21 +406,18 @@
         </label>`
         )
         .join("");
-      ingredientsHtml = `<div class="ingredient-list">${chips}</div>`;
-      invalidIngredientHtml = `
-        <div class="field">
-          <label>Ingredient invalid, pentru test (opțional)</label>
-          <input type="text" class="input-invalid-ingredient" placeholder="ex: ananas" />
-        </div>`;
-    } else if (product.ingredients && product.ingredients.length > 0) {
-      ingredientsHtml = `<div class="card-meta">Ingrediente: ${esc(product.ingredients.join(", "))}</div>`;
+      customizeHtml = `
+        <details class="customize-panel">
+          <summary>Personalizează</summary>
+          <div class="ingredient-list">${chips}</div>
+        </details>`;
     }
 
     const allergensHtml = product.allergens.length
       ? `<div class="card-meta">Alergeni: ${esc(product.allergens.join(", "))}</div>`
       : "";
-    const availabilityHtml = !product.available
-      ? `<div class="card-meta" style="color:var(--danger)">Indisponibil</div>`
+    const unavailableHtml = !product.available
+      ? `<div class="card-meta card-unavailable-note">Indisponibil momentan</div>`
       : "";
 
     card.innerHTML = `
@@ -314,154 +425,261 @@
       ${product.description ? `<div class="card-desc">${esc(product.description)}</div>` : ""}
       ${priceHtml}
       ${sizeHtml}
-      ${ingredientsHtml}
-      ${invalidIngredientHtml}
+      ${customizeHtml}
       ${allergensHtml}
-      ${availabilityHtml}
-      <div class="row">
-        <div class="field">
-          <label>Cantitate</label>
-          <input type="number" class="input-qty" min="1" max="50" step="1" value="1" />
-        </div>
-        <button type="button" class="btn btn--primary btn-add" style="align-self:flex-end">Adaugă</button>
-      </div>
+      ${unavailableHtml}
+      <div class="card-cta"></div>
     `;
 
-    card.querySelector(".btn-add").addEventListener("click", () => addProductToCart(product, card));
+    if (hasSizes && product.available) {
+      card.querySelectorAll(".segmented-btn[data-size-code]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          card
+            .querySelectorAll(".segmented-btn[data-size-code]")
+            .forEach((b) => setSegmentedActive(b, b === btn));
+          card.dataset.selectedSize = btn.getAttribute("data-size-code");
+          renderCardCta(card, product);
+        });
+      });
+    }
+
+    card.querySelectorAll(".input-removed-ingredient").forEach((checkbox) => {
+      checkbox.addEventListener("change", () => renderCardCta(card, product));
+    });
+
+    if (product.available) {
+      renderCardCta(card, product);
+    }
+
     return card;
   }
 
-  async function addProductToCart(product, card) {
-    const qty = parseInt(card.querySelector(".input-qty").value, 10) || 1;
-    const sizeSelect = card.querySelector(".input-size");
-    const sizeCode = sizeSelect ? sizeSelect.value : "";
-    const removedFromChips = Array.from(card.querySelectorAll(".input-removed-ingredient:checked")).map(
-      (el) => el.value
+  function cardRemovedIngredients(card) {
+    return Array.from(card.querySelectorAll(".input-removed-ingredient:checked")).map((el) => el.value);
+  }
+
+  /**
+   * Normalizeaza un nume de ingredient inainte de comparatie.
+   *
+   * Cele doua liste comparate vin din raspunsuri DIFERITE ale API-ului — bifele din
+   * `/api/menu`, linia de cos din `/api/sessions/.../items`. O diferenta de spatii, de
+   * majuscule sau de forma Unicode a diacriticelor (NFC vs NFD, „ș" compus altfel) ar
+   * face potrivirea sa esueze tacut: cardul ar arata „Adauga" in loc de stepper, iar un
+   * click ar crea o linie duplicat in loc sa o gaseasca pe cea existenta.
+   */
+  function normalizeIngredient(value) {
+    return String(value).trim().toLowerCase().normalize("NFC");
+  }
+
+  function arraysEqualUnordered(a, b) {
+    if (a.length !== b.length) return false;
+    const sortedA = a.map(normalizeIngredient).sort();
+    const sortedB = b.map(normalizeIngredient).sort();
+    return sortedA.every((value, index) => value === sortedB[index]);
+  }
+
+  /** Caută în coșul de pe server o linie cu exact această configurație (produs + mărime + ingrediente scoase). */
+  function findMatchingLine(product, selectedSizeCode, removedIngredients) {
+    if (!session || !session.cart) return null;
+    return (
+      session.cart.lines.find((line) => {
+        if (line.product_id !== product.id) return false;
+        if ((line.size_code || null) !== (selectedSizeCode || null)) return false;
+        return arraysEqualUnordered(line.removed_ingredients, removedIngredients);
+      }) || null
     );
-    const invalidInput = card.querySelector(".input-invalid-ingredient");
-    const invalidValue = invalidInput ? invalidInput.value.trim() : "";
-    const removedIngredients = invalidValue ? [...removedFromChips, invalidValue] : removedFromChips;
-
-    const body = { product_id: product.id, qty, removed_ingredients: removedIngredients };
-    if (sizeCode) body.size_code = sizeCode;
-
-    const cart = await guarded(() => PizzaApi.apiPost(`/api/sessions/${sessionId}/items`, body));
-    if (!cart) return;
-    session = { ...session, cart };
-    renderCart();
-    renderChecklist();
   }
 
-  // ----------------------------------------------------------------- căutare
-
-  async function runSearch(query) {
-    const trimmed = (query || "").trim();
-    const resultsContainer = document.getElementById("search-results");
-    if (!trimmed) {
-      resultsContainer.innerHTML = "";
-      return;
-    }
-    const items = await guarded(() => PizzaApi.apiGet(`/api/menu?query=${encodeURIComponent(trimmed)}`));
-    if (!items) return;
-    if (items.length === 0) {
-      resultsContainer.innerHTML = '<div class="empty-state">Niciun produs găsit pentru această căutare.</div>';
-      return;
-    }
-    resultsContainer.innerHTML = items
-      .map(
-        (product) => `
-      <div class="card">
-        <div class="card-title">${esc(product.name)} <span class="card-meta">(${esc(product.category)})</span></div>
-        <div class="card-meta">Alias-uri: ${esc(product.aliases.join(", ") || "—")}</div>
-        <div class="card-meta">${product.price_formatted ? esc(product.price_formatted) : "preț pe mărimi"}</div>
-      </div>`
-      )
-      .join("");
+  function buildStepperHtml(qty) {
+    // La plafon, „+" se dezactiveaza in loc sa trimita o cerere care oricum ar fi refuzata
+    // cu 422. Plafonul ramane al backend-ului — aici doar il oglindim, ca sa nu punem
+    // utilizatorul sa afle limita dintr-un mesaj de eroare.
+    const atMax = qty >= MAX_QTY_PER_LINE;
+    return `
+      <div class="stepper">
+        <button type="button" class="stepper-btn stepper-minus" aria-label="Scade cantitatea">−</button>
+        <span class="stepper-qty">${esc(String(qty))}</span>
+        <button type="button" class="stepper-btn stepper-plus" aria-label="Crește cantitatea"${atMax ? " disabled" : ""}>+</button>
+      </div>
+    `;
   }
 
-  // -------------------------------------------------------------------- coș
+  /** Randează în cardul de produs fie butonul „Adaugă”, fie stepper-ul, în funcție de coșul curent de pe server. */
+  function renderCardCta(card, product) {
+    const ctaContainer = card.querySelector(".card-cta");
+    if (!ctaContainer) return;
+    if (!product.available) {
+      ctaContainer.innerHTML = "";
+      return;
+    }
+    const selectedSize = card.dataset.selectedSize || null;
+    const removed = cardRemovedIngredients(card);
+    const line = findMatchingLine(product, selectedSize, removed);
 
-  function renderCart() {
-    const container = document.getElementById("cart-container");
+    if (line) {
+      ctaContainer.innerHTML = buildStepperHtml(line.qty);
+      ctaContainer.querySelector(".stepper-plus").addEventListener("click", () => bumpLineQty(line.line_id, line.qty + 1));
+      ctaContainer.querySelector(".stepper-minus").addEventListener("click", () => {
+        if (line.qty <= 1) {
+          deleteLine(line.line_id);
+        } else {
+          bumpLineQty(line.line_id, line.qty - 1);
+        }
+      });
+    } else {
+      ctaContainer.innerHTML = `<button type="button" class="btn btn--primary btn-add-product">Adaugă</button>`;
+      ctaContainer
+        .querySelector(".btn-add-product")
+        .addEventListener("click", () => addProductFromCard(product, selectedSize, removed));
+    }
+  }
+
+  function refreshAllCardCtas() {
+    registeredProductCards.forEach(({ card, product }) => renderCardCta(card, product));
+  }
+
+  async function addProductFromCard(product, sizeCode, removedIngredients) {
+    await serialized(async () => {
+      const body = { product_id: product.id, qty: 1, removed_ingredients: removedIngredients };
+      if (sizeCode) body.size_code = sizeCode;
+      const cart = await guarded(() => PizzaApi.apiPost(`/api/sessions/${sessionId}/items`, body));
+      if (!cart) return;
+      session = { ...session, cart };
+      onCartChanged();
+    });
+  }
+
+  async function bumpLineQty(lineId, qty) {
+    await serialized(async () => {
+      const cart = await guarded(() => PizzaApi.apiPatch(`/api/sessions/${sessionId}/items/${lineId}`, { qty }));
+      if (!cart) return;
+      session = { ...session, cart };
+      onCartChanged();
+    });
+  }
+
+  async function deleteLine(lineId) {
+    await serialized(async () => {
+      const cart = await guarded(() => PizzaApi.apiDelete(`/api/sessions/${sessionId}/items/${lineId}`));
+      if (!cart) return;
+      session = { ...session, cart };
+      onCartChanged();
+    });
+  }
+
+  function onCartChanged() {
+    renderFooterCart();
+    refreshAllCardCtas();
+    renderWizard();
+  }
+
+  // ------------------------------------------------------------- coș (sticky)
+
+  function buildCartLineRowHtml(line) {
+    const removedText = line.removed_ingredients.length ? `fără ${esc(line.removed_ingredients.join(", "))}` : "";
+    return `
+      <div class="cart-line-row" data-line-id="${esc(line.line_id)}">
+        <div class="cart-line-info">
+          <div class="cart-line-name">${esc(line.product_name)}${line.size_label ? " — " + esc(line.size_label) : ""}</div>
+          ${removedText ? `<div class="cart-line-meta">${removedText}</div>` : ""}
+          <div class="cart-line-meta">${PizzaApi.formatBani(line.unit_price_bani)} / buc</div>
+        </div>
+        <div class="cart-line-actions">
+          ${buildStepperHtml(line.qty)}
+          <div class="cart-line-total">${PizzaApi.formatBani(line.total_bani)}</div>
+          <button type="button" class="btn btn--small btn--danger btn-remove-line" aria-label="Șterge produsul">Șterge</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function attachCartLineRowHandlers(row) {
+    const lineId = row.getAttribute("data-line-id");
+    const line = session && session.cart ? session.cart.lines.find((l) => l.line_id === lineId) : null;
+    if (!line) return;
+    row.querySelector(".stepper-plus").addEventListener("click", () => bumpLineQty(lineId, line.qty + 1));
+    row.querySelector(".stepper-minus").addEventListener("click", () => {
+      if (line.qty <= 1) {
+        deleteLine(lineId);
+      } else {
+        bumpLineQty(lineId, line.qty - 1);
+      }
+    });
+    row.querySelector(".btn-remove-line").addEventListener("click", () => deleteLine(lineId));
+  }
+
+  /** Rezumatul de coș permanent vizibil (fixat jos): "N produse · total", desfășurabil pentru detalii. */
+  function renderFooterCart() {
     const cart = session ? session.cart : null;
-    if (!cart || cart.lines.length === 0) {
-      container.innerHTML = '<div class="empty-state">Coșul este gol.</div>';
+    const lines = cart ? cart.lines : [];
+    const totalQty = lines.reduce((sum, line) => sum + line.qty, 0);
+
+    const summaryText = document.getElementById("cart-summary-text");
+    if (!cart || lines.length === 0) {
+      summaryText.textContent = "Coșul este gol";
+    } else {
+      const noun = totalQty === 1 ? "produs" : "produse";
+      summaryText.textContent = `${totalQty} ${noun} · ${PizzaApi.formatBani(cart.total_bani)}`;
+    }
+
+    const panel = document.getElementById("cart-lines-panel");
+    if (!cart || lines.length === 0) {
+      panel.innerHTML = '<div class="empty-state">Coșul este gol.</div>';
       return;
     }
-    const rows = cart.lines.map((line) => buildCartRowHtml(line)).join("");
-    container.innerHTML = `
-      <table>
-        <thead>
-          <tr><th>Produs</th><th>Mărime</th><th>Fără</th><th>Cant.</th><th>Preț unitar</th><th>Total linie</th><th></th></tr>
-        </thead>
-        <tbody>${rows}</tbody>
-      </table>
+    panel.innerHTML = `
+      <div class="cart-lines-list">${lines.map(buildCartLineRowHtml).join("")}</div>
       <div class="totals">
         <div class="total-line"><span>Subtotal produse</span><span>${PizzaApi.formatBani(cart.items_bani)}</span></div>
         <div class="total-line"><span>Taxă livrare</span><span>${PizzaApi.formatBani(cart.delivery_fee_bani)}</span></div>
         <div class="total-line grand-total"><span>Total</span><span>${PizzaApi.formatBani(cart.total_bani)}</span></div>
       </div>
     `;
-    container.querySelectorAll("tr[data-line-id]").forEach((row) => attachCartRowHandlers(row));
+    panel.querySelectorAll("[data-line-id]").forEach(attachCartLineRowHandlers);
   }
 
-  function buildCartRowHtml(line) {
-    const removed = line.removed_ingredients.length ? esc(line.removed_ingredients.join(", ")) : "—";
-    return `
-      <tr data-line-id="${esc(line.line_id)}">
-        <td>${esc(line.product_name)}</td>
-        <td>${line.size_label ? esc(line.size_label) : "—"}</td>
-        <td>${removed}</td>
-        <td>
-          <input type="number" class="input-line-qty" min="1" max="50" step="1" value="${line.qty}" style="width:70px" />
-          <button type="button" class="btn btn--small btn-update-qty">Actualizează</button>
-        </td>
-        <td>${PizzaApi.formatBani(line.unit_price_bani)}</td>
-        <td>${PizzaApi.formatBani(line.total_bani)}</td>
-        <td><button type="button" class="btn btn--small btn--danger btn-remove-line">Șterge</button></td>
-      </tr>
-    `;
+  /** Inchide panoul de cos, daca e deschis. Fara efect daca e deja inchis. */
+  function collapseCartPanel() {
+    const panel = document.getElementById("cart-lines-panel");
+    const toggle = document.getElementById("cart-summary-toggle");
+    if (panel.hasAttribute("hidden")) return;
+    panel.setAttribute("hidden", "");
+    toggle.setAttribute("aria-expanded", "false");
+    toggle.classList.remove("is-open");
   }
 
-  function attachCartRowHandlers(row) {
-    const lineId = row.getAttribute("data-line-id");
-    row.querySelector(".btn-update-qty").addEventListener("click", async () => {
-      const qty = parseInt(row.querySelector(".input-line-qty").value, 10) || 1;
-      const cart = await guarded(() => PizzaApi.apiPatch(`/api/sessions/${sessionId}/items/${lineId}`, { qty }));
-      if (!cart) return;
-      session = { ...session, cart };
-      renderCart();
-    });
-    row.querySelector(".btn-remove-line").addEventListener("click", async () => {
-      const cart = await guarded(() => PizzaApi.apiDelete(`/api/sessions/${sessionId}/items/${lineId}`));
-      if (!cart) return;
-      session = { ...session, cart };
-      renderCart();
-      renderChecklist();
-    });
+  function toggleCartPanel() {
+    const panel = document.getElementById("cart-lines-panel");
+    const toggle = document.getElementById("cart-summary-toggle");
+    const isHidden = panel.hasAttribute("hidden");
+    if (isHidden) {
+      panel.removeAttribute("hidden");
+      toggle.setAttribute("aria-expanded", "true");
+      toggle.classList.add("is-open");
+    } else {
+      panel.setAttribute("hidden", "");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.classList.remove("is-open");
+    }
   }
 
   // --------------------------------------------------------------- preluare
 
   function renderFulfillment() {
     if (!session) return;
-    document.querySelectorAll('#fulfillment-controls input[name="fulfillment"]').forEach((radio) => {
-      radio.checked = radio.value === session.fulfillment;
-    });
-    document.getElementById("section-address").style.display = session.fulfillment === "delivery" ? "" : "none";
+    setSegmentedActive(document.getElementById("btn-fulfillment-delivery"), session.fulfillment === "delivery");
+    setSegmentedActive(document.getElementById("btn-fulfillment-pickup"), session.fulfillment === "pickup");
   }
 
-  async function onFulfillmentChange(event) {
-    if (!event.target.checked) return;
-    const fulfillment = event.target.value;
-    const cart = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/fulfillment`, { fulfillment }));
-    if (!cart) {
+  async function setFulfillment(value) {
+    await serialized(async () => {
+      const cart = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/fulfillment`, { fulfillment: value }));
+      if (!cart) return;
+      session = { ...session, cart, fulfillment: value };
       renderFulfillment();
-      return;
-    }
-    session = { ...session, cart, fulfillment };
-    renderCart();
-    renderFulfillment();
+      renderFooterCart();
+      renderWizard();
+    });
   }
 
   // ----------------------------------------------------------------- adresă
@@ -469,59 +687,109 @@
   async function checkAddress(text) {
     const trimmed = (text || "").trim();
     if (!trimmed) return;
+    lastAddressText = trimmed;
     const result = await guarded(() => PizzaApi.apiPost(`/api/sessions/${sessionId}/address`, { text: trimmed }));
     if (!result) return;
     renderAddressResult(result);
-    if (result.resolution === "ok") {
-      await refreshSession();
-    }
+    if (result.resolution !== "ok") return;
+
+    // Adresa e confirmata pe server, dar `session.address` local vine abia din reincarcarea
+    // sesiunii. Daca fix acel al doilea apel esueaza, ecranul ar ramane contradictoriu:
+    // banner verde de adresa confirmata sus, „Continua" blocat jos, fara nicio explicatie.
+    // Reincercam o data, iar daca nici asa nu merge o spunem pe fata.
+    if (await refreshSession()) return;
+    if (await refreshSession()) return;
+    errorLog.report({
+      code: "sesiune_nesincronizata",
+      message:
+        "Adresa a fost confirmată, dar nu am putut reîncărca datele comenzii. " +
+        "Verificați conexiunea și apăsați din nou „Verifică adresa”.",
+      field: null,
+      status: 0,
+    });
   }
 
+  /**
+   * Rezultatul verificării, arătat omenește — niciodată JSON brut. La ambiguitate,
+   * candidații apar ca butoane: un clic completează adresa aleasă în câmpul de text,
+   * ca omul să adauge bloc/scară/apartament și să reverifice, în loc să citească
+   * coordonate sau scoruri de încredere brute.
+   */
   function renderAddressResult(result) {
     const container = document.getElementById("address-result");
     const label = ADDRESS_RESOLUTION_LABELS[result.resolution] || result.resolution;
+
     let candidatesHtml = "";
-    if (result.candidates && result.candidates.length > 0) {
+    if (result.resolution === "ambiguous" && result.candidates && result.candidates.length > 0) {
       const items = result.candidates
         .map(
-          (candidate) => `
-        <li>${esc(candidate.address.formatted)} — încredere ${(candidate.confidence * 100).toFixed(0)}%,
-          ${candidate.in_zone ? "în zona de livrare" : "în afara zonei"}</li>`
+          (candidate, index) => `
+        <button type="button" class="address-candidate" data-candidate-index="${index}">
+          <span class="address-candidate-text">${esc(candidate.address.formatted)}</span>
+          <span class="address-candidate-meta">
+            ${candidate.in_zone ? "în zona de livrare" : "în afara zonei"} · încredere ${Math.round(candidate.confidence * 100)}%
+          </span>
+        </button>`
         )
         .join("");
-      candidatesHtml = `<ul>${items}</ul>`;
-      if (result.resolution === "ambiguous") {
-        candidatesHtml +=
-          '<div class="muted">Sistemul nu poate alege automat: spuneți din nou adresa cu mai multe detalii ' +
-          "(bloc, scară, apartament), ca să rămână un singur candidat în zonă.</div>";
-      }
+      candidatesHtml = `<div class="address-candidates">${items}</div>`;
     }
+
+    let hintHtml = "";
+    if (result.resolution === "ambiguous") {
+      hintHtml = `<p class="muted" style="margin:10px 0 0">Alegeți una dintre adrese, apoi adăugați bloc, scară sau apartament în câmpul de mai sus și verificați din nou, ca sistemul să rămână cu un singur candidat în zonă.</p>`;
+    } else if (result.resolution === "out_of_zone") {
+      hintHtml = `<p class="muted" style="margin:10px 0 0">Puteți alege „Ridicare din restaurant” la pasul de livrare.</p>`;
+    }
+
     container.innerHTML = `
       <div class="alert alert--${esc(result.resolution)}">
         <strong>${esc(label)}</strong>
         <div>${esc(result.message)}</div>
         ${candidatesHtml}
+        ${hintHtml}
       </div>
     `;
+
+    container.querySelectorAll(".address-candidate").forEach((button) => {
+      const index = Number(button.getAttribute("data-candidate-index"));
+      button.addEventListener("click", () => selectAddressCandidate(result.candidates[index]));
+    });
+  }
+
+  function selectAddressCandidate(candidate) {
+    const input = document.getElementById("address-input");
+    input.value = candidate.address.formatted;
+    input.focus();
   }
 
   function renderAddressCurrent() {
     const el = document.getElementById("address-current");
     if (!session) return;
-    el.textContent = session.address
-      ? `Adresă confirmată pe sesiune: ${session.address.formatted}`
-      : "Nicio adresă confirmată încă pe sesiune.";
+    el.textContent = session.address ? `Adresă confirmată: ${session.address.formatted}` : "";
   }
 
   // ---------------------------------------------------------------- contact
 
   async function saveContact() {
-    const phone = document.getElementById("contact-phone").value.trim();
-    const name = document.getElementById("contact-name").value.trim();
-    const result = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/contact`, { phone, name }));
-    if (!result) return;
-    session = result;
-    renderAll();
+    await serialized(async () => {
+      const phone = document.getElementById("contact-phone").value.trim();
+      const name = document.getElementById("contact-name").value.trim();
+      const errorEl = document.getElementById("contact-error");
+
+      if (!phone) {
+        errorEl.textContent = "Introduceți un număr de telefon.";
+        errorEl.style.display = "";
+        return;
+      }
+      errorEl.style.display = "none";
+
+      const result = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/contact`, { phone, name }));
+      if (!result) return;
+      session = result;
+      renderContactCurrent();
+      renderWizard();
+    });
   }
 
   function renderContactCurrent() {
@@ -529,64 +797,32 @@
     if (!session) return;
     el.textContent = session.contact
       ? `Contact salvat: ${session.contact.phone}${session.contact.name ? " — " + session.contact.name : ""}`
-      : "Niciun contact salvat încă.";
+      : "Introduceți telefonul și prenumele, apoi salvați.";
   }
 
   // ----------------------------------------------------------------- plată
 
   function renderPaymentCurrent() {
     if (!session) return;
-    document.querySelectorAll('#payment-controls input[name="payment"]').forEach((radio) => {
-      radio.checked = radio.value === session.payment;
-    });
+    setSegmentedActive(document.getElementById("btn-payment-cash"), session.payment === "cash");
+    setSegmentedActive(document.getElementById("btn-payment-card"), session.payment === "card_on_delivery");
     const el = document.getElementById("payment-current");
     el.textContent = session.payment
-      ? `Metodă salvată: ${PAYMENT_LABELS[session.payment] || session.payment}`
-      : "Nicio metodă de plată salvată încă.";
+      ? `Metodă selectată: ${PAYMENT_LABELS[session.payment] || session.payment}`
+      : "Alegeți o metodă de plată.";
   }
 
-  async function onPaymentChange(event) {
-    if (!event.target.checked) return;
-    const result = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/payment`, { payment: event.target.value }));
-    if (!result) {
+  async function setPayment(value) {
+    await serialized(async () => {
+      const result = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/payment`, { payment: value }));
+      if (!result) return;
+      session = result;
       renderPaymentCurrent();
-      return;
-    }
-    session = result;
-    renderAll();
-  }
-
-  // ------------------------------------------------------------- checklist
-
-  function renderChecklist() {
-    const container = document.getElementById("checklist-container");
-    if (!session) return;
-    container.innerHTML = UPSELL_CATEGORIES.map(([categoryKey, categoryLabel]) => {
-      const asked = Boolean(session.asked_flags && session.asked_flags[categoryKey]);
-      // Serverul nu expune un flag "acoperit"; derivăm afișarea din categoriile liniilor
-      // deja din coș — e o verificare de prezență, nu un calcul de preț.
-      const covered = session.cart.lines.some((line) => line.category === categoryKey);
-      return `
-        <div class="checklist-item" data-category="${categoryKey}">
-          <span class="checklist-name">${categoryLabel}</span>
-          <span class="flag ${asked ? "flag--yes" : "flag--no"}">Întrebat: ${asked ? "Da" : "Nu"}</span>
-          <span class="flag ${covered ? "flag--yes" : "flag--no"}">În coș: ${covered ? "Da" : "Nu"}</span>
-          ${asked ? "" : '<button type="button" class="btn btn--small btn-mark-asked">Marchează ca întrebat</button>'}
-        </div>
-      `;
-    }).join("");
-    container.querySelectorAll(".btn-mark-asked").forEach((button) => {
-      button.addEventListener("click", async () => {
-        const category = button.closest(".checklist-item").getAttribute("data-category");
-        const result = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/asked/${category}`));
-        if (!result) return;
-        session = result;
-        renderAll();
-      });
+      renderWizard();
     });
   }
 
-  // --------------------------------------------------------------- sumar
+  // ------------------------------------------------------------------ sumar
 
   async function showSummary() {
     const summary = await guarded(() => PizzaApi.apiGet(`/api/sessions/${sessionId}/summary`));
@@ -607,12 +843,9 @@
       .join("");
     const addressHtml = summary.address
       ? `<div>Adresă: ${esc(summary.address.formatted)}</div>`
-      : '<div class="muted">Fără adresă (ridicare, sau adresă nesetată).</div>';
+      : "";
     container.innerHTML = `
-      <div class="spoken-box">
-        <span class="spoken-box-label">Replica agentului (spoken_text)</span>
-        ${esc(summary.spoken_text)}
-      </div>
+      <div class="spoken-box">${esc(summary.spoken_text)}</div>
       <div class="stack" style="margin-top:14px">
         <div>Tip preluare: <strong>${summary.fulfillment === "delivery" ? "Livrare" : "Ridicare"}</strong></div>
         <ul>${linesHtml || "<li>Niciun produs</li>"}</ul>
@@ -625,78 +858,227 @@
     `;
   }
 
-  // ------------------------------------------------------------- plasare
+  // ---------------------------------------------------------------- plasare
 
-  async function placeOrder(isResend) {
-    if (!idempotencyKey) return;
+  /** Se declanșează din „Continuă” pe pasul „Sumar”: plasează comanda și trece pe ecranul de confirmare. */
+  async function placeOrderAndConfirm() {
     const order = await guarded(() => PizzaApi.apiPost(`/api/sessions/${sessionId}/place`, { idempotency_key: idempotencyKey }));
     if (!order) return;
-    renderPlaceResult(order, isResend);
-    await refreshSession();
+    renderConfirmation(order);
+    showScreen("confirmation");
   }
 
-  function renderPlaceResult(order, isResend) {
-    const container = document.getElementById("place-result");
-    if (firstPlacedOrderId === null) {
-      firstPlacedOrderId = order.id;
-    }
-    const sameIdHtml = isResend
-      ? `<div class="alert alert--${order.id === firstPlacedOrderId ? "ok" : "out_of_zone"}" style="margin-top:10px">
-           Același order_id ca la prima plasare: <strong>${order.id === firstPlacedOrderId ? "DA" : "NU"}</strong>
-           (${esc(order.id)} vs ${esc(firstPlacedOrderId)})
-         </div>`
-      : "";
+  function renderConfirmation(order) {
+    const container = document.getElementById("confirmation-result");
+    const fulfillmentNote =
+      order.fulfillment === "delivery"
+        ? "Comanda va fi livrată la adresa indicată."
+        : "Comanda poate fi ridicată de la restaurant.";
     container.innerHTML = `
-      <div class="alert alert--ok">
-        <div>Comandă: <strong>${esc(order.id)}</strong> — status: ${esc(order.status)}</div>
-        <div>ETA: ${PizzaApi.formatEtaWindow(order.eta)}</div>
-        <div>Total: ${PizzaApi.formatBani(order.cart.total_bani)}</div>
+      <div class="alert alert--ok" style="text-align:left">
+        <div>Număr comandă: <strong>${esc(order.id)}</strong></div>
+        <div>Timp estimat: ${PizzaApi.formatEtaWindow(order.eta)}</div>
+        <div>Total de plată: ${PizzaApi.formatBani(order.cart.total_bani)}</div>
+        <div>Metodă de plată: ${esc(PAYMENT_LABELS[order.payment] || order.payment)}</div>
       </div>
-      ${sameIdHtml}
+      <p class="muted" style="margin-top:16px">Vă mulțumim! ${esc(fulfillmentNote)}</p>
     `;
+  }
+
+  // ------------------------------------------------------------- asistent (wizard)
+
+  function isStepActive(step) {
+    return !step.showIf || step.showIf();
+  }
+
+  function activeSteps() {
+    return STEPS.filter(isStepActive);
+  }
+
+  /**
+   * Avansează index-ul cu `direction` (+1/-1), sărind pașii inactivi (ex: "address"
+   * la ridicare). Întoarce un index în afara limitelor [0, STEPS.length) dacă nu mai
+   * există niciun pas activ în direcția respectivă.
+   */
+  function clampStepIndex(startIndex, direction) {
+    let index = startIndex;
+    while (index >= 0 && index < STEPS.length && !isStepActive(STEPS[index])) {
+      index += direction;
+    }
+    return index;
+  }
+
+  function showValidationMessage(message) {
+    const el = document.getElementById("wizard-validation-msg");
+    el.textContent = message;
+    el.classList.add("visible");
+  }
+
+  function clearValidationMessage() {
+    const el = document.getElementById("wizard-validation-msg");
+    el.textContent = "";
+    el.classList.remove("visible");
+  }
+
+  function renderProgress(stepDef) {
+    const el = document.getElementById("wizard-progress");
+    const active = activeSteps();
+    const position = active.findIndex((step) => step.key === stepDef.key) + 1;
+    const total = active.length;
+    const dots = active
+      .map((step, index) => {
+        const stepPosition = index + 1;
+        const state = stepPosition < position ? "done" : stepPosition === position ? "current" : "upcoming";
+        return `<span class="wizard-dot wizard-dot--${state}" title="${esc(step.title)}"></span>`;
+      })
+      .join("");
+    el.innerHTML = `
+      <div class="wizard-progress-label">Pasul ${position} din ${total} — ${esc(stepDef.title)}</div>
+      <div class="wizard-progress-dots">${dots}</div>
+    `;
+  }
+
+  /** Randează exact un singur pas — restul secțiunilor sunt ascunse (`display:none`), nu doar dezactivate. */
+  function renderWizard() {
+    const stepDef = STEPS[currentStepIndex];
+
+    STEPS.forEach((step) => {
+      const el = document.getElementById(step.elId);
+      if (el) el.style.display = step.key === stepDef.key ? "" : "none";
+    });
+
+    renderProgress(stepDef);
+
+    const backIndex = clampStepIndex(currentStepIndex - 1, -1);
+    document.getElementById("btn-wizard-back").disabled = backIndex < 0;
+
+    const nextBtn = document.getElementById("btn-wizard-next");
+    const skipBtn = document.getElementById("btn-wizard-skip");
+    skipBtn.style.display = stepDef.upsellCategory ? "" : "none";
+    nextBtn.textContent = stepDef.key === "summary" ? "Plasează comanda" : "Continuă →";
+
+    const validator = STEP_VALIDATORS[stepDef.key];
+    const validation = validator ? validator() : { ok: true };
+    nextBtn.disabled = !validation.ok;
+    if (!validation.ok) {
+      showValidationMessage(validation.message);
+    } else {
+      clearValidationMessage();
+    }
+
+    if (stepDef.key === "summary") {
+      showSummary();
+    }
+
+    // Panoul de cos ramane deschis peste pasi si, pe ecran scund, impinge butoanele de
+    // navigare in afara ferestrei. Se inchide la fiecare schimbare de pas.
+    collapseCartPanel();
+  }
+
+  /**
+   * Muta focus-ul pe titlul pasului curent, dupa navigare.
+   *
+   * Fara asta, focus-ul ramane pe „Continua" din subsol, iar cine navigheaza cu tastatura
+   * trebuie sa mearga inapoi prin Shift+Tab ca sa ajunga la continutul pasului nou.
+   * `tabindex="-1"` face titlul focusabil programatic fara sa-l bage in ordinea de Tab.
+   */
+  function focusCurrentStepHeading() {
+    const section = document.getElementById(STEPS[currentStepIndex].elId);
+    const heading = section ? section.querySelector("h2") : null;
+    if (!heading) return;
+    heading.setAttribute("tabindex", "-1");
+    heading.focus({ preventScroll: false });
+  }
+
+  /** Marchează categoria de upsell ca "întrebată" — apelată atât de „Continuă” cât și de „Nu, mulțumesc”. */
+  async function markAsked(category) {
+    const result = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/asked/${category}`));
+    if (!result) return false;
+    session = result;
+    renderFooterCart();
+    return true;
+  }
+
+  async function goNext() {
+    await serialized(async () => {
+      const stepDef = STEPS[currentStepIndex];
+      const validator = STEP_VALIDATORS[stepDef.key];
+      // Butonul e deja dezactivat când validarea eșuează; verificarea de aici e doar
+      // o plasă de siguranță, nu o a doua sursă de adevăr.
+      if (validator && !validator().ok) return;
+
+      if (stepDef.key === "summary") {
+        await placeOrderAndConfirm();
+        return;
+      }
+
+      if (stepDef.upsellCategory) {
+        const ok = await markAsked(stepDef.upsellCategory);
+        if (!ok) return;
+      }
+
+      const nextIndex = clampStepIndex(currentStepIndex + 1, 1);
+      if (nextIndex >= STEPS.length) return;
+      currentStepIndex = nextIndex;
+      renderWizard();
+      focusCurrentStepHeading();
+    });
+  }
+
+  function goBack() {
+    const prevIndex = clampStepIndex(currentStepIndex - 1, -1);
+    if (prevIndex < 0) return;
+    currentStepIndex = prevIndex;
+    renderWizard();
+    focusCurrentStepHeading();
+  }
+
+  /** „Nu, mulțumesc” pe un pas de upsell: marchează categoria ca întrebată și trece mai departe. */
+  async function skipUpsellStep() {
+    await serialized(async () => {
+      const stepDef = STEPS[currentStepIndex];
+      if (!stepDef.upsellCategory) return;
+      const ok = await markAsked(stepDef.upsellCategory);
+      if (!ok) return;
+
+      const nextIndex = clampStepIndex(currentStepIndex + 1, 1);
+      if (nextIndex >= STEPS.length) return;
+      currentStepIndex = nextIndex;
+      renderWizard();
+      focusCurrentStepHeading();
+    });
   }
 
   // -------------------------------------------------------------- pornire
 
-  document.getElementById("btn-start-call").addEventListener("click", startCall);
+  document.getElementById("btn-start-order").addEventListener("click", startCall);
+  document.getElementById("btn-new-order").addEventListener("click", startCall);
 
-  document.getElementById("btn-search").addEventListener("click", () => runSearch(document.getElementById("search-input").value));
-  document.getElementById("search-input").addEventListener("keydown", (event) => {
-    if (event.key === "Enter") runSearch(event.target.value);
-  });
-  document.querySelectorAll("[data-demo-query]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const query = button.getAttribute("data-demo-query");
-      document.getElementById("search-input").value = query;
-      runSearch(query);
-    });
-  });
+  document.getElementById("btn-fulfillment-delivery").addEventListener("click", () => setFulfillment("delivery"));
+  document.getElementById("btn-fulfillment-pickup").addEventListener("click", () => setFulfillment("pickup"));
 
-  document.querySelectorAll('#fulfillment-controls input[name="fulfillment"]').forEach((radio) => {
-    radio.addEventListener("change", onFulfillmentChange);
-  });
-
-  document.getElementById("btn-check-address").addEventListener("click", () =>
-    checkAddress(document.getElementById("address-input").value)
-  );
-  document.querySelectorAll("[data-demo-address]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const text = button.getAttribute("data-demo-address");
-      document.getElementById("address-input").value = text;
-      checkAddress(text);
-    });
+  document
+    .getElementById("btn-check-address")
+    .addEventListener("click", () => checkAddress(document.getElementById("address-input").value));
+  document.getElementById("address-input").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      checkAddress(event.target.value);
+    }
   });
 
   document.getElementById("btn-save-contact").addEventListener("click", saveContact);
 
-  document.querySelectorAll('#payment-controls input[name="payment"]').forEach((radio) => {
-    radio.addEventListener("change", onPaymentChange);
-  });
+  document.getElementById("btn-payment-cash").addEventListener("click", () => setPayment("cash"));
+  document.getElementById("btn-payment-card").addEventListener("click", () => setPayment("card_on_delivery"));
 
-  document.getElementById("btn-summary").addEventListener("click", showSummary);
+  document.getElementById("cart-summary-toggle").addEventListener("click", toggleCartPanel);
 
-  document.getElementById("btn-place-order").addEventListener("click", () => placeOrder(false));
-  document.getElementById("btn-resend-order").addEventListener("click", () => placeOrder(true));
+  document.getElementById("btn-wizard-back").addEventListener("click", goBack);
+  document.getElementById("btn-wizard-next").addEventListener("click", goNext);
+  document.getElementById("btn-wizard-skip").addEventListener("click", skipUpsellStep);
+
+  showScreen("start");
 })();
 </script>
 </body>
