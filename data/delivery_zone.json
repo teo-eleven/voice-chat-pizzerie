@@ -1,12 +1,12 @@
 {
-  "_comment": "Poligon de livrare (lat, lon). Valorile de aici acoperă o zonă din centru-est Bucureşti — se înlocuiesc cu zona reală a pizzeriei.",
+  "_comment": "Poligon de livrare (lat, lon) peste Suceava — municipiul, fără Burdujeni și Ițcani. Coordonatele sunt aproximative, potrivite pentru dezvoltare locală; la trecerea în producție se înlocuiesc cu conturul real al zonei acoperite de pizzerie.",
   "polygon": [
-    [44.4520, 26.0850],
-    [44.4520, 26.1450],
-    [44.4260, 26.1650],
-    [44.4050, 26.1450],
-    [44.4050, 26.0850],
-    [44.4260, 26.0650]
+    [47.6700, 26.2300],
+    [47.6680, 26.2750],
+    [47.6500, 26.2950],
+    [47.6300, 26.2850],
+    [47.6280, 26.2400],
+    [47.6450, 26.2220]
   ],
   "min_order_bani": 5000,
   "delivery_fee_bani": 1200,
