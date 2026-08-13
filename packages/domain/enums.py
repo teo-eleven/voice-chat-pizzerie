@@ -65,6 +65,12 @@ class AddressResolution(StrEnum):
 
 
 class EscalationReason(StrEnum):
+    """Motivele pentru care apelul trece la un om.
+
+    SCHELET FAZA 5, folosit deocamdată doar de `Escalation`. Lista vine direct din
+    tabelul de situații neprevăzute din `docs/PLAN.md`.
+    """
+
     LOW_CONFIDENCE = "low_confidence"
     ANGRY_CUSTOMER = "angry_customer"
     COMPLAINT = "complaint"

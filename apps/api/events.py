@@ -6,6 +6,8 @@ catre clienti deconectati e ignorata silentios, conexiunea e scoasa din lista.
 
 from __future__ import annotations
 
+from typing import Any
+
 from fastapi import WebSocket, WebSocketDisconnect
 
 
@@ -21,7 +23,7 @@ class EventHub:
         if websocket in self._connections:
             self._connections.remove(websocket)
 
-    async def broadcast(self, event: dict) -> None:
+    async def broadcast(self, event: dict[str, Any]) -> None:
         """Trimite evenimentul catre toti clientii conectati; ignora esecurile individuale.
 
         Itereaza pe o copie (`tuple(...)`): `disconnect` poate muta lista live din alt

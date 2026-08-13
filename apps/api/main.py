@@ -8,6 +8,7 @@ povesteste acest mesaj clientului, nu il inventeaza.
 
 from __future__ import annotations
 
+import logging
 import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
@@ -58,6 +59,14 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 #: activate explicit doar cand e nevoie de ele (dezvoltare/depanare).
 _docs_enabled = os.environ.get("ENABLE_DOCS") == "1"
 
+if _docs_enabled:
+    # Un `.env` de dezvoltare copiat din greseala ar publica schema completa fara ca
+    # nimeni sa observe. Avertismentul face starea vizibila in orice log de pornire.
+    logging.getLogger(__name__).warning(
+        "ENABLE_DOCS=1: /docs, /redoc si /openapi.json sunt PUBLICE. "
+        "Nu lasa asta activ in afara dezvoltarii."
+    )
+
 app = FastAPI(
     title="Pizzeria Punto API",
     lifespan=lifespan,
@@ -82,6 +91,8 @@ async def orders_ws(websocket: WebSocket) -> None:
     await events.handle_connection(websocket, websocket.app.state.events)
 
 
-# Directorul e momentan gol (frontend-ul dashboard-urilor vine mai tarziu); montat
-# tolerant, ca sa nu pice startup-ul daca directorul lipseste sau e vid.
+# Serveste `apps/web/`: aplicatia de comanda (`index.html`), ecranele de bucatarie si
+# livrator, si bancul de test al API-ului (`harness.html`). Montat tolerant
+# (`check_dir=False`), ca startup-ul sa nu pice daca directorul lipseste — util la
+# rularea testelor dintr-un checkout partial.
 app.mount("/", StaticFiles(directory=str(_WEB_DIR), html=True, check_dir=False), name="web")

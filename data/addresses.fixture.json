@@ -1,42 +1,98 @@
 [
   {
-    "street": "Aleea Nucșoara",
-    "number": "4",
-    "lat": 44.4300,
-    "lon": 26.1000,
+    "street": "Strada Ștefan cel Mare",
+    "number": "24",
+    "lat": 47.645,
+    "lon": 26.2545,
     "confidence": 0.98,
-    "sector": "2"
+    "city": "Suceava"
   },
   {
-    "street": "Strada Trandafirilor",
-    "number": "5",
-    "lat": 44.4200,
-    "lon": 26.1100,
+    "street": "Bulevardul 1 Decembrie 1918",
+    "number": "8",
+    "lat": 47.648,
+    "lon": 26.25,
+    "confidence": 0.96,
+    "city": "Suceava"
+  },
+  {
+    "street": "Strada Mihai Viteazu",
+    "number": "12",
+    "lat": 47.6455,
+    "lon": 26.257,
     "confidence": 0.9,
-    "sector": "2"
+    "city": "Suceava"
   },
   {
-    "street": "Strada Trandafirilor",
-    "number": "5",
-    "lat": 44.4350,
-    "lon": 26.1200,
+    "street": "Strada Mihai Viteazu",
+    "number": "12",
+    "lat": 47.6462,
+    "lon": 26.2588,
     "confidence": 0.85,
-    "sector": "3"
+    "city": "Suceava"
   },
   {
-    "street": "Strada Progresului",
-    "number": "22",
-    "lat": 44.4400,
-    "lon": 26.1300,
+    "street": "Calea Unirii",
+    "number": "15",
+    "lat": 47.657,
+    "lon": 26.25,
     "confidence": 0.95,
-    "sector": "4"
+    "city": "Suceava"
   },
   {
-    "street": "Strada Aviatorilor",
-    "number": "10",
-    "lat": 44.4900,
-    "lon": 26.1000,
+    "street": "Bulevardul George Enescu",
+    "number": "30",
+    "lat": 47.66,
+    "lon": 26.256,
+    "confidence": 0.94,
+    "city": "Suceava"
+  },
+  {
+    "street": "Strada Mărășești",
+    "number": "7",
+    "lat": 47.647,
+    "lon": 26.261,
+    "confidence": 0.93,
+    "city": "Suceava"
+  },
+  {
+    "street": "Strada Petru Rareș",
+    "number": "5",
+    "lat": 47.65,
+    "lon": 26.253,
     "confidence": 0.95,
-    "sector": "1"
+    "city": "Suceava"
+  },
+  {
+    "street": "Strada Ana Ipătescu",
+    "number": "3",
+    "lat": 47.649,
+    "lon": 26.2575,
+    "confidence": 0.93,
+    "city": "Suceava"
+  },
+  {
+    "street": "Strada Universității",
+    "number": "13",
+    "lat": 47.642,
+    "lon": 26.287,
+    "confidence": 0.92,
+    "city": "Suceava"
+  },
+  {
+    "street": "Calea Burdujeni",
+    "number": "40",
+    "lat": 47.672,
+    "lon": 26.279,
+    "confidence": 0.95,
+    "city": "Suceava"
+  },
+  {
+    "street": "Strada Humorului",
+    "number": "45",
+    "lat": 47.68,
+    "lon": 26.245,
+    "confidence": 0.94,
+    "city": "Suceava"
   }
 ]

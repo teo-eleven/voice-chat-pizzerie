@@ -11,6 +11,7 @@ from __future__ import annotations
 import threading
 from datetime import datetime
 
+from sqlalchemy import Integer, cast, func
 from sqlmodel import Field, Session, SQLModel, select
 
 from packages.domain.enums import Fulfillment, OrderStatus, PaymentMethod
@@ -20,6 +21,9 @@ from packages.domain.models import Address, Cart, Contact, EtaWindow, Order
 #: concurente nu trebuie sa citeasca acelasi maxim si sa calculeze acelasi id
 #: inainte ca vreuna dintre ele sa fi facut commit.
 ORDER_ID_LOCK = threading.Lock()
+
+#: Prefixul id-ului de comanda. Sufixul numeric de 4 cifre vine dupa el.
+_ORDER_ID_PREFIX = "CMD-"
 
 
 class OrderRow(SQLModel, table=True):
@@ -42,9 +46,17 @@ class OrderRow(SQLModel, table=True):
 
 
 def from_domain(order: Order) -> OrderRow:
-    """`Order` de domeniu -> rand persistabil. Comanda plasata are deja ETA si created_at."""
-    assert order.eta is not None, "o comanda plasata trebuie sa aiba ETA calculat"
-    assert order.created_at is not None, "o comanda plasata trebuie sa aiba created_at"
+    """`Order` de domeniu -> rand persistabil. Comanda plasata are deja ETA si created_at.
+
+    Verificarile sunt `ValueError`, nu `assert`: un `assert` dispare sub `python -O`,
+    iar atunci `order.eta.min_minutes` ar da un `AttributeError` obscur in loc de un
+    mesaj clar. Nu sunt `DomainError` — clientul nu are ce corecta aici, e defect al
+    nostru daca o comanda ajunge la persistenta fara ETA.
+    """
+    if order.eta is None:
+        raise ValueError(f"Comanda „{order.id}” ajunge la persistenta fara ETA calculat.")
+    if order.created_at is None:
+        raise ValueError(f"Comanda „{order.id}” ajunge la persistenta fara created_at.")
     return OrderRow(
         id=order.id,
         status=order.status,
@@ -88,12 +100,20 @@ def next_order_id(session: Session) -> str:
     id inca existent. Apelantul trebuie sa tina `ORDER_ID_LOCK` cat cheama
     aceasta functie si face insert-ul, ca doua plasari concurente sa nu
     calculeze acelasi id inainte de commit.
+
+    Maximul se calculeaza in SQL, nu in Python: varianta care incarca toate id-urile
+    si le compara aici crestea liniar cu istoricul comenzilor, la fiecare plasare, si
+    o facea sub `ORDER_ID_LOCK` — adica exact intervalul in care nicio alta plasare nu
+    poate avansa. Comparatia e pe sufixul convertit la intreg, nu pe textul intreg:
+    lexicografic, `CMD-10000` ar veni inaintea lui `CMD-9999` si am recicla un id.
+
+    ATENTIE, depinde de SQLite: `CAST('abcd' AS INTEGER)` da `0` aici, deci un id cu
+    format neasteptat e ignorat linistit. Pe Postgres sau MySQL aceeasi expresie ridica
+    eroare la runtime. Daca `DATABASE_URL` pleaca vreodata de la SQLite, functia asta
+    trebuie rescrisa, nu doar reconfigurata.
     """
-    ids = session.exec(select(OrderRow.id)).all()
-    max_suffix = max((_numeric_suffix(order_id) for order_id in ids), default=0)
-    return f"CMD-{max_suffix + 1:04d}"
-
-
-def _numeric_suffix(order_id: str) -> int:
-    suffix = order_id.removeprefix("CMD-")
-    return int(suffix) if suffix.isdigit() else 0
+    statement = select(
+        func.max(cast(func.substr(OrderRow.id, len(_ORDER_ID_PREFIX) + 1), Integer))
+    )
+    max_suffix = session.exec(statement).one() or 0
+    return f"{_ORDER_ID_PREFIX}{max_suffix + 1:04d}"

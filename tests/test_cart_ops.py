@@ -8,7 +8,15 @@ from packages.domain import cart_ops
 from packages.domain.enums import Category, Fulfillment, SizeCode
 from packages.domain.errors import DomainError
 from packages.domain.limits import MAX_LINES_PER_CART, MAX_QTY_PER_LINE
-from packages.domain.models import Cart, Product, SizeOption, ZoneConfig
+from packages.domain.models import (
+    Cart,
+    LineChanges,
+    LineSpec,
+    PricingContext,
+    Product,
+    SizeOption,
+    ZoneConfig,
+)
 
 
 def _zone() -> ZoneConfig:
@@ -18,6 +26,10 @@ def _zone() -> ZoneConfig:
         delivery_fee_bani=1200,
         free_delivery_threshold_bani=12000,
     )
+
+
+def _context(fulfillment: Fulfillment = Fulfillment.PICKUP) -> PricingContext:
+    return PricingContext(fulfillment=fulfillment, zone=_zone())
 
 
 def _pizza(available: bool = True) -> Product:
@@ -52,11 +64,11 @@ class TestAddLine:
         # Arrange
         cart = Cart()
         pizza = _pizza()
-        zone = _zone()
+        context = _context()
 
         # Act
         result = cart_ops.add_line(
-            cart, pizza, size_code=SizeCode.SMALL, fulfillment=Fulfillment.PICKUP, zone=zone
+            cart, pizza, spec=LineSpec(size_code=SizeCode.SMALL), context=context
         )
 
         # Assert
@@ -71,12 +83,12 @@ class TestAddLine:
         # Arrange
         cart = Cart()
         pizza = _pizza(available=False)
-        zone = _zone()
+        context = _context()
 
         # Act
         with pytest.raises(DomainError) as exc:
             cart_ops.add_line(
-                cart, pizza, size_code=SizeCode.SMALL, fulfillment=Fulfillment.PICKUP, zone=zone
+                cart, pizza, spec=LineSpec(size_code=SizeCode.SMALL), context=context
             )
 
         # Assert
@@ -86,11 +98,11 @@ class TestAddLine:
         # Arrange
         cart = Cart()
         pizza = _pizza()
-        zone = _zone()
+        context = _context()
 
         # Act
         with pytest.raises(DomainError) as exc:
-            cart_ops.add_line(cart, pizza, fulfillment=Fulfillment.PICKUP, zone=zone)
+            cart_ops.add_line(cart, pizza, spec=LineSpec(), context=context)
 
         # Assert
         assert exc.value.issue.code == "size_required"
@@ -99,12 +111,12 @@ class TestAddLine:
         # Arrange
         cart = Cart()
         pizza = _pizza()  # nu are marimea "large" in template
-        zone = _zone()
+        context = _context()
 
         # Act
         with pytest.raises(DomainError) as exc:
             cart_ops.add_line(
-                cart, pizza, size_code=SizeCode.LARGE, fulfillment=Fulfillment.PICKUP, zone=zone
+                cart, pizza, spec=LineSpec(size_code=SizeCode.LARGE), context=context
             )
 
         # Assert
@@ -114,12 +126,12 @@ class TestAddLine:
         # Arrange
         cart = Cart()
         drink = _drink()
-        zone = _zone()
+        context = _context()
 
         # Act
         with pytest.raises(DomainError) as exc:
             cart_ops.add_line(
-                cart, drink, size_code=SizeCode.SMALL, fulfillment=Fulfillment.PICKUP, zone=zone
+                cart, drink, spec=LineSpec(size_code=SizeCode.SMALL), context=context
             )
 
         # Assert
@@ -130,11 +142,11 @@ class TestAddLine:
         # Arrange
         cart = Cart()
         drink = _drink()
-        zone = _zone()
+        context = _context()
 
         # Act
         with pytest.raises(DomainError) as exc:
-            cart_ops.add_line(cart, drink, qty=qty, fulfillment=Fulfillment.PICKUP, zone=zone)
+            cart_ops.add_line(cart, drink, spec=LineSpec(qty=qty), context=context)
 
         # Assert
         assert exc.value.issue.code == "invalid_qty"
@@ -143,13 +155,14 @@ class TestAddLine:
         # Arrange
         cart = Cart()
         pizza = _pizza()
-        zone = _zone()
+        context = _context()
 
         # Act
         with pytest.raises(DomainError) as exc:
             cart_ops.add_line(
-                cart, pizza, size_code=SizeCode.SMALL, removed_ingredients=("lamaie",),
-                fulfillment=Fulfillment.PICKUP, zone=zone,
+                cart, pizza,
+                spec=LineSpec(size_code=SizeCode.SMALL, removed_ingredients=("lamaie",)),
+                context=context,
             )
 
         # Assert
@@ -159,12 +172,13 @@ class TestAddLine:
         # Arrange
         cart = Cart()
         pizza = _pizza()
-        zone = _zone()
+        context = _context()
 
         # Act
         result = cart_ops.add_line(
-            cart, pizza, size_code=SizeCode.SMALL, removed_ingredients=("sunca",),
-            fulfillment=Fulfillment.PICKUP, zone=zone,
+            cart, pizza,
+            spec=LineSpec(size_code=SizeCode.SMALL, removed_ingredients=("sunca",)),
+            context=context,
         )
 
         # Assert
@@ -174,12 +188,13 @@ class TestAddLine:
         # Arrange
         cart = Cart()
         pizza = _pizza()  # ingredient real: "sunca" (fara diacritice in fixture)
-        zone = _zone()
+        context = _context()
 
         # Act
         result = cart_ops.add_line(
-            cart, pizza, size_code=SizeCode.SMALL, removed_ingredients=("SUNCĂ",),
-            fulfillment=Fulfillment.PICKUP, zone=zone,
+            cart, pizza,
+            spec=LineSpec(size_code=SizeCode.SMALL, removed_ingredients=("SUNCĂ",)),
+            context=context,
         )
 
         # Assert: acceptat, chiar daca varianta rostita are diacritice si majuscule
@@ -190,14 +205,14 @@ class TestAddLine:
         cart = Cart()
         pizza = _pizza()
         drink = _drink()
-        zone = _zone()
+        context = _context()
 
         # Act
         after_first = cart_ops.add_line(
-            cart, pizza, size_code=SizeCode.SMALL, fulfillment=Fulfillment.PICKUP, zone=zone
+            cart, pizza, spec=LineSpec(size_code=SizeCode.SMALL), context=context
         )
         after_second = cart_ops.add_line(
-            after_first, drink, fulfillment=Fulfillment.PICKUP, zone=zone
+            after_first, drink, spec=LineSpec(), context=context
         )
 
         # Assert
@@ -207,11 +222,11 @@ class TestAddLine:
         # Arrange
         cart = Cart()
         pizza = _pizza()
-        zone = _zone()
+        context = _context()
 
         # Act
         result = cart_ops.add_line(
-            cart, pizza, size_code=SizeCode.SMALL, fulfillment=Fulfillment.PICKUP, zone=zone
+            cart, pizza, spec=LineSpec(size_code=SizeCode.SMALL), context=context
         )
 
         # Assert
@@ -224,14 +239,14 @@ class TestAddLine:
 class TestRemoveLine:
     def test_removes_the_matching_line(self):
         # Arrange
-        zone = _zone()
+        context = _context()
         cart = cart_ops.add_line(
-            Cart(), _pizza(), size_code=SizeCode.SMALL,
-            fulfillment=Fulfillment.PICKUP, zone=zone,
+            Cart(), _pizza(), spec=LineSpec(size_code=SizeCode.SMALL),
+            context=context,
         )
 
         # Act
-        result = cart_ops.remove_line(cart, "L1", fulfillment=Fulfillment.PICKUP, zone=zone)
+        result = cart_ops.remove_line(cart, "L1", context=context)
 
         # Assert
         assert result.lines == ()
@@ -239,26 +254,26 @@ class TestRemoveLine:
 
     def test_raises_line_not_found_for_unknown_line_id(self):
         # Arrange
-        zone = _zone()
+        context = _context()
         cart = Cart()
 
         # Act
         with pytest.raises(DomainError) as exc:
-            cart_ops.remove_line(cart, "L99", fulfillment=Fulfillment.PICKUP, zone=zone)
+            cart_ops.remove_line(cart, "L99", context=context)
 
         # Assert
         assert exc.value.issue.code == "line_not_found"
 
     def test_does_not_mutate_the_original_cart(self):
         # Arrange
-        zone = _zone()
+        context = _context()
         cart = cart_ops.add_line(
-            Cart(), _pizza(), size_code=SizeCode.SMALL,
-            fulfillment=Fulfillment.PICKUP, zone=zone,
+            Cart(), _pizza(), spec=LineSpec(size_code=SizeCode.SMALL),
+            context=context,
         )
 
         # Act
-        result = cart_ops.remove_line(cart, "L1", fulfillment=Fulfillment.PICKUP, zone=zone)
+        result = cart_ops.remove_line(cart, "L1", context=context)
 
         # Assert
         assert len(cart.lines) == 1
@@ -267,16 +282,16 @@ class TestRemoveLine:
     def test_next_line_id_does_not_recycle_a_removed_lower_id(self):
         """Dupa ce L1 e scos, urmatoarea linie adaugata trebuie sa fie L3, nu L1."""
         # Arrange
-        zone = _zone()
+        context = _context()
         cart = cart_ops.add_line(
-            Cart(), _pizza(), size_code=SizeCode.SMALL,
-            fulfillment=Fulfillment.PICKUP, zone=zone,
+            Cart(), _pizza(), spec=LineSpec(size_code=SizeCode.SMALL),
+            context=context,
         )
-        cart = cart_ops.add_line(cart, _drink(), fulfillment=Fulfillment.PICKUP, zone=zone)
-        cart = cart_ops.remove_line(cart, "L1", fulfillment=Fulfillment.PICKUP, zone=zone)
+        cart = cart_ops.add_line(cart, _drink(), spec=LineSpec(), context=context)
+        cart = cart_ops.remove_line(cart, "L1", context=context)
 
         # Act
-        result = cart_ops.add_line(cart, _drink(), fulfillment=Fulfillment.PICKUP, zone=zone)
+        result = cart_ops.add_line(cart, _drink(), spec=LineSpec(), context=context)
 
         # Assert
         assert [line.line_id for line in result.lines] == ["L2", "L3"]
@@ -285,16 +300,17 @@ class TestRemoveLine:
 class TestUpdateLine:
     def test_updating_only_qty_preserves_other_fields(self):
         # Arrange
-        zone = _zone()
+        context = _context()
         pizza = _pizza()
         cart = cart_ops.add_line(
-            Cart(), pizza, size_code=SizeCode.SMALL, removed_ingredients=("sunca",),
-            fulfillment=Fulfillment.PICKUP, zone=zone,
+            Cart(), pizza,
+            spec=LineSpec(size_code=SizeCode.SMALL, removed_ingredients=("sunca",)),
+            context=context,
         )
 
         # Act
         result = cart_ops.update_line(
-            cart, "L1", pizza, qty=3, fulfillment=Fulfillment.PICKUP, zone=zone
+            cart, "L1", pizza, changes=LineChanges(qty=3), context=context
         )
 
         # Assert
@@ -306,16 +322,16 @@ class TestUpdateLine:
 
     def test_updating_size_code_recomputes_unit_price(self):
         # Arrange
-        zone = _zone()
+        context = _context()
         pizza = _pizza()
         cart = cart_ops.add_line(
-            Cart(), pizza, size_code=SizeCode.SMALL, fulfillment=Fulfillment.PICKUP, zone=zone
+            Cart(), pizza, spec=LineSpec(size_code=SizeCode.SMALL), context=context
         )
 
         # Act
         result = cart_ops.update_line(
-            cart, "L1", pizza, size_code=SizeCode.MEDIUM,
-            fulfillment=Fulfillment.PICKUP, zone=zone,
+            cart, "L1", pizza, changes=LineChanges(size_code=SizeCode.MEDIUM),
+            context=context,
         )
 
         # Assert
@@ -324,14 +340,14 @@ class TestUpdateLine:
 
     def test_raises_line_not_found_for_unknown_line_id(self):
         # Arrange
-        zone = _zone()
+        context = _context()
         cart = Cart()
         pizza = _pizza()
 
         # Act
         with pytest.raises(DomainError) as exc:
             cart_ops.update_line(
-                cart, "L99", pizza, qty=2, fulfillment=Fulfillment.PICKUP, zone=zone
+                cart, "L99", pizza, changes=LineChanges(qty=2), context=context
             )
 
         # Assert
@@ -339,15 +355,15 @@ class TestUpdateLine:
 
     def test_does_not_mutate_the_original_cart(self):
         # Arrange
-        zone = _zone()
+        context = _context()
         pizza = _pizza()
         cart = cart_ops.add_line(
-            Cart(), pizza, size_code=SizeCode.SMALL, fulfillment=Fulfillment.PICKUP, zone=zone
+            Cart(), pizza, spec=LineSpec(size_code=SizeCode.SMALL), context=context
         )
 
         # Act
         result = cart_ops.update_line(
-            cart, "L1", pizza, qty=5, fulfillment=Fulfillment.PICKUP, zone=zone
+            cart, "L1", pizza, changes=LineChanges(qty=5), context=context
         )
 
         # Assert
@@ -361,11 +377,11 @@ class TestQtyLimit:
         # Arrange
         cart = Cart()
         drink = _drink()
-        zone = _zone()
+        context = _context()
 
         # Act
         result = cart_ops.add_line(
-            cart, drink, qty=MAX_QTY_PER_LINE, fulfillment=Fulfillment.PICKUP, zone=zone
+            cart, drink, spec=LineSpec(qty=MAX_QTY_PER_LINE), context=context
         )
 
         # Assert
@@ -375,13 +391,13 @@ class TestQtyLimit:
         # Arrange
         cart = Cart()
         drink = _drink()
-        zone = _zone()
+        context = _context()
 
         # Act
         with pytest.raises(DomainError) as exc:
             cart_ops.add_line(
-                cart, drink, qty=MAX_QTY_PER_LINE + 1,
-                fulfillment=Fulfillment.PICKUP, zone=zone,
+                cart, drink, spec=LineSpec(qty=MAX_QTY_PER_LINE + 1),
+                context=context,
             )
 
         # Assert
@@ -389,15 +405,15 @@ class TestQtyLimit:
 
     def test_rejects_qty_above_max_on_update_line(self):
         # Arrange
-        zone = _zone()
+        context = _context()
         drink = _drink()
-        cart = cart_ops.add_line(Cart(), drink, fulfillment=Fulfillment.PICKUP, zone=zone)
+        cart = cart_ops.add_line(Cart(), drink, spec=LineSpec(), context=context)
 
         # Act
         with pytest.raises(DomainError) as exc:
             cart_ops.update_line(
-                cart, "L1", drink, qty=MAX_QTY_PER_LINE + 1,
-                fulfillment=Fulfillment.PICKUP, zone=zone,
+                cart, "L1", drink, changes=LineChanges(qty=MAX_QTY_PER_LINE + 1),
+                context=context,
             )
 
         # Assert
@@ -407,30 +423,30 @@ class TestQtyLimit:
 class TestCartSizeLimit:
     def test_rejects_add_line_when_cart_is_already_at_max_lines(self):
         # Arrange: umplem cosul pana la plafonul de linii
-        zone = _zone()
+        context = _context()
         drink = _drink()
         cart = Cart()
         for _ in range(MAX_LINES_PER_CART):
-            cart = cart_ops.add_line(cart, drink, fulfillment=Fulfillment.PICKUP, zone=zone)
+            cart = cart_ops.add_line(cart, drink, spec=LineSpec(), context=context)
 
         # Act
         with pytest.raises(DomainError) as exc:
-            cart_ops.add_line(cart, drink, fulfillment=Fulfillment.PICKUP, zone=zone)
+            cart_ops.add_line(cart, drink, spec=LineSpec(), context=context)
 
         # Assert
         assert exc.value.issue.code == "cart_too_large"
 
     def test_update_line_still_works_when_cart_is_at_max_lines(self):
         # Arrange: cosul plin nu creste, deci update_line nu trebuie blocat
-        zone = _zone()
+        context = _context()
         drink = _drink()
         cart = Cart()
         for _ in range(MAX_LINES_PER_CART):
-            cart = cart_ops.add_line(cart, drink, fulfillment=Fulfillment.PICKUP, zone=zone)
+            cart = cart_ops.add_line(cart, drink, spec=LineSpec(), context=context)
 
         # Act
         result = cart_ops.update_line(
-            cart, "L1", drink, qty=3, fulfillment=Fulfillment.PICKUP, zone=zone
+            cart, "L1", drink, changes=LineChanges(qty=3), context=context
         )
 
         # Assert: numarul de linii ramane neschimbat, doar cantitatea liniei L1
@@ -441,10 +457,10 @@ class TestCartSizeLimit:
 class TestClearCart:
     def test_returns_empty_cart_with_zero_totals(self):
         # Arrange
-        zone = _zone()
+        context = _context(fulfillment=Fulfillment.DELIVERY)
 
         # Act
-        result = cart_ops.clear_cart(fulfillment=Fulfillment.DELIVERY, zone=zone)
+        result = cart_ops.clear_cart(context=context)
 
         # Assert
         assert result.lines == ()

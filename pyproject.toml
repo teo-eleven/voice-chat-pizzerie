@@ -19,6 +19,7 @@ dev = [
     "pytest-asyncio>=0.24",
     "pytest-cov>=6.0",
     "ruff>=0.8",
+    "mypy>=1.13",
 ]
 
 [tool.pytest.ini_options]
@@ -34,4 +35,23 @@ line-length = 100
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "UP", "B", "SIM"]
+# `S` = flake8-bandit (securitate), `RUF` = reguli proprii ruff, `C4` = comprehensions,
+# `ANN` = adnotari lipsa. Codul e deja scris in stilul asta peste tot; regulile sunt
+# aici ca sa nu se piarda disciplina la urmatoarea faza, nu ca sa repare ceva acum.
+select = ["E", "F", "I", "UP", "B", "SIM", "S", "RUF", "C4", "ANN"]
+
+[tool.ruff.lint.per-file-ignores]
+# Testele au voie sa foloseasca `assert` (S101) — acolo e chiar unealta potrivita —
+# si nu au nevoie de adnotari de retur pe fiecare caz de test (ANN).
+"tests/*" = ["S101", "ANN"]
+"scripts/*" = ["ANN"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+# Codul e adnotat integral, dar SQLModel/SQLAlchemy nu expun tipuri complete.
+plugins = []
+
+[[tool.mypy.overrides]]
+module = ["sqlmodel.*", "sqlalchemy.*"]
+ignore_missing_imports = true

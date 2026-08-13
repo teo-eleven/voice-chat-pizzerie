@@ -53,7 +53,7 @@ def load_fixture(path: Path | str = _DEFAULT_FIXTURE_PATH) -> tuple[AddressFixtu
 def parse_spoken_address(spoken_text: str) -> dict[str, str]:
     """Extrage strada, numarul si detaliile de livrare dintr-un text rostit.
 
-    Ex: „Aleea Nucșoara 4, bloc 12, scara B, apartament 47” -> street/number/
+    Ex: „Strada Ștefan cel Mare 24, bloc 12, scara B, apartament 47” -> street/number/
     block/staircase/apartment. Detaliile absente nu apar in dict.
     """
     first_segment = spoken_text.split(",")[0].strip()

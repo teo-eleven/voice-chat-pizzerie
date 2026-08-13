@@ -6,6 +6,8 @@ reală e un bug pe care nu îl prinzi decât la casă.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
+
 BANI_PER_LEU = 100
 
 
@@ -62,9 +64,15 @@ def spoken_ron(bani: int) -> str:
     return f"{lei_part} și {bani_part}"
 
 
-def sum_bani(values: object) -> int:
-    """Sumă explicită pe întregi — evită `sum()` cu start float din greșeală."""
+def sum_bani(values: Iterable[int]) -> int:
+    """Sumă explicită pe întregi — evită `sum()` cu start float din greșeală.
+
+    Tipul e `Iterable[int]`, nu `object`: un `object` plus un `type: ignore` ar fi
+    anulat exact scopul funcției, pentru că verificatorul de tipuri nu ar mai fi putut
+    vedea că elementele sunt întregi — adică fix contaminarea cu float pe care funcția
+    există ca s-o împiedice.
+    """
     total = 0
-    for value in values:  # type: ignore[union-attr]
+    for value in values:
         total += int(value)
     return total

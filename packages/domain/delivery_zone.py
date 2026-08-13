@@ -12,6 +12,9 @@ from .models import Address, AddressCandidate, AddressResult, ZoneConfig
 #: Câți candidați ambigui e rezonabil să-i rostim la telefon.
 MAX_SPOKEN_CANDIDATES = 3
 
+#: Un punct geografic, în ordinea folosită peste tot în zonă: `(lat, lon)`.
+Point = tuple[float, float]
+
 
 def point_in_polygon(lat: float, lon: float, polygon: tuple[tuple[float, float], ...]) -> bool:
     """Ray casting. Un punct pe o latură sau pe un vârf se consideră în zonă.
@@ -46,13 +49,21 @@ def _on_boundary(lat: float, lon: float, polygon: tuple[tuple[float, float], ...
         lat2, lon2 = polygon[(i + 1) % count]
         if (lat, lon) == (lat1, lon1):
             return True
-        if _on_segment(lat, lon, lat1, lon1, lat2, lon2):
+        if _on_segment((lat, lon), (lat1, lon1), (lat2, lon2)):
             return True
     return False
 
 
-def _on_segment(lat: float, lon: float, lat1: float, lon1: float, lat2: float, lon2: float) -> bool:
-    """Punctul e coliniar cu segmentul (lat1, lon1)-(lat2, lon2) și între capete."""
+def _on_segment(point: Point, start: Point, end: Point) -> bool:
+    """Punctul e coliniar cu segmentul `start`-`end` și între capete.
+
+    Capetele vin ca perechi `(lat, lon)`, la fel ca vârfurile din `polygon`: șase
+    float-uri separate nu spuneau care e latitudine și care longitudine decât prin
+    ordinea lor.
+    """
+    lat, lon = point
+    lat1, lon1 = start
+    lat2, lon2 = end
     cross = (lon2 - lon1) * (lat - lat1) - (lat2 - lat1) * (lon - lon1)
     if abs(cross) > 1e-12:
         return False

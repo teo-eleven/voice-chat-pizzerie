@@ -22,6 +22,13 @@ from .enums import (
     PaymentMethod,
     SizeCode,
 )
+from .limits import (
+    MAX_ALLERGY_NOTE_LEN,
+    MAX_IDEMPOTENCY_KEY_LEN,
+    MAX_NAME_LEN,
+    MAX_NOTES_LEN,
+    MAX_PHONE_LEN,
+)
 
 
 class Frozen(BaseModel):
@@ -99,6 +106,29 @@ class ZoneConfig(Frozen):
     free_delivery_threshold_bani: int | None = Field(default=None, gt=0)
 
 
+class PricingContext(Frozen):
+    """Contextul de calcul al prețului: `fulfillment` și `zone` merg mereu împreună."""
+
+    fulfillment: Fulfillment
+    zone: ZoneConfig
+
+
+class LineSpec(Frozen):
+    """Ce se adaugă ca linie nouă în coș. Toate câmpurile au valori implicite."""
+
+    qty: int = 1
+    size_code: SizeCode | None = None
+    removed_ingredients: tuple[str, ...] = ()
+
+
+class LineChanges(Frozen):
+    """Ce se schimbă la o linie existentă. `None` înseamnă „păstrează valoarea actuală”."""
+
+    qty: int | None = None
+    size_code: SizeCode | None = None
+    removed_ingredients: tuple[str, ...] | None = None
+
+
 # --------------------------------------------------------------------------- coș
 
 
@@ -150,7 +180,7 @@ class Address(Frozen):
     apartment: str | None = None
     intercom: str | None = None
     #: Detalii pentru livrator: „câine în curte", „poarta a doua".
-    notes: str | None = None
+    notes: str | None = Field(default=None, max_length=MAX_NOTES_LEN)
     lat: float | None = None
     lon: float | None = None
     formatted: str = ""
@@ -179,9 +209,9 @@ class AddressResult(Frozen):
 
 class Contact(Frozen):
     #: La telefonie vine din caller ID și se confirmă, nu se dictează.
-    phone: str
+    phone: str = Field(max_length=MAX_PHONE_LEN)
     #: Prenumele e suficient.
-    name: str = ""
+    name: str = Field(default="", max_length=MAX_NAME_LEN)
 
 
 class EtaWindow(Frozen):
@@ -205,10 +235,10 @@ class Order(Frozen):
     address: Address | None = None
     eta: EtaWindow | None = None
     #: Text liber marcat vizibil în bucătărie. Prezența lui forțează escaladarea.
-    allergy_note: str | None = None
+    allergy_note: str | None = Field(default=None, max_length=MAX_ALLERGY_NOTE_LEN)
     created_at: datetime | None = None
     #: Garantează că un retry de rețea nu produce comandă dublă.
-    idempotency_key: str = ""
+    idempotency_key: str = Field(default="", max_length=MAX_IDEMPOTENCY_KEY_LEN)
 
     @property
     def needs_driver(self) -> bool:
@@ -216,6 +246,15 @@ class Order(Frozen):
 
 
 class Escalation(Frozen):
+    """Predarea apelului către un operator uman.
+
+    SCHELET FAZA 5, neconectat încă la nicio rută. `docs/PLAN.md` numește escaladarea
+    „plasa de siguranță": confidence mic de două ori pe același câmp, client nervos,
+    reclamație, alergie, comandă mare. Modelul e definit de pe acum pentru că motivele
+    sunt decizii de produs deja luate (vezi `EscalationReason`), nu detalii de
+    implementare — nu se rediscută când se scrie faza.
+    """
+
     reason: EscalationReason
     detail: str = ""
     #: Rezumatul conversației, predat operatorului uman.

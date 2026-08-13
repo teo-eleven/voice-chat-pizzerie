@@ -3,31 +3,30 @@
 from __future__ import annotations
 
 from . import pricing, text
-from .enums import Fulfillment, SizeCode
+from .enums import SizeCode
 from .errors import DomainError
 from .limits import MAX_LINES_PER_CART, MAX_QTY_PER_LINE
-from .models import Cart, CartLine, Product, ZoneConfig
+from .models import Cart, CartLine, LineChanges, LineSpec, PricingContext, Product
 
 
 def add_line(
     cart: Cart,
     product: Product,
     *,
-    qty: int = 1,
-    size_code: SizeCode | None = None,
-    removed_ingredients: tuple[str, ...] = (),
-    fulfillment: Fulfillment,
-    zone: ZoneConfig,
+    spec: LineSpec,
+    context: PricingContext,
 ) -> Cart:
     _validate_cart_size(cart)
-    line = _price_line(_next_line_id(cart), product, qty, size_code, removed_ingredients)
-    return pricing.price_cart((*cart.lines, line), fulfillment, zone)
+    line = _price_line(
+        _next_line_id(cart), product, spec.qty, spec.size_code, spec.removed_ingredients
+    )
+    return pricing.price_cart((*cart.lines, line), context.fulfillment, context.zone)
 
 
-def remove_line(cart: Cart, line_id: str, *, fulfillment: Fulfillment, zone: ZoneConfig) -> Cart:
+def remove_line(cart: Cart, line_id: str, *, context: PricingContext) -> Cart:
     _find_line(cart, line_id)
     remaining = tuple(line for line in cart.lines if line.line_id != line_id)
-    return pricing.price_cart(remaining, fulfillment, zone)
+    return pricing.price_cart(remaining, context.fulfillment, context.zone)
 
 
 def update_line(
@@ -35,25 +34,30 @@ def update_line(
     line_id: str,
     product: Product,
     *,
-    qty: int | None = None,
-    size_code: SizeCode | None = None,
-    removed_ingredients: tuple[str, ...] | None = None,
-    fulfillment: Fulfillment,
-    zone: ZoneConfig,
+    changes: LineChanges,
+    context: PricingContext,
 ) -> Cart:
     existing = _find_line(cart, line_id)
-    new_qty = existing.qty if qty is None else qty
-    new_size_code = existing.size_code if size_code is None else size_code
+    new_qty = existing.qty if changes.qty is None else changes.qty
+    new_size_code = existing.size_code if changes.size_code is None else changes.size_code
     new_removed = (
-        existing.removed_ingredients if removed_ingredients is None else removed_ingredients
+        existing.removed_ingredients
+        if changes.removed_ingredients is None
+        else changes.removed_ingredients
     )
     updated = _price_line(line_id, product, new_qty, new_size_code, new_removed)
     lines = tuple(updated if line.line_id == line_id else line for line in cart.lines)
-    return pricing.price_cart(lines, fulfillment, zone)
+    return pricing.price_cart(lines, context.fulfillment, context.zone)
 
 
-def clear_cart(*, fulfillment: Fulfillment, zone: ZoneConfig) -> Cart:
-    return pricing.price_cart((), fulfillment, zone)
+def clear_cart(*, context: PricingContext) -> Cart:
+    """Coș gol, dar re-prețuit prin același drum ca oricare altul.
+
+    Nicio rută nu golește coșul integral azi (clientul scoate linie cu linie), dar
+    agentul din Faza 2 are nevoie de ea la anularea comenzii — unul dintre
+    scenariile obligatorii din `docs/PLAN.md`.
+    """
+    return pricing.price_cart((), context.fulfillment, context.zone)
 
 
 def _price_line(
@@ -105,7 +109,14 @@ def _resolve_size(
                 f"„{product.name}” nu are mărimi de ales.",
                 field="size_code",
             )
-        assert product.price_bani is not None, "produs fără mărimi trebuie să aibă price_bani"
+        if product.price_bani is None:
+            # Catalogul valideaza asta la incarcare, deci aici e catalog stricat, nu
+            # cerere gresita: `ValueError`, nu `DomainError` (care ar spune clientului
+            # ca el a gresit ceva). `assert` ar disparea sub `python -O` si am insera
+            # o linie cu pret `None` intr-un cos considerat deja validat.
+            raise ValueError(
+                f"Produsul „{product.id}” nu are mărimi și nici price_bani — catalog invalid."
+            )
         return None, None, product.price_bani, 0, 0
     if size_code is None:
         raise DomainError.of(

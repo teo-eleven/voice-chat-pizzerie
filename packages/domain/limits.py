@@ -22,4 +22,9 @@ MAX_ALLERGY_NOTE_LEN = 300
 MAX_IDEMPOTENCY_KEY_LEN = 100
 
 #: Peste atâtea unități pe linie sau linii în coș, e o comandă de tip catering.
+#:
+#: SCHELET FAZA 5, încă neconectat. `docs/PLAN.md` cere ca o comandă mare să fie
+#: escaladată la un operator uman, nu refuzată — iar escaladarea nu există încă
+#: (vezi `EscalationReason.LARGE_ORDER`). Pragul stă aici ca decizia să fie luată o
+#: singură dată și într-un singur loc, nu împrăștiată prin cod când vine faza.
 LARGE_ORDER_QTY_THRESHOLD = 20

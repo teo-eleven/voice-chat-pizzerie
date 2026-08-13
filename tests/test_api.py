@@ -16,21 +16,13 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlmodel import Session
 
-import apps.api.routes_session as routes_session_module
+import apps.api.placement as placement_module
 from apps.api.db import get_engine
-from apps.api.main import app
 from apps.api.sessions import SessionStore
 from apps.api.tables import OrderRow
+from packages.domain.catalog import Catalog
 from packages.domain.limits import MAX_ADDRESS_TEXT_LEN, MAX_QTY_PER_LINE
-
-
-@pytest.fixture
-def client(tmp_path, monkeypatch):
-    # Fiecare test primeste un fisier SQLite propriu, izolat de restul suitei.
-    db_path = tmp_path / "test.db"
-    monkeypatch.setenv("DATABASE_URL", f"sqlite:///{db_path}")
-    with TestClient(app) as test_client:
-        yield test_client
+from packages.domain.models import ZoneConfig
 
 
 def _create_session(client: TestClient) -> str:
@@ -52,7 +44,7 @@ def _ready_delivery_session(client: TestClient) -> str:
     sid = _create_session(client)
     _add_pizza(client, sid)
     client.put(f"/api/sessions/{sid}/fulfillment", json={"fulfillment": "delivery"})
-    client.post(f"/api/sessions/{sid}/address", json={"text": "Aleea Nucsoara 4"})
+    client.post(f"/api/sessions/{sid}/address", json={"text": "Strada Stefan cel Mare 24"})
     client.put(f"/api/sessions/{sid}/contact", json={"phone": "0711111111", "name": "Ana"})
     client.put(f"/api/sessions/{sid}/payment", json={"payment": "cash"})
     return sid
@@ -144,7 +136,7 @@ class TestBelowMinimumRejection:
     def test_place_delivery_below_minimum_returns_422_below_minimum_order(self, client: TestClient):
         # Arrange: adresa in zona, dar cosul (o apa, 5 lei) e sub minimul de livrare
         sid = _create_session(client)
-        client.post(f"/api/sessions/{sid}/address", json={"text": "Aleea Nucsoara 4"})
+        client.post(f"/api/sessions/{sid}/address", json={"text": "Strada Stefan cel Mare 24"})
         client.post(f"/api/sessions/{sid}/items", json={"product_id": "BT-006", "qty": 1})
         client.put(f"/api/sessions/{sid}/contact", json={"phone": "0700000000"})
         client.put(f"/api/sessions/{sid}/payment", json={"payment": "cash"})
@@ -180,7 +172,7 @@ class TestResolveAddress:
 
         # Act
         response = client.post(
-            f"/api/sessions/{sid}/address", json={"text": "Strada Aviatorilor 10"}
+            f"/api/sessions/{sid}/address", json={"text": "Calea Burdujeni 40"}
         )
         session_state = client.get(f"/api/sessions/{sid}")
 
@@ -195,7 +187,7 @@ class TestResolveAddress:
 
         # Act
         response = client.post(
-            f"/api/sessions/{sid}/address", json={"text": "Strada Trandafirilor 5"}
+            f"/api/sessions/{sid}/address", json={"text": "Strada Mihai Viteazu 12"}
         )
 
         # Assert
@@ -209,12 +201,14 @@ class TestResolveAddress:
         sid = _create_session(client)
 
         # Act
-        response = client.post(f"/api/sessions/{sid}/address", json={"text": "Aleea Nucsoara 4"})
+        response = client.post(
+            f"/api/sessions/{sid}/address", json={"text": "Strada Stefan cel Mare 24"}
+        )
         session_state = client.get(f"/api/sessions/{sid}")
 
         # Assert
         assert response.json()["resolution"] == "ok"
-        assert session_state.json()["address"]["street"] == "Aleea Nucșoara"
+        assert session_state.json()["address"]["street"] == "Strada Ștefan cel Mare"
 
 
 class TestAddItemValidation:
@@ -553,7 +547,7 @@ class TestOrderIdGeneration:
             f"/api/sessions/{first_sid}/place", json={"idempotency_key": "collide-1"}
         ).json()["id"]
 
-        real_next_order_id = routes_session_module.next_order_id
+        real_next_order_id = placement_module.next_order_id
         calls = {"count": 0}
 
         def _colliding_next_order_id(db_session):
@@ -563,7 +557,7 @@ class TestOrderIdGeneration:
                 return first_order_id
             return real_next_order_id(db_session)
 
-        monkeypatch.setattr(routes_session_module, "next_order_id", _colliding_next_order_id)
+        monkeypatch.setattr(placement_module, "next_order_id", _colliding_next_order_id)
 
         # Act: a doua comanda ar coliza pe `id` la prima incercare
         second_sid = _ready_delivery_session(client)
@@ -600,3 +594,76 @@ class TestOrderIdGeneration:
 
         # Assert: id-ul nou nu se reciclista si nu coliziona cu cel ramas
         assert third_order_id not in (first_order_id, second_order_id)
+
+
+class TestPlaceOrderValidation:
+    """Ramurile de re-validare din `place_order`, cerute explicit de `docs/PLAN.md`.
+
+    Predicatele de domeniu (`cart_ops`, `delivery_zone`, `pricing`) sunt acoperite la
+    nivel de unitate, dar orchestrarea lor din API — care verificare se declanseaza
+    prima si ce cod ajunge in raspuns — nu era testata. Un `if` mutat sau sters aici
+    ar fi trecut nevazut, exact in bucata pe care planul o numeste blocanta si peste
+    care Faza 2 construieste tool-ul `place_order`.
+    """
+
+    def test_place_without_contact_returns_422_contact_required(self, client: TestClient):
+        # Arrange: livrare completa (cos peste minim, adresa in zona, plata), fara contact
+        sid = _create_session(client)
+        _add_pizza(client, sid)
+        client.put(f"/api/sessions/{sid}/fulfillment", json={"fulfillment": "delivery"})
+        client.post(f"/api/sessions/{sid}/address", json={"text": "Strada Stefan cel Mare 24"})
+        client.put(f"/api/sessions/{sid}/payment", json={"payment": "cash"})
+
+        # Act
+        response = client.post(f"/api/sessions/{sid}/place", json={"idempotency_key": "no-contact"})
+
+        # Assert
+        assert response.status_code == 422
+        assert response.json()["code"] == "contact_required"
+
+    def test_place_without_payment_returns_422_payment_required(self, client: TestClient):
+        # Arrange: livrare completa cu contact setat, fara metoda de plata
+        sid = _create_session(client)
+        _add_pizza(client, sid)
+        client.put(f"/api/sessions/{sid}/fulfillment", json={"fulfillment": "delivery"})
+        client.post(f"/api/sessions/{sid}/address", json={"text": "Strada Stefan cel Mare 24"})
+        client.put(f"/api/sessions/{sid}/contact", json={"phone": "0733333333", "name": "Maria"})
+
+        # Act
+        response = client.post(f"/api/sessions/{sid}/place", json={"idempotency_key": "no-payment"})
+
+        # Assert
+        assert response.status_code == 422
+        assert response.json()["code"] == "payment_required"
+
+    def test_place_after_product_leaves_catalog_returns_422_product_unavailable(
+        self, client: TestClient
+    ):
+        # Arrange: sesiune gata de plasat, apoi produsul dispare din catalog intre
+        # adaugare si plasare — fix scenariul pentru care `place_order` re-valideaza.
+        sid = _ready_delivery_session(client)
+        client.app.state.catalog = Catalog()
+
+        # Act
+        response = client.post(f"/api/sessions/{sid}/place", json={"idempotency_key": "gone-1"})
+
+        # Assert
+        assert response.status_code == 422
+        assert response.json()["code"] == "product_unavailable"
+
+    def test_place_after_zone_shrinks_returns_422_address_out_of_zone(self, client: TestClient):
+        # Arrange: adresa era in zona la `resolve_address`, dar zona s-a schimbat
+        # intre timp. `min_order_bani=0` ca refuzul sa vina din zona, nu din minim.
+        sid = _ready_delivery_session(client)
+        client.app.state.zone = ZoneConfig(
+            polygon=((0.0, 0.0), (0.0, 1.0), (1.0, 1.0)),
+            min_order_bani=0,
+            delivery_fee_bani=0,
+        )
+
+        # Act
+        response = client.post(f"/api/sessions/{sid}/place", json={"idempotency_key": "zone-1"})
+
+        # Assert
+        assert response.status_code == 422
+        assert response.json()["code"] == "address_out_of_zone"

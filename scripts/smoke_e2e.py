@@ -9,14 +9,19 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 os.chdir(ROOT)  # catalogul și config-urile se încarcă din căi relative la rădăcină
-os.environ["DATABASE_URL"] = f"sqlite:///{tempfile.mktemp(suffix='.db')}"
+# `mkstemp` creează fișierul atomic și întoarce un descriptor deja deschis; `mktemp`
+# doar propunea un nume liber, pe care alt proces îl putea ocupa între timp.
+_db_fd, _db_path = tempfile.mkstemp(suffix=".db")
+os.close(_db_fd)  # SQLite deschide singur fișierul; nouă ne trebuie doar calea rezervată
+os.environ["DATABASE_URL"] = f"sqlite:///{_db_path}"
 
 from fastapi.testclient import TestClient  # noqa: E402
+from httpx import Response  # noqa: E402
 
 from apps.api.main import app  # noqa: E402
 
 
-def show(label, resp):
+def show(label: str, resp: Response) -> None:
     print(f"\n--- {label} -> HTTP {resp.status_code}")
     print(resp.json())
 
@@ -45,11 +50,11 @@ with TestClient(app) as c:
 
     show("livrare", c.put(f"/api/sessions/{sid}/fulfillment", json={"fulfillment": "delivery"}))
     show("adresa in afara zonei", c.post(f"/api/sessions/{sid}/address",
-         json={"text": "Strada Aviatorilor 10"}))
+         json={"text": "Calea Burdujeni 40"}))
     show("adresa ambigua", c.post(f"/api/sessions/{sid}/address",
-         json={"text": "Strada Trandafirilor 5"}))
+         json={"text": "Strada Mihai Viteazu 12"}))
     show("adresa buna + detalii", c.post(f"/api/sessions/{sid}/address",
-         json={"text": "Aleea Nucsoara 4, bloc 12, scara B, apartament 47"}))
+         json={"text": "Strada Stefan cel Mare 24, bloc 12, scara B, apartament 47"}))
     show("contact", c.put(f"/api/sessions/{sid}/contact",
          json={"phone": "0722334455", "name": "Teodor"}))
     show("plata cash", c.put(f"/api/sessions/{sid}/payment", json={"payment": "cash"}))

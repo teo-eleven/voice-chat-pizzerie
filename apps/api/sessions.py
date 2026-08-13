@@ -70,7 +70,7 @@ class CallSession(BaseModel):
     payment: PaymentMethod | None = None
     allergy_note: str | None = None
     asked_flags: dict[str, bool] = Field(
-        default_factory=lambda: {category: False for category in _ASKED_CATEGORIES}
+        default_factory=lambda: dict.fromkeys(_ASKED_CATEGORIES, False)
     )
     placed_order_id: str | None = None
 
