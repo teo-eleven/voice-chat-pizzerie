@@ -1,0 +1,2374 @@
+{
+  "_comment": "Registrul de străzi al municipiului Suceava, generat de scripts/import_addresses.py din date © colaboratorii OpenStreetMap (ODbL). Nu se editează manual — se regenerează.",
+  "city": "Suceava",
+  "county": "Suceava",
+  "country": "România",
+  "streets": [
+    {
+      "name": "Bulevardul 1 Decembrie 1918",
+      "key": "1 decembrie 1918",
+      "lat": 47.6345736,
+      "lon": 26.2322102,
+      "address_count": 20
+    },
+    {
+      "name": "Bulevardul 1 Mai",
+      "key": "1 mai",
+      "lat": 47.638061,
+      "lon": 26.2408152,
+      "address_count": 19
+    },
+    {
+      "name": "Strada 22 Decembrie",
+      "key": "22 decembrie",
+      "lat": 47.6839673,
+      "lon": 26.2898564,
+      "address_count": 220
+    },
+    {
+      "name": "Strada 28 Noiembrie",
+      "key": "28 noiembrie",
+      "lat": 47.6791292,
+      "lon": 26.2344313,
+      "address_count": 0
+    },
+    {
+      "name": "Strada 6 Noiembrie",
+      "key": "6 noiembrie",
+      "lat": 47.6426862,
+      "lon": 26.2505167,
+      "address_count": 52
+    },
+    {
+      "name": "Strada Academician Vasile Grecu",
+      "key": "academician vasile grecu",
+      "lat": 47.642295,
+      "lon": 26.2326509,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Alexandru cel Bun",
+      "key": "alexandru cel bun",
+      "lat": 47.6397541,
+      "lon": 26.2518641,
+      "address_count": 2
+    },
+    {
+      "name": "Strada Alexandru Ienceanu",
+      "key": "alexandru ienceanu",
+      "lat": 47.642247,
+      "lon": 26.2561023,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Alexandru Vlahuță",
+      "key": "alexandru vlahuta",
+      "lat": 47.6787947,
+      "lon": 26.2448962,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Alexandru Voievidca",
+      "key": "alexandru voievidca",
+      "lat": 47.6746816,
+      "lon": 26.2347162,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Aluminiului",
+      "key": "aluminiului",
+      "lat": 47.6790886,
+      "lon": 26.28798,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Alunului",
+      "key": "alunului",
+      "lat": 47.6773154,
+      "lon": 26.2852961,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Amurgului",
+      "key": "amurgului",
+      "lat": 47.6684762,
+      "lon": 26.2797764,
+      "address_count": 0
+    },
+    {
+      "name": "Bulevardul Ana Ipătescu",
+      "key": "ana ipatescu",
+      "lat": 47.6444564,
+      "lon": 26.261899,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Anastasie Crimca",
+      "key": "anastasie crimca",
+      "lat": 47.6414207,
+      "lon": 26.2519589,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Anton Holban",
+      "key": "anton holban",
+      "lat": 47.6826998,
+      "lon": 26.2659516,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Apeductului",
+      "key": "apeductului",
+      "lat": 47.6528811,
+      "lon": 26.2630973,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Arcașilor",
+      "key": "arcasilor",
+      "lat": 47.6447378,
+      "lon": 26.2532122,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Armenească",
+      "key": "armeneasca",
+      "lat": 47.648022,
+      "lon": 26.2567319,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Aron Pumnul",
+      "key": "aron pumnul",
+      "lat": 47.6779008,
+      "lon": 26.2415197,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Arțarului",
+      "key": "artarului",
+      "lat": 47.6822879,
+      "lon": 26.2692843,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Artur Gorovei",
+      "key": "artur gorovei",
+      "lat": 47.6658298,
+      "lon": 26.2880303,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Aurel Vlaicu",
+      "key": "aurel vlaicu",
+      "lat": 47.6741943,
+      "lon": 26.2362893,
+      "address_count": 4
+    },
+    {
+      "name": "Strada Aurora",
+      "key": "aurora",
+      "lat": 47.6708974,
+      "lon": 26.2806565,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Avântului",
+      "key": "avantului",
+      "lat": 47.6708132,
+      "lon": 26.278626,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Aviatorului",
+      "key": "aviatorului",
+      "lat": 47.6744244,
+      "lon": 26.2374839,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Avram Iancu",
+      "key": "avram iancu",
+      "lat": 47.6476549,
+      "lon": 26.2613012,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Baladei",
+      "key": "baladei",
+      "lat": 47.672947,
+      "lon": 26.275481,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Barbu Lăzăreanu",
+      "key": "barbu lazareanu",
+      "lat": 47.6773512,
+      "lon": 26.2477459,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Barbu Ștefănescu Delavrancea",
+      "key": "barbu stefanescu delavrancea",
+      "lat": 47.6806205,
+      "lon": 26.237933,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Bart Jean",
+      "key": "bart jean",
+      "lat": 47.6742797,
+      "lon": 26.2695268,
+      "address_count": 2
+    },
+    {
+      "name": "Strada Bazelor",
+      "key": "bazelor",
+      "lat": 47.6671496,
+      "lon": 26.2781217,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Bernath Andrei",
+      "key": "bernath andrei",
+      "lat": 47.6780457,
+      "lon": 26.2408797,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Biruinței",
+      "key": "biruintei",
+      "lat": 47.6773746,
+      "lon": 26.2410022,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Bistriței",
+      "key": "bistritei",
+      "lat": 47.6372167,
+      "lon": 26.232073,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Bogdan Vodă",
+      "key": "bogdan voda",
+      "lat": 47.6517462,
+      "lon": 26.2497324,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Brădetului",
+      "key": "bradetului",
+      "lat": 47.6369699,
+      "lon": 26.2677687,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Bradului",
+      "key": "bradului",
+      "lat": 47.6385345,
+      "lon": 26.2463623,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Brîndușei",
+      "key": "brindusei",
+      "lat": 47.6704612,
+      "lon": 26.2791264,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Bujorilor",
+      "key": "bujorilor",
+      "lat": 47.6686426,
+      "lon": 26.2787564,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Burdujeni",
+      "key": "burdujeni",
+      "lat": 47.6720313,
+      "lon": 26.2818787,
+      "address_count": 2
+    },
+    {
+      "name": "Strada Călimani",
+      "key": "calimani",
+      "lat": 47.6723438,
+      "lon": 26.2772095,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Calistrat Hogaș",
+      "key": "calistrat hogas",
+      "lat": 47.6766894,
+      "lon": 26.27624,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Camil Petrescu",
+      "key": "camil petrescu",
+      "lat": 47.682467,
+      "lon": 26.2826133,
+      "address_count": 26
+    },
+    {
+      "name": "Strada Câmpului",
+      "key": "campului",
+      "lat": 47.6809308,
+      "lon": 26.2438475,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Căpitan Grigore Andrei",
+      "key": "capitan grigore andrei",
+      "lat": 47.6787123,
+      "lon": 26.2825805,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Căprioarei",
+      "key": "caprioarei",
+      "lat": 47.6839308,
+      "lon": 26.3016777,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Cărămidarilor",
+      "key": "caramidarilor",
+      "lat": 47.6525618,
+      "lon": 26.2545756,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Carierei",
+      "key": "carierei",
+      "lat": 47.6867709,
+      "lon": 26.2999403,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Castanilor",
+      "key": "castanilor",
+      "lat": 47.6365912,
+      "lon": 26.2341541,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Celulozei",
+      "key": "celulozei",
+      "lat": 47.6728064,
+      "lon": 26.2773853,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Centura Suceava",
+      "key": "centura suceava",
+      "lat": 47.6194922,
+      "lon": 26.2348837,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Cernăuți",
+      "key": "cernauti",
+      "lat": 47.6604085,
+      "lon": 26.2506981,
+      "address_count": 2
+    },
+    {
+      "name": "Strada Cetății",
+      "key": "cetatii",
+      "lat": 47.6456979,
+      "lon": 26.2645595,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Cezar Petrescu",
+      "key": "cezar petrescu",
+      "lat": 47.687865,
+      "lon": 26.2357095,
+      "address_count": 15
+    },
+    {
+      "name": "Strada Ciprian Porumbescu",
+      "key": "ciprian porumbescu",
+      "lat": 47.6449203,
+      "lon": 26.2579645,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Cireșilor",
+      "key": "ciresilor",
+      "lat": 47.6431328,
+      "lon": 26.2629227,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Cireșoaia",
+      "key": "ciresoaia",
+      "lat": 47.6478312,
+      "lon": 26.2508398,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Comercianților",
+      "key": "comerciantilor",
+      "lat": 47.6423231,
+      "lon": 26.2436655,
+      "address_count": 41
+    },
+    {
+      "name": "Strada Constantin Dobrogeanu Gherea",
+      "key": "constantin dobrogeanu gherea",
+      "lat": 47.648394,
+      "lon": 26.2547173,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Constantin Moraru",
+      "key": "constantin moraru",
+      "lat": 47.6801398,
+      "lon": 26.242438,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Constantin Sofroni",
+      "key": "constantin sofroni",
+      "lat": 47.6644821,
+      "lon": 26.2965931,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Constructorului",
+      "key": "constructorului",
+      "lat": 47.6654203,
+      "lon": 26.2761465,
+      "address_count": 19
+    },
+    {
+      "name": "Bulevardul Corneliu Coposu",
+      "key": "corneliu coposu",
+      "lat": 47.6375556,
+      "lon": 26.2349167,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Costache Negri",
+      "key": "costache negri",
+      "lat": 47.6759876,
+      "lon": 26.2778219,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Costin Neculce",
+      "key": "costin neculce",
+      "lat": 47.6485763,
+      "lon": 26.246562,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Crângului",
+      "key": "crangului",
+      "lat": 47.6873026,
+      "lon": 26.2891517,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Crinului",
+      "key": "crinului",
+      "lat": 47.6765115,
+      "lon": 26.2291405,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Curtea Domnească",
+      "key": "curtea domneasca",
+      "lat": 47.6464757,
+      "lon": 26.2603086,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Cuza Vodă",
+      "key": "cuza voda",
+      "lat": 47.6710395,
+      "lon": 26.2891918,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Dan Dimitrie",
+      "key": "dan dimitrie",
+      "lat": 47.6481989,
+      "lon": 26.2621121,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Dealului",
+      "key": "dealului",
+      "lat": 47.6601474,
+      "lon": 26.2486649,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Decebal",
+      "key": "decebal",
+      "lat": 47.6548406,
+      "lon": 26.2569884,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Demostene Botez",
+      "key": "demostene botez",
+      "lat": 47.6681004,
+      "lon": 26.2974251,
+      "address_count": 37
+    },
+    {
+      "name": "Strada Depoului",
+      "key": "depoului",
+      "lat": 47.6782867,
+      "lon": 26.2326846,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Dimitrie Cantemir",
+      "key": "dimitrie cantemir",
+      "lat": 47.6467623,
+      "lon": 26.2442139,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Dimitrie Loghin",
+      "key": "dimitrie loghin",
+      "lat": 47.662746,
+      "lon": 26.2867691,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Dimitrie Onciul",
+      "key": "dimitrie onciul",
+      "lat": 47.6462211,
+      "lon": 26.258657,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Dionisie Para",
+      "key": "dionisie para",
+      "lat": 47.6523607,
+      "lon": 26.2484737,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Doamna Maria Voichița",
+      "key": "doamna maria voichita",
+      "lat": 47.6396911,
+      "lon": 26.252334,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Dobrilă Eugen",
+      "key": "dobrila eugen",
+      "lat": 47.6962632,
+      "lon": 26.286699,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Doctor Victor Babeș",
+      "key": "doctor victor babes",
+      "lat": 47.6804705,
+      "lon": 26.298123,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Dosoftei",
+      "key": "dosoftei",
+      "lat": 47.6759083,
+      "lon": 26.2448522,
+      "address_count": 16
+    },
+    {
+      "name": "Strada Dragomirna",
+      "key": "dragomirna",
+      "lat": 47.6834384,
+      "lon": 26.2444288,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Dragoș Vodă",
+      "key": "dragos voda",
+      "lat": 47.6473911,
+      "lon": 26.2552646,
+      "address_count": 53
+    },
+    {
+      "name": "Strada Drum Burdujeni - Aeroport Suceava",
+      "key": "drum burdujeni - aeroport suceava",
+      "lat": 47.693381,
+      "lon": 26.300682,
+      "address_count": 0
+    },
+    {
+      "name": "Aleea Dumbrăvii",
+      "key": "dumbravii",
+      "lat": 47.6828031,
+      "lon": 26.2677429,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Duzilor",
+      "key": "duzilor",
+      "lat": 47.6374234,
+      "lon": 26.235988,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Ecaterina Teodoroiu",
+      "key": "ecaterina teodoroiu",
+      "lat": 47.6773462,
+      "lon": 26.2884824,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Emil Cioran",
+      "key": "emil cioran",
+      "lat": 47.6377443,
+      "lon": 26.2554143,
+      "address_count": 61
+    },
+    {
+      "name": "Strada Emil Racoviță",
+      "key": "emil racovita",
+      "lat": 47.6774709,
+      "lon": 26.2466834,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Energeticianului",
+      "key": "energeticianului",
+      "lat": 47.6579666,
+      "lon": 26.2687911,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Epaminonda Bucovschi",
+      "key": "epaminonda bucovschi",
+      "lat": 47.6781734,
+      "lon": 26.2460506,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Eraclie Porumbescu",
+      "key": "eraclie porumbescu",
+      "lat": 47.6815197,
+      "lon": 26.2293727,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Eroilor",
+      "key": "eroilor",
+      "lat": 47.6673013,
+      "lon": 26.2834679,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Eternității",
+      "key": "eternitatii",
+      "lat": 47.6809133,
+      "lon": 26.2874143,
+      "address_count": 61
+    },
+    {
+      "name": "Strada Eugen Lovinescu",
+      "key": "eugen lovinescu",
+      "lat": 47.68063,
+      "lon": 26.2634329,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Eusebiu Camilar",
+      "key": "eusebiu camilar",
+      "lat": 47.6683553,
+      "lon": 26.2949855,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Făgărașului",
+      "key": "fagarasului",
+      "lat": 47.6320304,
+      "lon": 26.2208107,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Făgetului",
+      "key": "fagetului",
+      "lat": 47.6914946,
+      "lon": 26.2843906,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Fagului",
+      "key": "fagului",
+      "lat": 47.6782639,
+      "lon": 26.2694878,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Fântâna Albă",
+      "key": "fantana alba",
+      "lat": 47.6385348,
+      "lon": 26.2316333,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Florilor",
+      "key": "florilor",
+      "lat": 47.6721175,
+      "lon": 26.2690827,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Frasinului",
+      "key": "frasinului",
+      "lat": 47.6815975,
+      "lon": 26.2705426,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Gării",
+      "key": "garii",
+      "lat": 47.6737889,
+      "lon": 26.2409874,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Gemeniuc",
+      "key": "gemeniuc",
+      "lat": 47.6305992,
+      "lon": 26.2197162,
+      "address_count": 0
+    },
+    {
+      "name": "Strada General Iacob Zadik",
+      "key": "general iacob zadik",
+      "lat": 47.6736638,
+      "lon": 26.2846126,
+      "address_count": 0
+    },
+    {
+      "name": "Strada General Leonard Mociulschi",
+      "key": "general leonard mociulschi",
+      "lat": 47.6395938,
+      "lon": 26.2336054,
+      "address_count": 0
+    },
+    {
+      "name": "Strada George Bacovia",
+      "key": "george bacovia",
+      "lat": 47.6761465,
+      "lon": 26.2805607,
+      "address_count": 0
+    },
+    {
+      "name": "Strada George Călinescu",
+      "key": "george calinescu",
+      "lat": 47.6803479,
+      "lon": 26.2626421,
+      "address_count": 16
+    },
+    {
+      "name": "Strada George Coșbuc",
+      "key": "george cosbuc",
+      "lat": 47.6492132,
+      "lon": 26.2647944,
+      "address_count": 1
+    },
+    {
+      "name": "Bulevardul George Enescu",
+      "key": "george enescu",
+      "lat": 47.6437772,
+      "lon": 26.2412518,
+      "address_count": 5
+    },
+    {
+      "name": "Strada George Topârceanu",
+      "key": "george toparceanu",
+      "lat": 47.6790652,
+      "lon": 26.2564337,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Gheorghe Asachi",
+      "key": "gheorghe asachi",
+      "lat": 47.6761635,
+      "lon": 26.2797509,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Gheorghe Cozorici",
+      "key": "gheorghe cozorici",
+      "lat": 47.6653307,
+      "lon": 26.2928403,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Gheorghe Doja",
+      "key": "gheorghe doja",
+      "lat": 47.6757707,
+      "lon": 26.2589717,
+      "address_count": 112
+    },
+    {
+      "name": "Strada Gheorghe Mihuță",
+      "key": "gheorghe mihuta",
+      "lat": 47.6352965,
+      "lon": 26.2933448,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Gheorghe Ștefan",
+      "key": "gheorghe stefan",
+      "lat": 47.6794873,
+      "lon": 26.2380473,
+      "address_count": 2
+    },
+    {
+      "name": "Strada Gherasim Buliga",
+      "key": "gherasim buliga",
+      "lat": 47.6439186,
+      "lon": 26.2538441,
+      "address_count": 15
+    },
+    {
+      "name": "Strada Ghiocelului",
+      "key": "ghiocelului",
+      "lat": 47.6765875,
+      "lon": 26.2537101,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Grădinilor",
+      "key": "gradinilor",
+      "lat": 47.6461161,
+      "lon": 26.2685477,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Grigore Alex. Ghica",
+      "key": "grigore alex. ghica",
+      "lat": 47.6834235,
+      "lon": 26.2330125,
+      "address_count": 20
+    },
+    {
+      "name": "Strada Grigore Alexandru Ghica",
+      "key": "grigore alexandru ghica",
+      "lat": 47.6783354,
+      "lon": 26.2378847,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Grigore Andrei",
+      "key": "grigore andrei",
+      "lat": 47.677329,
+      "lon": 26.2854833,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Grigore Antipa",
+      "key": "grigore antipa",
+      "lat": 47.6744017,
+      "lon": 26.2857021,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Grigore Cobălcescu",
+      "key": "grigore cobalcescu",
+      "lat": 47.6781172,
+      "lon": 26.2449211,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Grigore Ureche",
+      "key": "grigore ureche",
+      "lat": 47.6482819,
+      "lon": 26.248504,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Grigore Vieru",
+      "key": "grigore vieru",
+      "lat": 47.6653528,
+      "lon": 26.2893792,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Grigore Vindereu",
+      "key": "grigore vindereu",
+      "lat": 47.6392086,
+      "lon": 26.2627659,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Horia Cloșca și Crișan",
+      "key": "horia closca si crisan",
+      "lat": 47.6470217,
+      "lon": 26.2597711,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Humorului",
+      "key": "humorului",
+      "lat": 47.68,
+      "lon": 26.245,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Hurmuzache Eudoxiu",
+      "key": "hurmuzache eudoxiu",
+      "lat": 47.6403801,
+      "lon": 26.2575073,
+      "address_count": 0
+    },
+    {
+      "name": "Strada I. C. Brătianu",
+      "key": "i. c. bratianu",
+      "lat": 47.6829976,
+      "lon": 26.2374144,
+      "address_count": 23
+    },
+    {
+      "name": "Strada I. G. Sbiera",
+      "key": "i. g. sbiera",
+      "lat": 47.6471487,
+      "lon": 26.2521262,
+      "address_count": 43
+    },
+    {
+      "name": "Strada Iancu Flondor",
+      "key": "iancu flondor",
+      "lat": 47.6423685,
+      "lon": 26.263359,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Iasomiei",
+      "key": "iasomiei",
+      "lat": 47.677316,
+      "lon": 26.2837217,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Ienceanu Alexandru",
+      "key": "ienceanu alexandru",
+      "lat": 47.642949,
+      "lon": 26.2572483,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Ileana Bardă",
+      "key": "ileana barda",
+      "lat": 47.6960579,
+      "lon": 26.2476993,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Ilie Ilașcu",
+      "key": "ilie ilascu",
+      "lat": 47.6535146,
+      "lon": 26.246769,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Înfrățirii",
+      "key": "infratirii",
+      "lat": 47.6824615,
+      "lon": 26.2925017,
+      "address_count": 11
+    },
+    {
+      "name": "Strada Ioan Slavici",
+      "key": "ioan slavici",
+      "lat": 47.6758717,
+      "lon": 26.2755375,
+      "address_count": 27
+    },
+    {
+      "name": "Strada Ioan Vodă Viteazul",
+      "key": "ioan voda viteazul",
+      "lat": 47.641935,
+      "lon": 26.262781,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Ion Carp Fluierici",
+      "key": "ion carp fluierici",
+      "lat": 47.6763915,
+      "lon": 26.273859,
+      "address_count": 37
+    },
+    {
+      "name": "Strada Ion Constantin Brătianu",
+      "key": "ion constantin bratianu",
+      "lat": 47.6830904,
+      "lon": 26.237461,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Ion Creangă",
+      "key": "ion creanga",
+      "lat": 47.6492649,
+      "lon": 26.2559427,
+      "address_count": 42
+    },
+    {
+      "name": "Strada Ion Dragoslav",
+      "key": "ion dragoslav",
+      "lat": 47.6828898,
+      "lon": 26.2645458,
+      "address_count": 37
+    },
+    {
+      "name": "Strada Ion Gheorghe Sbiera",
+      "key": "ion gheorghe sbiera",
+      "lat": 47.6468658,
+      "lon": 26.2521821,
+      "address_count": 0
+    },
+    {
+      "name": "Aleea Ion Grămadă",
+      "key": "ion gramada",
+      "lat": 47.643965,
+      "lon": 26.2604144,
+      "address_count": 4
+    },
+    {
+      "name": "Strada Ion Irimescu",
+      "key": "ion irimescu",
+      "lat": 47.6308546,
+      "lon": 26.2242249,
+      "address_count": 2
+    },
+    {
+      "name": "Strada Ion Luca Caragiale",
+      "key": "ion luca caragiale",
+      "lat": 47.6767873,
+      "lon": 26.2289008,
+      "address_count": 20
+    },
+    {
+      "name": "Strada Ion Neculce",
+      "key": "ion neculce",
+      "lat": 47.6490561,
+      "lon": 26.2477081,
+      "address_count": 15
+    },
+    {
+      "name": "Strada Ion Nistor",
+      "key": "ion nistor",
+      "lat": 47.6888287,
+      "lon": 26.2886336,
+      "address_count": 20
+    },
+    {
+      "name": "Strada Ion Păun Pincio",
+      "key": "ion paun pincio",
+      "lat": 47.6518304,
+      "lon": 26.2508711,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Ion Vodă Viteazu",
+      "key": "ion voda viteazu",
+      "lat": 47.6420391,
+      "lon": 26.2617533,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Ionel Teodoreanu",
+      "key": "ionel teodoreanu",
+      "lat": 47.6819582,
+      "lon": 26.2552147,
+      "address_count": 52
+    },
+    {
+      "name": "Strada Iuliu Maniu",
+      "key": "iuliu maniu",
+      "lat": 47.6378717,
+      "lon": 26.2575414,
+      "address_count": 49
+    },
+    {
+      "name": "Strada Izvoarele Cetății",
+      "key": "izvoarele cetatii",
+      "lat": 47.6385984,
+      "lon": 26.2644988,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Izvoarelor",
+      "key": "izvoarelor",
+      "lat": 47.6553591,
+      "lon": 26.2556067,
+      "address_count": 9
+    },
+    {
+      "name": "Strada Jean Bart",
+      "key": "jean bart",
+      "lat": 47.6729523,
+      "lon": 26.2682604,
+      "address_count": 33
+    },
+    {
+      "name": "Strada Joseph Schmidt",
+      "key": "joseph schmidt",
+      "lat": 47.666718,
+      "lon": 26.2841251,
+      "address_count": 2
+    },
+    {
+      "name": "Aleea Jupiter",
+      "key": "jupiter",
+      "lat": 47.6445933,
+      "lon": 26.2355948,
+      "address_count": 25
+    },
+    {
+      "name": "Aleea Lalelelor",
+      "key": "lalelelor",
+      "lat": 47.6425998,
+      "lon": 26.2370209,
+      "address_count": 26
+    },
+    {
+      "name": "Strada Lascăr Lutia",
+      "key": "lascar lutia",
+      "lat": 47.6521219,
+      "lon": 26.2518258,
+      "address_count": 9
+    },
+    {
+      "name": "Strada Lazăr Vicol",
+      "key": "lazar vicol",
+      "lat": 47.6414772,
+      "lon": 26.2385298,
+      "address_count": 11
+    },
+    {
+      "name": "Strada Leca Morariu",
+      "key": "leca morariu",
+      "lat": 47.6436752,
+      "lon": 26.2470731,
+      "address_count": 32
+    },
+    {
+      "name": "Strada Leca Morariu Profesor",
+      "key": "leca morariu profesor",
+      "lat": 47.6447679,
+      "lon": 26.2461868,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Leonard Mociulschi",
+      "key": "leonard mociulschi",
+      "lat": 47.6392772,
+      "lon": 26.2332922,
+      "address_count": 7
+    },
+    {
+      "name": "Strada Lev Tolstoi",
+      "key": "lev tolstoi",
+      "lat": 47.6867411,
+      "lon": 26.2939967,
+      "address_count": 48
+    },
+    {
+      "name": "Strada Libertății",
+      "key": "libertatii",
+      "lat": 47.6429649,
+      "lon": 26.2583981,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Liliacului",
+      "key": "liliacului",
+      "lat": 47.6737952,
+      "lon": 26.2404821,
+      "address_count": 15
+    },
+    {
+      "name": "Strada Lipoveni",
+      "key": "lipoveni",
+      "lat": 47.6858198,
+      "lon": 26.2306855,
+      "address_count": 5
+    },
+    {
+      "name": "Strada Livezilor",
+      "key": "livezilor",
+      "lat": 47.682692,
+      "lon": 26.2349369,
+      "address_count": 6
+    },
+    {
+      "name": "Strada Liviu Rebreanu",
+      "key": "liviu rebreanu",
+      "lat": 47.6814456,
+      "lon": 26.2823358,
+      "address_count": 10
+    },
+    {
+      "name": "Strada Locotenent Mircea Damaschin",
+      "key": "locotenent mircea damaschin",
+      "lat": 47.6720645,
+      "lon": 26.2753645,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Locotenent Nicolae Cătănescu",
+      "key": "locotenent nicolae catanescu",
+      "lat": 47.6607687,
+      "lon": 26.298592,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Luca Arbore",
+      "key": "luca arbore",
+      "lat": 47.6450771,
+      "lon": 26.2645317,
+      "address_count": 19
+    },
+    {
+      "name": "Strada Luceafărului",
+      "key": "luceafarului",
+      "lat": 47.6394704,
+      "lon": 26.2373845,
+      "address_count": 14
+    },
+    {
+      "name": "Strada Lucian Blaga",
+      "key": "lucian blaga",
+      "lat": 47.6789548,
+      "lon": 26.2616349,
+      "address_count": 17
+    },
+    {
+      "name": "Strada Madrid",
+      "key": "madrid",
+      "lat": 47.6335108,
+      "lon": 26.264293,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Măgurei",
+      "key": "magurei",
+      "lat": 47.637218,
+      "lon": 26.2246569,
+      "address_count": 16
+    },
+    {
+      "name": "Strada Mărășești",
+      "key": "marasesti",
+      "lat": 47.647902,
+      "lon": 26.2502538,
+      "address_count": 82
+    },
+    {
+      "name": "Strada Mărăști",
+      "key": "marasti",
+      "lat": 47.6465174,
+      "lon": 26.2510183,
+      "address_count": 18
+    },
+    {
+      "name": "Strada Marin Preda",
+      "key": "marin preda",
+      "lat": 47.6810872,
+      "lon": 26.2832424,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Marin Sorescu",
+      "key": "marin sorescu",
+      "lat": 47.6760528,
+      "lon": 26.2687725,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Mărpșești",
+      "key": "marpsesti",
+      "lat": 47.6462172,
+      "lon": 26.2495955,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Matei Millo",
+      "key": "matei millo",
+      "lat": 47.6765336,
+      "lon": 26.2866828,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Merilor",
+      "key": "merilor",
+      "lat": 47.6741884,
+      "lon": 26.236333,
+      "address_count": 13
+    },
+    {
+      "name": "Strada Meseriașilor",
+      "key": "meseriasilor",
+      "lat": 47.6456881,
+      "lon": 26.2590941,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Mesteacănului",
+      "key": "mesteacanului",
+      "lat": 47.6370012,
+      "lon": 26.2350625,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Micșunelelor",
+      "key": "micsunelelor",
+      "lat": 47.679045,
+      "lon": 26.2335322,
+      "address_count": 25
+    },
+    {
+      "name": "Strada Mihai Băcescu",
+      "key": "mihai bacescu",
+      "lat": 47.6831022,
+      "lon": 26.2631764,
+      "address_count": 14
+    },
+    {
+      "name": "Strada Mihai Eminescu",
+      "key": "mihai eminescu",
+      "lat": 47.6459689,
+      "lon": 26.255728,
+      "address_count": 38
+    },
+    {
+      "name": "Strada Mihai Viteazu",
+      "key": "mihai viteazu",
+      "lat": 47.6458571,
+      "lon": 26.2570454,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Mihai Viteazul",
+      "key": "mihai viteazul",
+      "lat": 47.6440806,
+      "lon": 26.2539221,
+      "address_count": 42
+    },
+    {
+      "name": "Strada Mihail Kogălniceanu",
+      "key": "mihail kogalniceanu",
+      "lat": 47.6514239,
+      "lon": 26.2538026,
+      "address_count": 27
+    },
+    {
+      "name": "Strada Mihail Sadoveanu",
+      "key": "mihail sadoveanu",
+      "lat": 47.6566419,
+      "lon": 26.2485949,
+      "address_count": 81
+    },
+    {
+      "name": "Strada Mioriței",
+      "key": "mioritei",
+      "lat": 47.6831416,
+      "lon": 26.2983932,
+      "address_count": 15
+    },
+    {
+      "name": "Strada Mirăuților",
+      "key": "mirautilor",
+      "lat": 47.647322,
+      "lon": 26.2717001,
+      "address_count": 63
+    },
+    {
+      "name": "Strada Mircea Damaschin",
+      "key": "mircea damaschin",
+      "lat": 47.6728611,
+      "lon": 26.2741049,
+      "address_count": 19
+    },
+    {
+      "name": "Strada Mircea Hrișcă",
+      "key": "mircea hrisca",
+      "lat": 47.6669047,
+      "lon": 26.2957661,
+      "address_count": 89
+    },
+    {
+      "name": "Strada Mircea Motrici",
+      "key": "mircea motrici",
+      "lat": 47.6659975,
+      "lon": 26.2958603,
+      "address_count": 31
+    },
+    {
+      "name": "Strada Mircea Șeptilici",
+      "key": "mircea septilici",
+      "lat": 47.656681,
+      "lon": 26.2525489,
+      "address_count": 13
+    },
+    {
+      "name": "Strada Mircea Țurcanu",
+      "key": "mircea turcanu",
+      "lat": 47.6482735,
+      "lon": 26.2490491,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Miron Costin",
+      "key": "miron costin",
+      "lat": 47.6462109,
+      "lon": 26.2489548,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Mitocelului",
+      "key": "mitocelului",
+      "lat": 47.6832654,
+      "lon": 26.251976,
+      "address_count": 72
+    },
+    {
+      "name": "Strada Mitocului",
+      "key": "mitocului",
+      "lat": 47.6821858,
+      "lon": 26.2398265,
+      "address_count": 20
+    },
+    {
+      "name": "Strada Mitropoliei",
+      "key": "mitropoliei",
+      "lat": 47.6413699,
+      "lon": 26.2614305,
+      "address_count": 15
+    },
+    {
+      "name": "Strada Mitropolit Dosoftei",
+      "key": "mitropolit dosoftei",
+      "lat": 47.6760517,
+      "lon": 26.2447156,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Mitropolit Vladimir Repta",
+      "key": "mitropolit vladimir repta",
+      "lat": 47.6412149,
+      "lon": 26.260873,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Moldovița",
+      "key": "moldovita",
+      "lat": 47.6354099,
+      "lon": 26.265914,
+      "address_count": 11
+    },
+    {
+      "name": "Strada Molidului",
+      "key": "molidului",
+      "lat": 47.6972087,
+      "lon": 26.2835336,
+      "address_count": 14
+    },
+    {
+      "name": "Strada Morii",
+      "key": "morii",
+      "lat": 47.6418341,
+      "lon": 26.2396638,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Muncii",
+      "key": "muncii",
+      "lat": 47.6691632,
+      "lon": 26.2807738,
+      "address_count": 6
+    },
+    {
+      "name": "Strada Muncitorului",
+      "key": "muncitorului",
+      "lat": 47.6781636,
+      "lon": 26.2426082,
+      "address_count": 33
+    },
+    {
+      "name": "Strada Narciselor",
+      "key": "narciselor",
+      "lat": 47.6493994,
+      "lon": 26.2443103,
+      "address_count": 48
+    },
+    {
+      "name": "Strada Nichita Stănescu",
+      "key": "nichita stanescu",
+      "lat": 47.6376405,
+      "lon": 26.2506864,
+      "address_count": 19
+    },
+    {
+      "name": "Strada Nicolae Bălcescu",
+      "key": "nicolae balcescu",
+      "lat": 47.6454129,
+      "lon": 26.2590549,
+      "address_count": 10
+    },
+    {
+      "name": "Strada Nicolae Cătănescu",
+      "key": "nicolae catanescu",
+      "lat": 47.6606125,
+      "lon": 26.2986649,
+      "address_count": 14
+    },
+    {
+      "name": "Strada Nicolae Costin",
+      "key": "nicolae costin",
+      "lat": 47.6482694,
+      "lon": 26.2464582,
+      "address_count": 14
+    },
+    {
+      "name": "Strada Nicolae Grigorescu",
+      "key": "nicolae grigorescu",
+      "lat": 47.6743133,
+      "lon": 26.2885196,
+      "address_count": 29
+    },
+    {
+      "name": "Strada Nicolae Iorga",
+      "key": "nicolae iorga",
+      "lat": 47.6689787,
+      "lon": 26.2719392,
+      "address_count": 32
+    },
+    {
+      "name": "Strada Nicolae Istrati",
+      "key": "nicolae istrati",
+      "lat": 47.6834479,
+      "lon": 26.2615563,
+      "address_count": 33
+    },
+    {
+      "name": "Strada Nicolae Labiș",
+      "key": "nicolae labis",
+      "lat": 47.6561021,
+      "lon": 26.2571464,
+      "address_count": 24
+    },
+    {
+      "name": "Strada Nicolae Milescu",
+      "key": "nicolae milescu",
+      "lat": 47.6521446,
+      "lon": 26.24911,
+      "address_count": 27
+    },
+    {
+      "name": "Strada Nicolae Titulescu",
+      "key": "nicolae titulescu",
+      "lat": 47.6382879,
+      "lon": 26.2549346,
+      "address_count": 55
+    },
+    {
+      "name": "Strada Nistor Ion",
+      "key": "nistor ion",
+      "lat": 47.6887394,
+      "lon": 26.2892873,
+      "address_count": 0
+    },
+    {
+      "name": "Aleea Nucului",
+      "key": "nucului",
+      "lat": 47.6432735,
+      "lon": 26.2564495,
+      "address_count": 16
+    },
+    {
+      "name": "Calea Obcinelor",
+      "key": "obcinelor",
+      "lat": 47.6392682,
+      "lon": 26.2361467,
+      "address_count": 14
+    },
+    {
+      "name": "Strada Octav Băncilă",
+      "key": "octav bancila",
+      "lat": 47.6489562,
+      "lon": 26.2470875,
+      "address_count": 8
+    },
+    {
+      "name": "Strada Octavian Goga",
+      "key": "octavian goga",
+      "lat": 47.6761232,
+      "lon": 26.2748919,
+      "address_count": 17
+    },
+    {
+      "name": "Strada Oituz",
+      "key": "oituz",
+      "lat": 47.6451237,
+      "lon": 26.2471273,
+      "address_count": 45
+    },
+    {
+      "name": "Strada Păcii",
+      "key": "pacii",
+      "lat": 47.6687025,
+      "lon": 26.2833273,
+      "address_count": 20
+    },
+    {
+      "name": "Strada Panaiteanu",
+      "key": "panaiteanu",
+      "lat": 47.6785138,
+      "lon": 26.2930816,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Parcului",
+      "key": "parcului",
+      "lat": 47.6400678,
+      "lon": 26.272148,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Paris",
+      "key": "paris",
+      "lat": 47.6361992,
+      "lon": 26.2603207,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Perilor",
+      "key": "perilor",
+      "lat": 47.6741128,
+      "lon": 26.235466,
+      "address_count": 10
+    },
+    {
+      "name": "Strada Petre Țuțea",
+      "key": "petre tutea",
+      "lat": 47.6778832,
+      "lon": 26.2608145,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Petru Mușat",
+      "key": "petru musat",
+      "lat": 47.6474242,
+      "lon": 26.2675875,
+      "address_count": 27
+    },
+    {
+      "name": "Strada Petru Rareș",
+      "key": "petru rares",
+      "lat": 47.6478127,
+      "lon": 26.2601045,
+      "address_count": 86
+    },
+    {
+      "name": "Strada Petuniilor",
+      "key": "petuniilor",
+      "lat": 47.6525269,
+      "lon": 26.2508079,
+      "address_count": 7
+    },
+    {
+      "name": "Strada Pictor Dumitru Dacian",
+      "key": "pictor dumitru dacian",
+      "lat": 47.6787891,
+      "lon": 26.2600546,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Pictor Panaiteanu",
+      "key": "pictor panaiteanu",
+      "lat": 47.6780991,
+      "lon": 26.290956,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Pictor Panaitescu",
+      "key": "pictor panaitescu",
+      "lat": 47.6785738,
+      "lon": 26.2926766,
+      "address_count": 78
+    },
+    {
+      "name": "Strada Pictor Romeo Calancea",
+      "key": "pictor romeo calancea",
+      "lat": 47.6810799,
+      "lon": 26.2594093,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Pictor Șerban Rusu Arbore",
+      "key": "pictor serban rusu arbore",
+      "lat": 47.6357429,
+      "lon": 26.2392442,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Pietrăriei",
+      "key": "pietrariei",
+      "lat": 47.6886878,
+      "lon": 26.2968808,
+      "address_count": 22
+    },
+    {
+      "name": "Strada Pinilor",
+      "key": "pinilor",
+      "lat": 47.6317913,
+      "lon": 26.2788414,
+      "address_count": 0
+    },
+    {
+      "name": "Aleea Pinului",
+      "key": "pinului",
+      "lat": 47.6434404,
+      "lon": 26.2566146,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Plăieșilor",
+      "key": "plaiesilor",
+      "lat": 47.6461258,
+      "lon": 26.25939,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Plaiului",
+      "key": "plaiului",
+      "lat": 47.6756378,
+      "lon": 26.2512494,
+      "address_count": 27
+    },
+    {
+      "name": "Strada Platoului",
+      "key": "platoului",
+      "lat": 47.6583562,
+      "lon": 26.2476516,
+      "address_count": 11
+    },
+    {
+      "name": "Strada Plevnei",
+      "key": "plevnei",
+      "lat": 47.68165,
+      "lon": 26.2923443,
+      "address_count": 168
+    },
+    {
+      "name": "Strada Plopului",
+      "key": "plopului",
+      "lat": 47.6800755,
+      "lon": 26.2680238,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Podul Unirii",
+      "key": "podul unirii",
+      "lat": 47.6518952,
+      "lon": 26.2791965,
+      "address_count": 0
+    },
+    {
+      "name": "Bulevardul Prefect Gavril Tudoraș",
+      "key": "prefect gavril tudoras",
+      "lat": 47.6350225,
+      "lon": 26.2303168,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Prieteniei",
+      "key": "prieteniei",
+      "lat": 47.6699548,
+      "lon": 26.2856972,
+      "address_count": 10
+    },
+    {
+      "name": "Strada Privighetorii",
+      "key": "privighetorii",
+      "lat": 47.6732137,
+      "lon": 26.2674283,
+      "address_count": 13
+    },
+    {
+      "name": "Strada Profesor Leca Morariu",
+      "key": "profesor leca morariu",
+      "lat": 47.6439981,
+      "lon": 26.2475846,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Profesor Tudoraș Gavril",
+      "key": "profesor tudoras gavril",
+      "lat": 47.6341446,
+      "lon": 26.22738,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Promenadei",
+      "key": "promenadei",
+      "lat": 47.6563335,
+      "lon": 26.2653493,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Prunului",
+      "key": "prunului",
+      "lat": 47.6470213,
+      "lon": 26.2629781,
+      "address_count": 11
+    },
+    {
+      "name": "Strada Putna",
+      "key": "putna",
+      "lat": 47.6736075,
+      "lon": 26.2664539,
+      "address_count": 24
+    },
+    {
+      "name": "Strada Rarău",
+      "key": "rarau",
+      "lat": 47.6735611,
+      "lon": 26.2754025,
+      "address_count": 4
+    },
+    {
+      "name": "Strada Republicii",
+      "key": "republicii",
+      "lat": 47.6420634,
+      "lon": 26.2548476,
+      "address_count": 20
+    },
+    {
+      "name": "Strada Rîndunicii",
+      "key": "rindunicii",
+      "lat": 47.6700618,
+      "lon": 26.279691,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Romeo Calancea",
+      "key": "romeo calancea",
+      "lat": 47.6806684,
+      "lon": 26.2594089,
+      "address_count": 16
+    },
+    {
+      "name": "Strada Romeo Clancea",
+      "key": "romeo clancea",
+      "lat": 47.6926212,
+      "lon": 26.2630554,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Rulmentului",
+      "key": "rulmentului",
+      "lat": 47.6395886,
+      "lon": 26.2330684,
+      "address_count": 18
+    },
+    {
+      "name": "Strada Sălciilor",
+      "key": "salciilor",
+      "lat": 47.6530871,
+      "lon": 26.2609555,
+      "address_count": 7
+    },
+    {
+      "name": "Strada Samoil Isopescu",
+      "key": "samoil isopescu",
+      "lat": 47.639167,
+      "lon": 26.2607818,
+      "address_count": 36
+    },
+    {
+      "name": "Strada Saturn",
+      "key": "saturn",
+      "lat": 47.6420622,
+      "lon": 26.2431941,
+      "address_count": 8
+    },
+    {
+      "name": "Strada Sbiera I. G.",
+      "key": "sbiera i. g.",
+      "lat": 47.6499665,
+      "lon": 26.2537204,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Scurtă",
+      "key": "scurta",
+      "lat": 47.6401375,
+      "lon": 26.2415102,
+      "address_count": 5
+    },
+    {
+      "name": "Strada Semicercului",
+      "key": "semicercului",
+      "lat": 47.654866,
+      "lon": 26.2544846,
+      "address_count": 9
+    },
+    {
+      "name": "Strada Şerban Rusu Arbore",
+      "key": "serban rusu arbore",
+      "lat": 47.636286,
+      "lon": 26.2384657,
+      "address_count": 2
+    },
+    {
+      "name": "Strada Severin Procopovici",
+      "key": "severin procopovici",
+      "lat": 47.6509942,
+      "lon": 26.2600783,
+      "address_count": 6
+    },
+    {
+      "name": "Strada Simion Florea Marian",
+      "key": "simion florea marian",
+      "lat": 47.6451437,
+      "lon": 26.2551109,
+      "address_count": 13
+    },
+    {
+      "name": "Strada Șipotului",
+      "key": "sipotului",
+      "lat": 47.6537521,
+      "lon": 26.2554263,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Slătioarei",
+      "key": "slatioarei",
+      "lat": 47.6372865,
+      "lon": 26.2319933,
+      "address_count": 23
+    },
+    {
+      "name": "Strada Socului",
+      "key": "socului",
+      "lat": 47.6815977,
+      "lon": 26.2714462,
+      "address_count": 6
+    },
+    {
+      "name": "Bulevardul Sofia Vicoveanca",
+      "key": "sofia vicoveanca",
+      "lat": 47.6309412,
+      "lon": 26.2300488,
+      "address_count": 21
+    },
+    {
+      "name": "Strada Șoimului",
+      "key": "soimului",
+      "lat": 47.6734489,
+      "lon": 26.2772112,
+      "address_count": 2
+    },
+    {
+      "name": "Strada Solidarității",
+      "key": "solidaritatii",
+      "lat": 47.6511374,
+      "lon": 26.2619104,
+      "address_count": 27
+    },
+    {
+      "name": "Strada Spicului",
+      "key": "spicului",
+      "lat": 47.6789887,
+      "lon": 26.2839999,
+      "address_count": 10
+    },
+    {
+      "name": "Strada Spiru Haret",
+      "key": "spiru haret",
+      "lat": 47.6756366,
+      "lon": 26.2831195,
+      "address_count": 11
+    },
+    {
+      "name": "Strada Stadionului",
+      "key": "stadionului",
+      "lat": 47.6784752,
+      "lon": 26.2366282,
+      "address_count": 19
+    },
+    {
+      "name": "Strada Stațiunii",
+      "key": "statiunii",
+      "lat": 47.6369194,
+      "lon": 26.2276456,
+      "address_count": 28
+    },
+    {
+      "name": "Strada Ștefan cel Mare",
+      "key": "stefan cel mare",
+      "lat": 47.6409715,
+      "lon": 26.2546846,
+      "address_count": 39
+    },
+    {
+      "name": "Strada Ștefan Dracinschi",
+      "key": "stefan dracinschi",
+      "lat": 47.6396391,
+      "lon": 26.2556892,
+      "address_count": 17
+    },
+    {
+      "name": "Strada Ștefan Luchian",
+      "key": "stefan luchian",
+      "lat": 47.6853542,
+      "lon": 26.2875845,
+      "address_count": 24
+    },
+    {
+      "name": "Strada Ștefan Octavian Iosif",
+      "key": "stefan octavian iosif",
+      "lat": 47.6513784,
+      "lon": 26.250575,
+      "address_count": 9
+    },
+    {
+      "name": "Strada Ștefan Răzvan",
+      "key": "stefan razvan",
+      "lat": 47.6798841,
+      "lon": 26.284379,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Ștefan Stefureac",
+      "key": "stefan stefureac",
+      "lat": 47.6504096,
+      "lon": 26.2582943,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Ștefan Tomșa",
+      "key": "stefan tomsa",
+      "lat": 47.639142,
+      "lon": 26.2519775,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Ștefăniță Vodă",
+      "key": "stefanita voda",
+      "lat": 47.6445292,
+      "lon": 26.265013,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Stejarului",
+      "key": "stejarului",
+      "lat": 47.6501969,
+      "lon": 26.2474878,
+      "address_count": 11
+    },
+    {
+      "name": "Strada Ștrandului",
+      "key": "strandului",
+      "lat": 47.666185,
+      "lon": 26.2486607,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Sublocotenent Alexandru Ienceanu",
+      "key": "sublocotenent alexandru ienceanu",
+      "lat": 47.6427116,
+      "lon": 26.2555237,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Sublocotenent Turturică",
+      "key": "sublocotenent turturica",
+      "lat": 47.6800686,
+      "lon": 26.2476433,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Sucevița",
+      "key": "sucevita",
+      "lat": 47.6363274,
+      "lon": 26.2680925,
+      "address_count": 6
+    },
+    {
+      "name": "Strada Tăbăcarilor",
+      "key": "tabacarilor",
+      "lat": 47.6507455,
+      "lon": 26.2563817,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Tarniței",
+      "key": "tarnitei",
+      "lat": 47.6341967,
+      "lon": 26.2247055,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Tatarasi Noi",
+      "key": "tatarasi noi",
+      "lat": 47.6291189,
+      "lon": 26.2698886,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Teilor",
+      "key": "teilor",
+      "lat": 47.6398772,
+      "lon": 26.2432969,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Teodor Robeanu",
+      "key": "teodor robeanu",
+      "lat": 47.6488765,
+      "lon": 26.2613671,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Teodor Ștefanelli",
+      "key": "teodor stefanelli",
+      "lat": 47.6477104,
+      "lon": 26.2658884,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Tiberiu Popeia",
+      "key": "tiberiu popeia",
+      "lat": 47.6884509,
+      "lon": 26.2938162,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Tineretului",
+      "key": "tineretului",
+      "lat": 47.6696714,
+      "lon": 26.2816004,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Tipografiei",
+      "key": "tipografiei",
+      "lat": 47.6402906,
+      "lon": 26.2592159,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Titu Maiorescu",
+      "key": "titu maiorescu",
+      "lat": 47.6801107,
+      "lon": 26.2835186,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Traian Popovici",
+      "key": "traian popovici",
+      "lat": 47.6633958,
+      "lon": 26.2929727,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Traian Țăranu",
+      "key": "traian taranu",
+      "lat": 47.630269,
+      "lon": 26.2278781,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Traian Vuia",
+      "key": "traian vuia",
+      "lat": 47.6579402,
+      "lon": 26.2567544,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Trandafirilor",
+      "key": "trandafirilor",
+      "lat": 47.6415327,
+      "lon": 26.2537557,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Triajului",
+      "key": "triajului",
+      "lat": 47.668964,
+      "lon": 26.2650985,
+      "address_count": 16
+    },
+    {
+      "name": "Strada Tudor Arghezi",
+      "key": "tudor arghezi",
+      "lat": 47.6754244,
+      "lon": 26.2710396,
+      "address_count": 15
+    },
+    {
+      "name": "Strada Tudor Vianu",
+      "key": "tudor vianu",
+      "lat": 47.6806057,
+      "lon": 26.2533707,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Tudor Vladimirescu",
+      "key": "tudor vladimirescu",
+      "lat": 47.6401958,
+      "lon": 26.2611106,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Tudoraș Gavril Profesor",
+      "key": "tudoras gavril profesor",
+      "lat": 47.6345769,
+      "lon": 26.2301036,
+      "address_count": 0
+    },
+    {
+      "name": "Calea Unirii",
+      "key": "unirii",
+      "lat": 47.6630883,
+      "lon": 26.2696071,
+      "address_count": 6
+    },
+    {
+      "name": "Strada Universității",
+      "key": "universitatii",
+      "lat": 47.6408605,
+      "lon": 26.2459733,
+      "address_count": 4
+    },
+    {
+      "name": "Strada Vasile Alecsandri",
+      "key": "vasile alecsandri",
+      "lat": 47.646559,
+      "lon": 26.2576565,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Vasile Bumbac",
+      "key": "vasile bumbac",
+      "lat": 47.6430422,
+      "lon": 26.2577138,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Vasile Lupu",
+      "key": "vasile lupu",
+      "lat": 47.6804584,
+      "lon": 26.237483,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Vasile Pîrvan",
+      "key": "vasile pirvan",
+      "lat": 47.6901761,
+      "lon": 26.2958866,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Venus",
+      "key": "venus",
+      "lat": 47.6436595,
+      "lon": 26.2416737,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Veronica Micle",
+      "key": "veronica micle",
+      "lat": 47.6471399,
+      "lon": 26.2530416,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Victoriei",
+      "key": "victoriei",
+      "lat": 47.6348344,
+      "lon": 26.2279224,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Viena",
+      "key": "viena",
+      "lat": 47.6347893,
+      "lon": 26.2625055,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Viitorului",
+      "key": "viitorului",
+      "lat": 47.6385089,
+      "lon": 26.2285677,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Vișinilor",
+      "key": "visinilor",
+      "lat": 47.6487103,
+      "lon": 26.2455196,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Voroneț",
+      "key": "voronet",
+      "lat": 47.6359588,
+      "lon": 26.2688122,
+      "address_count": 18
+    },
+    {
+      "name": "Strada Zadik Iacob Gl",
+      "key": "zadik iacob gl",
+      "lat": 47.6718725,
+      "lon": 26.2833329,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Zamca",
+      "key": "zamca",
+      "lat": 47.6515339,
+      "lon": 26.248219,
+      "address_count": 2
+    },
+    {
+      "name": "Strada Zamcei",
+      "key": "zamcei",
+      "lat": 47.6507986,
+      "lon": 26.2483695,
+      "address_count": 3
+    },
+    {
+      "name": "Strada Zefirului",
+      "key": "zefirului",
+      "lat": 47.681403,
+      "lon": 26.2379584,
+      "address_count": 0
+    },
+    {
+      "name": "Strada Zimbrului",
+      "key": "zimbrului",
+      "lat": 47.6492032,
+      "lon": 26.2514554,
+      "address_count": 1
+    },
+    {
+      "name": "Strada Zorilor",
+      "key": "zorilor",
+      "lat": 47.6412625,
+      "lon": 26.2373618,
+      "address_count": 1
+    }
+  ]
+}

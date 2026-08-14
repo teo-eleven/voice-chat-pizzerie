@@ -27,3 +27,6 @@ htmlcov/
 # unelte
 .idea/
 .vscode/
+
+# cache brut OSM (se regenereaza cu scripts/import_addresses.py fetch)
+data/osm-cache/
