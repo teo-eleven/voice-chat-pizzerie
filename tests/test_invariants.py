@@ -93,7 +93,12 @@ class TestBuildOrderRequiresCompleteSession:
         # Act / Assert
         with pytest.raises(ValueError, match="contact"):
             _build_order(
-                "CMD-0001", call_session, EtaWindow(min_minutes=20, max_minutes=30), "key-1"
+                "CMD-0001",
+                call_session,
+                EtaWindow(min_minutes=20, max_minutes=30),
+                "key-1",
+                datetime.now(UTC),
+                1,
             )
 
     def test_session_without_payment_raises_value_error(self):
@@ -103,5 +108,10 @@ class TestBuildOrderRequiresCompleteSession:
         # Act / Assert
         with pytest.raises(ValueError, match="plata"):
             _build_order(
-                "CMD-0001", call_session, EtaWindow(min_minutes=20, max_minutes=30), "key-1"
+                "CMD-0001",
+                call_session,
+                EtaWindow(min_minutes=20, max_minutes=30),
+                "key-1",
+                datetime.now(UTC),
+                1,
             )

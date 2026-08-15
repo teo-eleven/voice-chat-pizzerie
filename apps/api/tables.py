@@ -9,10 +9,11 @@ coloane native.
 from __future__ import annotations
 
 import threading
-from datetime import datetime
+from datetime import UTC, datetime
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import Integer, cast, func
-from sqlmodel import Field, Session, SQLModel, select
+from sqlmodel import Field, Session, SQLModel, col, select
 
 from packages.domain.enums import Fulfillment, OrderStatus, PaymentMethod
 from packages.domain.models import Address, Cart, Contact, EtaWindow, Order
@@ -25,6 +26,10 @@ ORDER_ID_LOCK = threading.Lock()
 #: Prefixul id-ului de comanda. Sufixul numeric de 4 cifre vine dupa el.
 _ORDER_ID_PREFIX = "CMD-"
 
+#: Ceasul dupa care se rupe ziua de lucru: cel al pizzeriei, nu UTC. Fara el,
+#: comenzile dintre miezul noptii si ora 3 ar primi numarul zilei precedente.
+PIZZERIA_TIMEZONE = ZoneInfo("Europe/Bucharest")
+
 
 class OrderRow(SQLModel, table=True):
     """Randul de comanda persistat. `to_domain`/`from_domain` fac conversia."""
@@ -35,6 +40,12 @@ class OrderRow(SQLModel, table=True):
     payment: PaymentMethod
     idempotency_key: str = Field(unique=True, index=True)
     created_at: datetime
+    #: Ziua de lucru („2026-08-14"), dupa ceasul local. Indexata: numarul urmator se
+    #: cauta filtrand pe ea la fiecare plasare.
+    business_date: str = Field(default="", index=True)
+    #: Numarul rostit al comenzii, repornit de la 1 in fiecare zi. NU e unic peste
+    #: istoricul complet — identitatea comenzii ramane `id`.
+    daily_number: int = Field(default=0)
     eta_min: int
     eta_max: int
     allergy_note: str | None = None
@@ -64,6 +75,8 @@ def from_domain(order: Order) -> OrderRow:
         payment=order.payment,
         idempotency_key=order.idempotency_key,
         created_at=order.created_at,
+        business_date=business_date_of(order.created_at),
+        daily_number=order.daily_number,
         eta_min=order.eta.min_minutes,
         eta_max=order.eta.max_minutes,
         allergy_note=order.allergy_note,
@@ -78,6 +91,7 @@ def to_domain(row: OrderRow) -> Order:
     address = Address.model_validate_json(row.address_json) if row.address_json else None
     return Order(
         id=row.id,
+        daily_number=row.daily_number,
         cart=Cart.model_validate_json(row.cart_json),
         fulfillment=row.fulfillment,
         contact=Contact.model_validate_json(row.contact_json),
@@ -117,3 +131,29 @@ def next_order_id(session: Session) -> str:
     )
     max_suffix = session.exec(statement).one() or 0
     return f"{_ORDER_ID_PREFIX}{max_suffix + 1:04d}"
+
+
+def business_date_of(moment: datetime) -> str:
+    """Ziua de lucru a unui moment, „AAAA-LL-ZZ", dupa ceasul pizzeriei.
+
+    Un moment fara fus orar se citeste ca UTC: asa vin inapoi randurile scrise de
+    versiunile anterioare, iar o comanda veche n-are voie sa arunce la citire.
+    """
+    aware = moment if moment.tzinfo is not None else moment.replace(tzinfo=UTC)
+    return aware.astimezone(PIZZERIA_TIMEZONE).strftime("%Y-%m-%d")
+
+
+def next_daily_number(session: Session, business_date: str) -> int:
+    """Numarul rostit al urmatoarei comenzi din ziua data: 1, 2, 3, ...
+
+    Din maximul zilei, nu din `COUNT(*)`: dupa stergerea unei comenzi, un contor pe
+    numar de randuri ar da doua comenzi cu acelasi numar rostit in aceeasi zi, adica
+    exact confuzia pe care numarul trebuie s-o previna la ghiseu.
+
+    Se cheama sub `ORDER_ID_LOCK`, ca si `next_order_id`: doua plasari concurente
+    nu trebuie sa citeasca acelasi maxim inainte ca vreuna sa fi facut commit.
+    """
+    statement = select(func.max(OrderRow.daily_number)).where(
+        col(OrderRow.business_date) == business_date
+    )
+    return (session.exec(statement).one() or 0) + 1

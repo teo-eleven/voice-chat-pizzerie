@@ -30,7 +30,15 @@ from packages.domain.models import (
 from .schemas import PlaceOrderRequest
 from .session_access import require_call_session
 from .sessions import CallSession, SessionStore
-from .tables import ORDER_ID_LOCK, OrderRow, from_domain, next_order_id, to_domain
+from .tables import (
+    ORDER_ID_LOCK,
+    OrderRow,
+    business_date_of,
+    from_domain,
+    next_daily_number,
+    next_order_id,
+    to_domain,
+)
 
 #: Cate incercari face `persist_order` la coliziune pe cheia primara `id`
 #: (doua plasari concurente care au calculat acelasi id) inainte sa renunte.
@@ -100,7 +108,14 @@ def _persist_order(
         last_error: IntegrityError | None = None
         for _attempt in range(_MAX_PLACE_ATTEMPTS):
             order_id = next_order_id(db_session)
-            order = _build_order(order_id, call_session, eta, idempotency_key)
+            # Momentul plasării decide și ziua de lucru, deci și numărul rostit.
+            # Amândouă se calculează sub aceeași blocare ca id-ul: altfel două
+            # plasări simultane ar citi același maxim și ar striga același număr.
+            created_at = datetime.now(UTC)
+            daily_number = next_daily_number(db_session, business_date_of(created_at))
+            order = _build_order(
+                order_id, call_session, eta, idempotency_key, created_at, daily_number
+            )
             row = from_domain(order)
             db_session.add(row)
             try:
@@ -119,7 +134,12 @@ def _persist_order(
 
 
 def _build_order(
-    order_id: str, call_session: CallSession, eta: EtaWindow, idempotency_key: str
+    order_id: str,
+    call_session: CallSession,
+    eta: EtaWindow,
+    idempotency_key: str,
+    created_at: datetime,
+    daily_number: int,
 ) -> Order:
     # Garantat de `validate_for_placement`, chemata inainte. Verificat totusi explicit:
     # un `assert` dispare sub `python -O`, iar `Order` ar primi `None` pe campuri
@@ -135,6 +155,7 @@ def _build_order(
         )
     return Order(
         id=order_id,
+        daily_number=daily_number,
         cart=call_session.cart,
         fulfillment=call_session.fulfillment,
         contact=contact,
@@ -143,7 +164,7 @@ def _build_order(
         address=call_session.address,
         eta=eta,
         allergy_note=call_session.allergy_note,
-        created_at=datetime.now(UTC),
+        created_at=created_at,
         idempotency_key=idempotency_key,
     )
 

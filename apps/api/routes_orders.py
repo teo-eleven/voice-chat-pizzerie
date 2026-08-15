@@ -113,6 +113,7 @@ def _apply_status(order_id: str, status: OrderStatus, db_session: Session) -> Or
 def _to_kitchen_view(order: Order) -> KitchenOrderOut:
     return KitchenOrderOut(
         id=order.id,
+        daily_number=order.daily_number,
         status=order.status,
         fulfillment=order.fulfillment,
         cart=order.cart,
