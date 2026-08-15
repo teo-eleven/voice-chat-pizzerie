@@ -17,8 +17,6 @@
 
 <main class="page">
 
-  <div id="error-log"></div>
-
   <!-- ------------------------------------------------------------ ecran start -->
   <section id="screen-start">
     <div class="start-hero">
@@ -28,7 +26,6 @@
         unde livrăm sau dacă ridicați personal, și cum plătiți — restul îl facem noi.
       </p>
       <button type="button" class="btn btn--primary btn--large" id="btn-start-order">Începe comanda</button>
-      <div id="start-error" class="alert alert--out_of_zone" style="display:none"></div>
     </div>
   </section>
 
@@ -94,7 +91,6 @@
       <div class="row" style="margin-top:10px">
         <button type="button" class="btn btn--primary" id="btn-save-contact">Salvează contactul</button>
       </div>
-      <div id="contact-error" class="field-error" style="display:none"></div>
       <div id="contact-current" class="muted" style="margin-top:8px"></div>
     </section>
 
@@ -119,7 +115,6 @@
         <span class="cart-summary-caret" aria-hidden="true">▾</span>
       </button>
       <div class="cart-lines-panel" id="cart-lines-panel" hidden></div>
-      <div id="wizard-validation-msg" class="wizard-validation-msg" role="alert"></div>
       <div class="row wizard-nav-buttons">
         <button type="button" class="btn" id="btn-wizard-back">← Înapoi</button>
         <div class="row" style="margin-left:auto">
@@ -148,7 +143,7 @@
   "use strict";
 
   const esc = PizzaApi.escapeHtml;
-  const errorLog = PizzaApi.createErrorLog(document.getElementById("error-log"));
+  const toast = PizzaApi.createToaster();
 
   const PRODUCT_CATEGORIES = ["pizza", "sauce", "drink", "dessert"];
   //: Oglindeste `MAX_QTY_PER_LINE` din `packages/domain/limits.py`. Backend-ul ramane
@@ -160,6 +155,10 @@
     ambiguous: "Adresă ambiguă",
     out_of_zone: "În afara zonei de livrare",
     not_found: "Adresă negăsită",
+    // `below_minimum` există în `AddressResolution` dar nu e încă întors de backend.
+    // Eticheta stă aici de pe acum: fără ea, ecranul ar afișa codul brut în ziua în
+    // care ruta începe să-l trimită.
+    below_minimum: "Sub comanda minimă",
   };
 
   /**
@@ -218,6 +217,8 @@
   let session = null;
   let idempotencyKey = null;
   let currentStepIndex = 0;
+  /** Ultimul pas randat, ca animația de intrare să pornească doar la schimbarea lui. */
+  let lastRenderedStepKey = null;
   let lastAddressText = "";
   /** Carduri de produs randate curent, ca să le putem reface butonul/stepper-ul după orice schimbare de coș. */
   let registeredProductCards = [];
@@ -250,16 +251,12 @@
     }
   }
 
-  /** Rulează un apel API, raportează eroarea în jurnalul vizibil și întoarce `null` la eșec. */
+  /** Rulează un apel API, arată eroarea ca pop-up și întoarce `null` la eșec. */
   async function guarded(promiseFactory) {
     try {
       return await promiseFactory();
     } catch (err) {
-      if (err instanceof PizzaApi.ApiError) {
-        errorLog.report(err);
-      } else {
-        errorLog.report({ code: null, message: `Eroare neașteptată: ${err.message}`, field: null, status: 0 });
-      }
+      toast.reportError(err);
       return null;
     }
   }
@@ -275,10 +272,35 @@
     button.setAttribute("aria-pressed", String(isActive));
   }
 
+  /**
+   * Comută ecranul principal, cu o intrare animată pentru cel care apare.
+   *
+   * Animația se repornește explicit (`replay`): clasa e deja pe element de la
+   * comutarea precedentă, iar browserul nu redă din nou o animație a cărei clasă
+   * n-a plecat între timp.
+   */
   function showScreen(name) {
-    document.getElementById("screen-start").style.display = name === "start" ? "" : "none";
-    document.getElementById("screen-wizard").style.display = name === "wizard" ? "" : "none";
-    document.getElementById("screen-confirmation").style.display = name === "confirmation" ? "" : "none";
+    const screens = {
+      start: document.getElementById("screen-start"),
+      wizard: document.getElementById("screen-wizard"),
+      confirmation: document.getElementById("screen-confirmation"),
+    };
+    Object.entries(screens).forEach(([key, el]) => {
+      el.style.display = key === name ? "" : "none";
+    });
+    replayAnimation(screens[name], "screen--enter");
+  }
+
+  /**
+   * Repornește o animație CSS pe un element: scoate clasa, forțează un reflow,
+   * o pune la loc. Fără reflow, browserul comasează cele două schimbări și nu
+   * observă că animația a fost reluată.
+   */
+  function replayAnimation(element, className) {
+    if (!element) return;
+    element.classList.remove(className);
+    void element.offsetWidth;
+    element.classList.add(className);
   }
 
   // ----------------------------------------------------------------- sesiune
@@ -287,15 +309,13 @@
   async function startCall() {
     const result = await guarded(() => PizzaApi.apiPost("/api/sessions"));
     if (!result) {
-      const el = document.getElementById("start-error");
-      el.textContent = "Nu am putut deschide o comandă nouă. Verificați conexiunea și încercați din nou.";
-      el.style.display = "";
+      // `guarded` a arătat deja motivul exact; aici spunem doar ce înseamnă pentru client.
+      toast.error("Nu am putut deschide o comandă nouă. Verificați conexiunea și încercați din nou.");
       showScreen("start");
       return;
     }
     sessionId = result.session_id;
     idempotencyKey = PizzaApi.genIdempotencyKey();
-    document.getElementById("start-error").style.display = "none";
     document.getElementById("address-input").value = "";
     document.getElementById("address-result").innerHTML = "";
     document.getElementById("contact-phone").value = "";
@@ -310,11 +330,20 @@
   }
 
   /** Reincarca sesiunea de pe server. Intoarce `true` la reusita, ca apelantul sa poata reincerca. */
+  /**
+   * Reîncarcă sesiunea de pe server. Întoarce `true` la reușită.
+   *
+   * Valoarea de retur nu e decorativă: `checkAddress` o folosește ca să știe dacă mai
+   * trebuie să reîncerce. Fără `return true` explicit, reușita întorcea `undefined`,
+   * deci fiecare adresă confirmată corect cerea sesiunea de două ori și se termina cu
+   * un mesaj de eroare — pe un flux care mersese perfect.
+   */
   async function refreshSession() {
     const result = await guarded(() => PizzaApi.apiGet(`/api/sessions/${sessionId}`));
     if (!result) return false;
     session = result;
     renderAll();
+    return true;
   }
 
   function renderAll() {
@@ -544,7 +573,10 @@
       if (sizeCode) body.size_code = sizeCode;
       const cart = await guarded(() => PizzaApi.apiPost(`/api/sessions/${sessionId}/items`, body));
       if (!cart) return;
+      const previousLineIds = new Set((session.cart ? session.cart.lines : []).map((l) => l.line_id));
       session = { ...session, cart };
+      const added = cart.lines.find((line) => !previousLineIds.has(line.line_id));
+      toast.success(`${added ? added.product_name : product.name} — adăugat în coș.`);
       onCartChanged();
     });
   }
@@ -554,15 +586,20 @@
       const cart = await guarded(() => PizzaApi.apiPatch(`/api/sessions/${sessionId}/items/${lineId}`, { qty }));
       if (!cart) return;
       session = { ...session, cart };
+      const line = cart.lines.find((item) => item.line_id === lineId);
+      if (line) toast.info(`${line.product_name} — acum ${line.qty} bucăți în coș.`);
       onCartChanged();
     });
   }
 
   async function deleteLine(lineId) {
     await serialized(async () => {
+      // Numele se citește înainte de ștergere: după ea, linia nu mai există nicăieri.
+      const removed = (session.cart ? session.cart.lines : []).find((item) => item.line_id === lineId);
       const cart = await guarded(() => PizzaApi.apiDelete(`/api/sessions/${sessionId}/items/${lineId}`));
       if (!cart) return;
       session = { ...session, cart };
+      toast.info(`${removed ? removed.product_name : "Produsul"} — scos din coș.`);
       onCartChanged();
     });
   }
@@ -676,6 +713,7 @@
       const cart = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/fulfillment`, { fulfillment: value }));
       if (!cart) return;
       session = { ...session, cart, fulfillment: value };
+      toast.success(value === "delivery" ? "Am reținut: livrare la adresă." : "Am reținut: ridicare din restaurant.");
       renderFulfillment();
       renderFooterCart();
       renderWizard();
@@ -686,27 +724,38 @@
 
   async function checkAddress(text) {
     const trimmed = (text || "").trim();
-    if (!trimmed) return;
+    if (!trimmed) {
+      toast.warning("Scrieți adresa: strada și numărul, apoi apăsați „Verifică adresa”.");
+      return;
+    }
     lastAddressText = trimmed;
     const result = await guarded(() => PizzaApi.apiPost(`/api/sessions/${sessionId}/address`, { text: trimmed }));
     if (!result) return;
     renderAddressResult(result);
+    announceAddressResult(result);
     if (result.resolution !== "ok") return;
 
     // Adresa e confirmata pe server, dar `session.address` local vine abia din reincarcarea
     // sesiunii. Daca fix acel al doilea apel esueaza, ecranul ar ramane contradictoriu:
-    // banner verde de adresa confirmata sus, „Continua" blocat jos, fara nicio explicatie.
-    // Reincercam o data, iar daca nici asa nu merge o spunem pe fata.
+    // banner verde de adresa confirmata sus, „Continua" care refuza sa avanseze, fara
+    // nicio explicatie. Reincercam o data, iar daca nici asa nu merge o spunem pe fata.
     if (await refreshSession()) return;
     if (await refreshSession()) return;
-    errorLog.report({
-      code: "sesiune_nesincronizata",
-      message:
-        "Adresa a fost confirmată, dar nu am putut reîncărca datele comenzii. " +
-        "Verificați conexiunea și apăsați din nou „Verifică adresa”.",
-      field: null,
-      status: 0,
-    });
+    toast.error(
+      "Adresa a fost confirmată, dar nu am putut reîncărca datele comenzii. " +
+        "Verificați conexiunea și apăsați din nou „Verifică adresa”."
+    );
+  }
+
+  /** Rezultatul verificării, spus și ca pop-up — panoul de sub câmp rămâne pentru candidați. */
+  function announceAddressResult(result) {
+    if (result.resolution === "ok") {
+      toast.success(result.message || "Am găsit adresa.");
+    } else if (result.resolution === "ambiguous") {
+      toast.warning(result.message || "Am găsit mai multe adrese posibile.");
+    } else {
+      toast.error(result.message || "Nu am găsit adresa.");
+    }
   }
 
   /**
@@ -742,10 +791,11 @@
       hintHtml = `<p class="muted" style="margin:10px 0 0">Puteți alege „Ridicare din restaurant” la pasul de livrare.</p>`;
     }
 
+    // Mesajul serverului nu se repetă aici: îl spune pop-up-ul. Panoul rămâne pentru
+    // ce nu încape într-un pop-up — eticheta de stare, candidații și îndrumarea.
     container.innerHTML = `
       <div class="alert alert--${esc(result.resolution)}">
         <strong>${esc(label)}</strong>
-        <div>${esc(result.message)}</div>
         ${candidatesHtml}
         ${hintHtml}
       </div>
@@ -775,18 +825,16 @@
     await serialized(async () => {
       const phone = document.getElementById("contact-phone").value.trim();
       const name = document.getElementById("contact-name").value.trim();
-      const errorEl = document.getElementById("contact-error");
 
       if (!phone) {
-        errorEl.textContent = "Introduceți un număr de telefon.";
-        errorEl.style.display = "";
+        toast.warning("Introduceți un număr de telefon.");
         return;
       }
-      errorEl.style.display = "none";
 
       const result = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/contact`, { phone, name }));
       if (!result) return;
       session = result;
+      toast.success("Datele de contact au fost salvate.");
       renderContactCurrent();
       renderWizard();
     });
@@ -817,6 +865,7 @@
       const result = await guarded(() => PizzaApi.apiPut(`/api/sessions/${sessionId}/payment`, { payment: value }));
       if (!result) return;
       session = result;
+      toast.success(`Plată: ${PAYMENT_LABELS[value] || value}.`);
       renderPaymentCurrent();
       renderWizard();
     });
@@ -864,6 +913,7 @@
   async function placeOrderAndConfirm() {
     const order = await guarded(() => PizzaApi.apiPost(`/api/sessions/${sessionId}/place`, { idempotency_key: idempotencyKey }));
     if (!order) return;
+    toast.success(`Comanda a fost plasată — ${PizzaApi.formatOrderNumber(order)}.`);
     renderConfirmation(order);
     showScreen("confirmation");
   }
@@ -876,7 +926,7 @@
         : "Comanda poate fi ridicată de la restaurant.";
     container.innerHTML = `
       <div class="alert alert--ok" style="text-align:left">
-        <div>Număr comandă: <strong>${esc(order.id)}</strong></div>
+        <div><strong>${esc(PizzaApi.formatOrderNumberCapitalized(order))}</strong></div>
         <div>Timp estimat: ${PizzaApi.formatEtaWindow(order.eta)}</div>
         <div>Total de plată: ${PizzaApi.formatBani(order.cart.total_bani)}</div>
         <div>Metodă de plată: ${esc(PAYMENT_LABELS[order.payment] || order.payment)}</div>
@@ -908,18 +958,6 @@
     return index;
   }
 
-  function showValidationMessage(message) {
-    const el = document.getElementById("wizard-validation-msg");
-    el.textContent = message;
-    el.classList.add("visible");
-  }
-
-  function clearValidationMessage() {
-    const el = document.getElementById("wizard-validation-msg");
-    el.textContent = "";
-    el.classList.remove("visible");
-  }
-
   function renderProgress(stepDef) {
     const el = document.getElementById("wizard-progress");
     const active = activeSteps();
@@ -946,6 +984,12 @@
       const el = document.getElementById(step.elId);
       if (el) el.style.display = step.key === stepDef.key ? "" : "none";
     });
+    // Doar la schimbarea pasului, nu la fiecare re-randare: `renderWizard` se cheamă
+    // și după fiecare modificare de coș, iar pasul ar tresări la fiecare „+".
+    if (lastRenderedStepKey !== stepDef.key) {
+      lastRenderedStepKey = stepDef.key;
+      replayAnimation(document.getElementById(stepDef.elId), "step--enter");
+    }
 
     renderProgress(stepDef);
 
@@ -957,14 +1001,10 @@
     skipBtn.style.display = stepDef.upsellCategory ? "" : "none";
     nextBtn.textContent = stepDef.key === "summary" ? "Plasează comanda" : "Continuă →";
 
-    const validator = STEP_VALIDATORS[stepDef.key];
-    const validation = validator ? validator() : { ok: true };
-    nextBtn.disabled = !validation.ok;
-    if (!validation.ok) {
-      showValidationMessage(validation.message);
-    } else {
-      clearValidationMessage();
-    }
+    // „Continuă" rămâne apăsabil chiar dacă pasul e incomplet: la apăsare, `goNext`
+    // spune într-un pop-up ce mai lipsește. Un buton dezactivat nu poate fi focusat
+    // și nu-și explică singur starea — omul apasă și nu se întâmplă nimic.
+    nextBtn.disabled = false;
 
     if (stepDef.key === "summary") {
       showSummary();
@@ -1003,9 +1043,11 @@
     await serialized(async () => {
       const stepDef = STEPS[currentStepIndex];
       const validator = STEP_VALIDATORS[stepDef.key];
-      // Butonul e deja dezactivat când validarea eșuează; verificarea de aici e doar
-      // o plasă de siguranță, nu o a doua sursă de adevăr.
-      if (validator && !validator().ok) return;
+      const validation = validator ? validator() : { ok: true };
+      if (!validation.ok) {
+        toast.warning(validation.message);
+        return;
+      }
 
       if (stepDef.key === "summary") {
         await placeOrderAndConfirm();

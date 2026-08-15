@@ -26,7 +26,6 @@
     o dată, în ordinea în care l-ar parcurge și agentul vocal.
   </p>
 
-  <div id="error-log"></div>
 
   <section class="section" id="section-demo">
     <h2>Comandă demo completă</h2>
@@ -181,7 +180,6 @@
     </section>
 
     <div class="wizard-nav">
-      <div id="wizard-validation-msg" class="wizard-validation-msg" role="alert"></div>
       <div class="row wizard-nav-buttons">
         <button type="button" class="btn" id="btn-wizard-back">← Înapoi</button>
         <div class="row" style="margin-left:auto">
@@ -200,7 +198,7 @@
   "use strict";
 
   const esc = PizzaApi.escapeHtml;
-  const errorLog = PizzaApi.createErrorLog(document.getElementById("error-log"));
+  const toast = PizzaApi.createToaster();
 
   const PRODUCT_CATEGORIES = ["pizza", "sauce", "drink", "dessert"];
   const PAYMENT_LABELS = { cash: "Numerar", card_on_delivery: "Card la livrare" };
@@ -209,6 +207,10 @@
     ambiguous: "Adresă ambiguă",
     out_of_zone: "În afara zonei de livrare",
     not_found: "Adresă negăsită",
+    // `below_minimum` există în `AddressResolution` dar nu e încă întors de backend.
+    // Eticheta stă aici de pe acum: fără ea, ecranul ar afișa codul brut în ziua în
+    // care ruta începe să-l trimită.
+    below_minimum: "Sub comanda minimă",
   };
 
   /**
@@ -277,11 +279,7 @@
     try {
       return await promiseFactory();
     } catch (err) {
-      if (err instanceof PizzaApi.ApiError) {
-        errorLog.report(err);
-      } else {
-        errorLog.report({ code: null, message: `Eroare neașteptată: ${err.message}`, field: null, status: 0 });
-      }
+      toast.reportError(err);
       return null;
     }
   }
@@ -783,18 +781,6 @@
     el.textContent = `Întrebat: ${asked ? "Da" : "Nu"} · În coș: ${covered ? "Da" : "Nu"}`;
   }
 
-  function showValidationMessage(message) {
-    const el = document.getElementById("wizard-validation-msg");
-    el.textContent = message;
-    el.classList.add("visible");
-  }
-
-  function clearValidationMessage() {
-    const el = document.getElementById("wizard-validation-msg");
-    el.textContent = "";
-    el.classList.remove("visible");
-  }
-
   function renderProgress(stepDef) {
     const el = document.getElementById("wizard-progress");
     const active = activeSteps();
@@ -834,14 +820,8 @@
     nextBtn.style.display = isLastStep ? "none" : "";
     skipBtn.style.display = stepDef.upsellCategory ? "" : "none";
 
-    const validator = STEP_VALIDATORS[stepDef.key];
-    const validation = validator ? validator() : { ok: true };
-    nextBtn.disabled = !isLastStep && !validation.ok;
-    if (!isLastStep && !validation.ok) {
-      showValidationMessage(validation.message);
-    } else {
-      clearValidationMessage();
-    }
+    // Butonul rămâne apăsabil: la apăsare, `goNext` spune într-un pop-up ce lipsește.
+    nextBtn.disabled = false;
 
     if (stepDef.upsellCategory) {
       renderUpsellStatus(stepDef.upsellCategory);
@@ -868,9 +848,11 @@
   async function goNext() {
     const stepDef = STEPS[currentStepIndex];
     const validator = STEP_VALIDATORS[stepDef.key];
-    // Butonul e deja dezactivat când validarea eșuează; verificarea de aici e doar
-    // o plasă de siguranță, nu o a doua sursă de adevăr.
-    if (validator && !validator().ok) return;
+    const validation = validator ? validator() : { ok: true };
+    if (!validation.ok) {
+      toast.warning(validation.message);
+      return;
+    }
 
     if (stepDef.upsellCategory) {
       await markUpsellAskedIfCovered(stepDef.upsellCategory);
@@ -1061,7 +1043,7 @@
     const steps = buildDemoSteps();
 
     button.disabled = true;
-    errorLog.clear();
+    toast.clear();
     renderDemoSteps(steps);
     status.textContent = "În curs…";
 
@@ -1077,7 +1059,7 @@
         return;
       }
       if (detail === null) {
-        setDemoStepState(index, "failed", "eșuat — vezi jurnalul de erori");
+        setDemoStepState(index, "failed", "eșuat — vezi mesajul afișat");
         status.textContent = `Oprit la pasul ${index + 1}.`;
         button.disabled = false;
         return;
