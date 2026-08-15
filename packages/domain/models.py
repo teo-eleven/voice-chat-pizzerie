@@ -225,7 +225,12 @@ class EtaWindow(Frozen):
 
 
 class Order(Frozen):
+    #: Identitatea comenzii, unică peste tot istoricul. Nu se rostește.
     id: str
+    #: Numărul rostit — „numărul comenzii 7" — repornit de la 1 în fiecare zi de
+    #: lucru. Se repetă de la o zi la alta, deci nu identifică nimic singur; e
+    #: pentru oameni: clientul îl reține, bucătarul îl strigă.
+    daily_number: int = Field(default=0, ge=0)
     cart: Cart
     fulfillment: Fulfillment
     contact: Contact

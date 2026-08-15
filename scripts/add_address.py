@@ -19,7 +19,6 @@ import argparse
 import json
 import os
 import sys
-import tempfile
 from collections.abc import Sequence
 from pathlib import Path
 
@@ -30,10 +29,16 @@ os.chdir(ROOT)  # fixture-ul și zona se încarcă din căi relative la rădăci
 
 from pydantic import ValidationError  # noqa: E402
 
-from apps.api.geocoding import AddressFixtureEntry, load_fixture  # noqa: E402
-from packages.domain import config, delivery_zone, text  # noqa: E402
+from apps.api.geocoding import DEFAULT_CITY, AddressFixtureEntry, load_fixture  # noqa: E402
+from packages.domain import config, delivery_zone  # noqa: E402
+from packages.domain.address_text import (  # noqa: E402
+    canonical_street,
+    house_number_key,
+    street_key,
+)
 from packages.domain.errors import DomainError  # noqa: E402
 from packages.domain.models import ZoneConfig  # noqa: E402
+from packages.fileio import write_json_atomic  # noqa: E402
 
 FIXTURE_PATH = ROOT / "data" / "addresses.fixture.json"
 ZONE_PATH = ROOT / "data" / "delivery_zone.json"
@@ -44,12 +49,9 @@ LATITUDE_MAX = 90.0
 LONGITUDE_MIN = -180.0
 LONGITUDE_MAX = 180.0
 
-#: Încredere implicită pentru o adresă introdusă manual de proprietar.
+#: Încredere implicită pentru o adresă introdusă manual de proprietar — mai mare
+#: decât a unei adrese importate din OSM, fiindcă a fost verificată de un om.
 DEFAULT_CONFIDENCE = 0.95
-DEFAULT_CITY = "Suceava"
-
-#: Permisiunile fixture-ului, aliniate cu restul fișierelor din `data/`.
-_FIXTURE_FILE_MODE = 0o644
 
 
 class AddressScriptError(Exception):
@@ -137,43 +139,30 @@ def _load_zone_safe(path: Path) -> ZoneConfig:
 
 
 def _is_same_address(
-    entry: AddressFixtureEntry, street_key: str, number: str, lat: float, lon: float
+    entry: AddressFixtureEntry, key: str, number: str, lat: float, lon: float
 ) -> bool:
-    """Aceeași stradă normalizată + același număr + aceleași coordonate exacte."""
+    """Aceeași stradă + același număr + aceleași coordonate exacte.
+
+    Strada și numărul se compară pe cheie, nu pe text: „Str. Zorilor 12A" e aceeași
+    adresă cu „Strada Zorilor 12a" și nu trebuie adăugată de două ori.
+    """
     return (
-        text.normalize(entry.street) == street_key
-        and entry.number == number
+        street_key(entry.street) == key
+        and house_number_key(entry.number) == house_number_key(number)
         and entry.lat == lat
         and entry.lon == lon
     )
 
 
 def _write_fixture_atomic(path: Path, entries: tuple[AddressFixtureEntry, ...]) -> None:
-    """Scrie fixture-ul într-un fișier temporar și îl mută peste original.
+    """Scrie fixture-ul atomic, în formatul folosit și de importul din OSM.
 
-    `mkstemp` creează fișierul atomic și întoarce un descriptor deja deschis; o
-    întrerupere la mijloc lasă temporarul pe disc, nu fixture-ul corupt.
-
-    Permisiunile se pun explicit pe `0644`: `mkstemp` creează cu `0600`, iar `replace`
-    păstrează modul temporarului. Fără linia asta, fiecare rulare a scriptului ar
-    strânge tăcut drepturile fixture-ului față de restul fișierelor din `data/`, iar
-    serverul rulat sub alt utilizator ar ajunge să nu-și mai poată citi propriile date.
+    `exclude_defaults` ține fișierul curat: orașul, județul și țara sunt aceleași
+    pentru toate adresele și trăiesc ca implicite pe `AddressFixtureEntry`, nu
+    repetate pe fiecare din cele câteva mii de intrări.
     """
-    payload = [entry.model_dump(exclude_none=True) for entry in entries]
-    content = json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
-
-    fd, tmp_name = tempfile.mkstemp(
-        dir=path.parent, prefix=f".{path.name}.", suffix=".tmp"
-    )
-    tmp_path = Path(tmp_name)
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8") as tmp_file:
-            tmp_file.write(content)
-        tmp_path.chmod(_FIXTURE_FILE_MODE)
-        tmp_path.replace(path)
-    except BaseException:
-        tmp_path.unlink(missing_ok=True)
-        raise
+    payload = [entry.model_dump(exclude_defaults=True) for entry in entries]
+    write_json_atomic(path, payload)
 
 
 def _run_add(
@@ -185,9 +174,9 @@ def _run_add(
     entries = _load_fixture_safe(FIXTURE_PATH)
     zone = _load_zone_safe(ZONE_PATH)
 
-    street_key = text.normalize(street)
+    key = street_key(street)
     duplicate = next(
-        (entry for entry in entries if _is_same_address(entry, street_key, number, lat, lon)),
+        (entry for entry in entries if _is_same_address(entry, key, number, lat, lon)),
         None,
     )
     if duplicate is not None:
@@ -197,8 +186,15 @@ def _run_add(
         )
 
     try:
+        # Numele se scrie canonic („str. zorilor" -> „Strada Zorilor"), ca fixture-ul
+        # să arate la fel indiferent dacă adresa a venit de la om sau din import.
         new_entry = AddressFixtureEntry(
-            street=street, number=number, lat=lat, lon=lon, confidence=confidence, city=city
+            street=canonical_street(street),
+            number=number,
+            lat=lat,
+            lon=lon,
+            confidence=confidence,
+            city=city,
         )
     except ValidationError as exc:
         raise AddressScriptError(f"Datele adresei sunt invalide:\n{exc}") from exc

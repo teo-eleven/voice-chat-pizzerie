@@ -405,7 +405,8 @@ label {
 }
 
 .alert--out_of_zone,
-.alert--not_found {
+.alert--not_found,
+.alert--below_minimum {
   color: var(--danger);
   background: var(--danger-bg);
   border-color: var(--danger-border);
@@ -436,53 +437,139 @@ label {
   letter-spacing: 0.02em;
 }
 
-/* -------------------------------------------------------------- error log */
+/* --------------------------------------------------------------- pop-up-uri */
 
-#error-log {
+/* Teancul stă fix în colțul din dreapta-sus, peste conținut, dar nu peste nav.
+   `pointer-events: none` pe teanc și `auto` pe fiecare mesaj: zona goală dintre
+   mesaje rămâne clickabilă, ca pop-up-urile să nu blocheze butoanele de dedesubt. */
+.toast-stack {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 18px;
-}
-
-.error-entry {
-  border: 1px solid var(--danger-border);
-  background: var(--danger-bg);
-  border-radius: var(--radius);
-  padding: 10px 12px;
-}
-
-.error-entry-head {
-  display: flex;
-  align-items: center;
   gap: 10px;
+  width: min(380px, calc(100vw - 32px));
+  pointer-events: none;
 }
 
-.error-code {
+.toast {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--bg-elevated-2);
+  color: var(--text);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  animation: toast-in 200ms ease-out;
+}
+
+.toast--leaving {
+  animation: toast-out 200ms ease-in forwards;
+}
+
+.toast-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.toast-title {
   font-weight: 700;
-  color: var(--danger);
-  font-family: "Consolas", "Courier New", monospace;
   font-size: 13px;
+  letter-spacing: 0.01em;
 }
 
-.error-field {
-  color: var(--text-dim);
-  font-size: 12px;
+.toast-message {
+  font-size: 14px;
+  color: var(--text);
+  overflow-wrap: anywhere;
 }
 
-.error-dismiss {
+.toast-close {
   margin-left: auto;
   background: none;
   border: none;
   color: var(--text-dim);
-  font-size: 16px;
-  cursor: pointer;
+  font-size: 18px;
   line-height: 1;
+  cursor: pointer;
+  padding: 0 2px;
 }
 
-.error-message {
-  margin-top: 4px;
+.toast-close:hover {
   color: var(--text);
+}
+
+.toast--success {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+}
+
+.toast--success .toast-title {
+  color: var(--success);
+}
+
+.toast--error {
+  background: var(--danger-bg);
+  border-color: var(--danger-border);
+}
+
+.toast--error .toast-title {
+  color: var(--danger);
+}
+
+.toast--warning {
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+}
+
+.toast--warning .toast-title {
+  color: var(--warning);
+}
+
+.toast--info {
+  background: var(--info-bg);
+  border-color: var(--info-border);
+}
+
+.toast--info .toast-title {
+  color: var(--info);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes toast-out {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+/* Cine a cerut mai puțină mișcare primește mesajul instant, nu glisat. */
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .toast--leaving {
+    animation: none;
+  }
 }
 
 /* ---------------------------------------------------------------- cart ---*/
@@ -726,22 +813,6 @@ hr.sep {
 
 .wizard-nav-buttons {
   justify-content: space-between;
-}
-
-.wizard-validation-msg {
-  display: none;
-  color: var(--danger);
-  background: var(--danger-bg);
-  border: 1px solid var(--danger-border);
-  border-radius: var(--radius);
-  padding: 10px 14px;
-  margin-bottom: 10px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.wizard-validation-msg.visible {
-  display: block;
 }
 
 /* ------------------------------------------------------------ comandă demo */
@@ -994,12 +1065,6 @@ hr.sep {
   color: var(--text-dim);
 }
 
-.field-error {
-  color: var(--danger);
-  font-size: 13px;
-  margin-top: 6px;
-}
-
 /* --------------------------------------------------------------- coș sticky */
 
 .cart-summary-toggle {
@@ -1118,5 +1183,148 @@ body.is-busy .address-candidate {
 @media (max-height: 640px) {
   .cart-lines-panel {
     max-height: min(320px, 40vh);
+  }
+}
+
+/* ------------------------------------------------------- tranziții și animații */
+
+/* Tranziție între pagini (Comandă / Bucătărie / Livrare). Browserele care nu
+   cunosc regula o ignoră și navighează ca înainte — nimic nu se rupe. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: fade-out 140ms ease-in both;
+}
+
+::view-transition-new(root) {
+  animation: fade-in-up 220ms ease-out both;
+}
+
+/* Peste tot `backwards`, niciodată `both`.
+   `both` păstrează pentru totdeauna ultimul cadru, adică lasă un `transform` aplicat
+   pe element și după ce animația s-a terminat. Un `transform` pe un strămoș rupe
+   `position: sticky` din interior — exact bara de navigare a asistentului, care stă
+   lipită de marginea de jos. `backwards` acoperă doar intervalul dinainte de start
+   (fără licărire), iar la final elementul revine la starea lui normală, fără
+   `transform`. Cadrul final al fiecărei animații e oricum starea implicită. */
+
+/* Prima încărcare a paginii: conținutul intră, nu apare brusc. Nav-ul rămâne pe loc,
+   ca reperul de navigare să nu se miște sub cursor. */
+.page {
+  animation: fade-in-up 260ms ease-out backwards;
+}
+
+/* Ecranele mari ale comenzii (start / asistent / confirmare) și pașii asistentului.
+   Clasele se pun din JS, cu repornirea animației. */
+.screen--enter {
+  animation: fade-in-up 240ms ease-out backwards;
+}
+
+.step--enter {
+  animation: step-in 220ms ease-out backwards;
+}
+
+/* Cardurile de comandă apărute acum pe bucătărie/livrare. Doar cele noi — restul
+   rămân nemișcate, ca ochiul să se ducă exact la ce s-a schimbat. */
+.card--enter {
+  animation: card-in 320ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+/* Butoanele răspund la apăsare: fără feedback, la o rețea lentă pare că n-a mers. */
+.btn,
+.segmented-btn,
+.stepper-btn,
+.address-candidate {
+  transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease,
+    transform 80ms ease;
+}
+
+.btn:active,
+.segmented-btn:active,
+.stepper-btn:active,
+.address-candidate:active {
+  transform: scale(0.97);
+}
+
+.card,
+.section {
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.nav a {
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Cine a cerut mai puțină mișcare primește totul instant. Regula stă la sfârșit, ca
+   să bată tot ce e mai sus, și acoperă și tranziția între pagini. */
+@media (prefers-reduced-motion: reduce) {
+  .page,
+  .screen--enter,
+  .step--enter,
+  .card--enter {
+    animation: none;
+  }
+
+  .btn,
+  .segmented-btn,
+  .stepper-btn,
+  .address-candidate,
+  .card,
+  .section,
+  .nav a {
+    transition: none;
+  }
+
+  .btn:active,
+  .segmented-btn:active,
+  .stepper-btn:active,
+  .address-candidate:active {
+    transform: none;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
   }
 }

@@ -133,6 +133,8 @@ class KitchenOrderOut(_ApiModel):
     """
 
     id: str
+    #: Numarul rostit al comenzii — pe el il striga bucataria, nu id-ul intern.
+    daily_number: int = 0
     status: OrderStatus
     fulfillment: Fulfillment
     cart: Cart

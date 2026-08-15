@@ -21,6 +21,16 @@ MAX_NOTES_LEN = 300
 MAX_ALLERGY_NOTE_LEN = 300
 MAX_IDEMPOTENCY_KEY_LEN = 100
 
+#: Lungimi maxime pentru datele de adresă venite din surse externe (OpenStreetMap).
+#: Tot ce scrie un cartograf într-o etichetă OSM ajunge în fișierele din `data/`, apoi
+#: în memoria serverului la fiecare pornire și în răspunsurile API. Cea mai lungă
+#: stradă reală din Suceava are 40 de caractere, iar cel mai lung număr 6 — plafoanele
+#: de mai jos lasă loc de trei ori pe atât și opresc o etichetă absurdă înainte să
+#: intre în date.
+MAX_STREET_NAME_LEN = 120
+MAX_HOUSE_NUMBER_LEN = 24
+MAX_POSTCODE_LEN = 16
+
 #: Peste atâtea unități pe linie sau linii în coș, e o comandă de tip catering.
 #:
 #: SCHELET FAZA 5, încă neconectat. `docs/PLAN.md` cere ca o comandă mare să fie

@@ -43,7 +43,7 @@ def _init_state(app: FastAPI) -> None:
     app.state.catalog = load_catalog()
     app.state.zone = load_zone_config()
     app.state.kitchen = load_kitchen_config()
-    app.state.addresses = geocoding.load_fixture()
+    app.state.addresses = geocoding.load_index()
     app.state.sessions = SessionStore()
     app.state.events = events.EventHub()
 

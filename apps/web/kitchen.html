@@ -20,8 +20,6 @@
   <h1>Ecran bucătărie</h1>
   <p class="subtitle">Starea se reconstruiește din baza de date la încărcare, apoi se actualizează live prin WebSocket.</p>
 
-  <div id="error-log"></div>
-
   <div class="alert alert--info">
     Notă: acest ecran nu primește și nu afișează telefonul sau adresa clientului — răspunsul serverului pentru
     <code>view=kitchen</code> le omite intenționat (minimizare de date). Acele detalii sunt disponibile doar pe ecranul de livrare.
@@ -36,7 +34,7 @@
   "use strict";
 
   const esc = PizzaApi.escapeHtml;
-  const errorLog = PizzaApi.createErrorLog(document.getElementById("error-log"));
+  const toast = PizzaApi.createToaster();
 
   const FULFILLMENT_LABELS = { delivery: "Livrare", pickup: "Ridicare" };
   const STATUS_LABELS = {
@@ -51,25 +49,54 @@
   };
 
   let orders = [];
+  /**
+   * Comenzile deja văzute pe ecran. Servesc la două lucruri: anunțul unei comenzi
+   * noi și animația de intrare — fără ele, orice eveniment WebSocket ar reanima
+   * toate cardurile și ar anunța din nou comenzi vechi.
+   */
+  const seenOrderIds = new Set();
+  /** `true` până la prima încărcare: comenzile deja în baza de date nu sunt „noi". */
+  let isFirstLoad = true;
+  /**
+   * Numărul încărcării curente. Fiecare eveniment WebSocket pornește o cerere nouă,
+   * iar răspunsurile nu sosesc neapărat în ordinea în care au plecat: două evenimente
+   * apropiate (o comandă plasată și imediat preluată) pot da un răspuns vechi sosit
+   * ultimul, care ar repicta ecranul cu starea dinainte — cardul ar sări înapoi la
+   * statusul anterior. Se afișează doar rezultatul ultimei cereri pornite.
+   */
+  let loadSequence = 0;
 
+  /** Rulează un apel API, arată eroarea ca pop-up și întoarce `null` la eșec. */
   async function guarded(promiseFactory) {
     try {
       return await promiseFactory();
     } catch (err) {
-      if (err instanceof PizzaApi.ApiError) {
-        errorLog.report(err);
-      } else {
-        errorLog.report({ code: null, message: `Eroare neașteptată: ${err.message}`, field: null, status: 0 });
-      }
+      toast.reportError(err);
       return null;
     }
   }
 
   async function loadOrders() {
+    const sequence = (loadSequence += 1);
     const result = await guarded(() => PizzaApi.apiGet("/api/orders?view=kitchen"));
     if (!result) return;
+    if (sequence !== loadSequence) return;
     orders = result;
+    announceNewOrders();
     renderOrders();
+  }
+
+  /** Anunță comenzile apărute de la ultima încărcare. Prima încărcare nu anunță nimic. */
+  function announceNewOrders() {
+    const fresh = orders.filter((order) => !seenOrderIds.has(order.id));
+    orders.forEach((order) => seenOrderIds.add(order.id));
+    if (isFirstLoad) {
+      isFirstLoad = false;
+      return;
+    }
+    fresh.forEach((order) =>
+      toast.info(`Comandă nouă: ${PizzaApi.formatOrderNumber(order)}.`, { durationMs: 8000 })
+    );
   }
 
   function renderOrders() {
@@ -78,7 +105,13 @@
       container.innerHTML = '<div class="empty-state">Nicio comandă activă în bucătărie momentan.</div>';
       return;
     }
+    const known = new Set(
+      Array.prototype.map.call(container.querySelectorAll(".card[data-order-id]"), (el) => el.dataset.orderId)
+    );
     container.innerHTML = orders.map(buildOrderCard).join("");
+    container.querySelectorAll(".card[data-order-id]").forEach((card) => {
+      if (!known.has(card.dataset.orderId)) card.classList.add("card--enter");
+    });
     container.querySelectorAll(".btn-transition").forEach((button) => {
       button.addEventListener("click", () => transitionOrder(button.dataset.orderId, button.dataset.status));
     });
@@ -110,9 +143,9 @@
     }
 
     return `
-      <div class="card">
+      <div class="card" data-order-id="${esc(order.id)}">
         <div class="row" style="justify-content:space-between">
-          <strong>${esc(order.id)}</strong>
+          <strong>${esc(PizzaApi.formatOrderNumberCapitalized(order))}</strong>
           <span class="badge badge--${esc(order.fulfillment)}">${FULFILLMENT_LABELS[order.fulfillment] || order.fulfillment}</span>
         </div>
         <div class="row">
@@ -130,6 +163,12 @@
   async function transitionOrder(orderId, status) {
     const result = await guarded(() => PizzaApi.apiPost(`/api/orders/${orderId}/status`, { status }));
     if (!result) return;
+    // Confirmarea e necesară: cardul se re-randează abia după reîncărcare, iar fără
+    // ea bucătarul nu știe dacă apăsarea a contat sau s-a pierdut.
+    const changed = orders.find((order) => order.id === orderId);
+    toast.success(
+      `${PizzaApi.formatOrderNumberCapitalized(changed || { id: orderId })}: ${STATUS_LABELS[status] || status}.`
+    );
     await loadOrders();
   }
 
